@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DIRECT_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
       AUTH_SECRET: ci-build-secret-key-minimum-32-chars
       GOOGLE_CLIENT_ID: ci-google-client-id
       GOOGLE_CLIENT_SECRET: ci-google-client-secret
@@ -50,6 +51,7 @@ jobs:
         run: |
           cat > .env <<EOF
           DATABASE_URL=${{ env.DATABASE_URL }}
+          DIRECT_DATABASE_URL=${{ env.DIRECT_DATABASE_URL }}
           AUTH_SECRET=${{ env.AUTH_SECRET }}
           GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ env.GOOGLE_CLIENT_SECRET }}
