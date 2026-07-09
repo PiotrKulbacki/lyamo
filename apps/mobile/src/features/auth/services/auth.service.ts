@@ -1,7 +1,12 @@
 import Toast from 'react-native-toast-message';
 import { DEFAULT_LOCALE, translateError, t } from '@shared/features/i18n';
 import { env } from '@mobile/env';
-import { clearTokens, getAccessToken, getRefreshToken, saveTokens } from '@mobile/features/auth/lib/token-storage';
+import {
+  clearTokens,
+  getAccessToken,
+  getRefreshToken,
+  saveTokens,
+} from '@mobile/features/auth/lib/token-storage';
 
 export type SafeUser = {
   id: string;
@@ -40,7 +45,7 @@ function showSuccess(key: string) {
 
 async function apiRequest<T>(
   path: string,
-  options: RequestInit = {},
+  options: RequestInit = {}
 ): Promise<{ data?: T; error?: string; status: number }> {
   const accessToken = await getAccessToken();
 
@@ -152,7 +157,7 @@ export async function getCurrentUser(): Promise<SafeUser | null> {
 
     await saveTokens(
       refreshResult.data.accessToken,
-      refreshResult.data.refreshToken ?? refreshToken,
+      refreshResult.data.refreshToken ?? refreshToken
     );
 
     return refreshResult.data.user;

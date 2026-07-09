@@ -60,9 +60,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         return;
       }
 
-      toast.success(
-        t(mode === 'login' ? 'auth.success.login' : 'auth.success.register', locale),
-      );
+      toast.success(t(mode === 'login' ? 'auth.success.login' : 'auth.success.register', locale));
       router.push('/');
       router.refresh();
     } catch {
@@ -124,10 +122,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
       {mode === 'register' && (
         <div>
-          <label
-            htmlFor="confirmPassword"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium text-gray-700">
             {t('auth.labels.confirmPassword', locale)}
           </label>
           <input

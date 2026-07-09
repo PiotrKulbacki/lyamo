@@ -3,10 +3,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@smart-expense-control/database';
 import { env } from '@web/env';
 import { exchangeGoogleCode } from '@web/features/auth/lib/tokens';
-import {
-  createWebSession,
-  setSessionCookie,
-} from '@web/features/auth/services/auth.service';
+import { createWebSession, setSessionCookie } from '@web/features/auth/services/auth.service';
 
 const OAUTH_STATE_COOKIE = 'sec_oauth_state';
 
@@ -19,7 +16,7 @@ export async function GET(request: Request) {
 
     if (error || !code || !state) {
       return NextResponse.redirect(
-        `${env.NEXT_PUBLIC_APP_URL}/login?error=auth.errors.oauthFailed`,
+        `${env.NEXT_PUBLIC_APP_URL}/login?error=auth.errors.oauthFailed`
       );
     }
 
@@ -28,7 +25,7 @@ export async function GET(request: Request) {
 
     if (!storedState || storedState !== state) {
       return NextResponse.redirect(
-        `${env.NEXT_PUBLIC_APP_URL}/login?error=auth.errors.oauthFailed`,
+        `${env.NEXT_PUBLIC_APP_URL}/login?error=auth.errors.oauthFailed`
       );
     }
 
@@ -85,8 +82,6 @@ export async function GET(request: Request) {
     response.cookies.set(OAUTH_STATE_COOKIE, '', { maxAge: 0, path: '/' });
     return response;
   } catch {
-    return NextResponse.redirect(
-      `${env.NEXT_PUBLIC_APP_URL}/login?error=auth.errors.oauthFailed`,
-    );
+    return NextResponse.redirect(`${env.NEXT_PUBLIC_APP_URL}/login?error=auth.errors.oauthFailed`);
   }
 }

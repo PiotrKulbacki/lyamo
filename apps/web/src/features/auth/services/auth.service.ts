@@ -10,11 +10,7 @@ import {
   type SafeUser,
   toSafeUser,
 } from '@web/features/auth/types';
-import {
-  generateToken,
-  hashToken,
-  signAccessToken,
-} from '@web/features/auth/lib/tokens';
+import { generateToken, hashToken, signAccessToken } from '@web/features/auth/lib/tokens';
 
 export { toSafeUser };
 
@@ -78,7 +74,7 @@ export function clearSessionCookie(response: NextResponse): void {
 
 export function buildAuthResponse(
   user: SafeUser,
-  tokens?: { accessToken: string; refreshToken: string },
+  tokens?: { accessToken: string; refreshToken: string }
 ): AuthResponse {
   return tokens ? { user, ...tokens } : { user };
 }
@@ -104,7 +100,7 @@ export async function getUserFromSession(): Promise<SafeUser | null> {
 }
 
 export async function getUserFromBearerToken(
-  authorizationHeader: string | null,
+  authorizationHeader: string | null
 ): Promise<SafeUser | null> {
   if (!authorizationHeader?.startsWith('Bearer ')) {
     return null;

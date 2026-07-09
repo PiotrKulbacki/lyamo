@@ -118,9 +118,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
       </Pressable>
 
       <Pressable
-        onPress={() =>
-          router.push((mode === 'login' ? '/register' : '/login') as Href)
-        }
+        onPress={() => router.push((mode === 'login' ? '/register' : '/login') as Href)}
         disabled={isLoading}
       >
         <Text style={styles.link}>

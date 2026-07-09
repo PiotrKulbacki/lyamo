@@ -14,6 +14,7 @@
 **2026-07-09 — Faza 2 zakończona (Baza, Auth, i18n)**
 
 ### ORM & Baza danych
+
 - Wybrano **Prisma** w pakiecie `packages/database/`.
 - Schemat: `packages/database/prisma/schema.prisma`
 - Migracja inicjalizacyjna: `packages/database/prisma/migrations/20260709120000_init/migration.sql`
@@ -24,15 +25,18 @@
 - Build web: `migrate deploy && next build` (Vercel-ready)
 
 ### Walidacja Zod (shared)
+
 - Auth: `packages/shared/src/features/auth/schemas.ts` (`loginSchema`, `registerSchema`, silne hasło)
 - Transakcje: `packages/shared/src/features/transactions/schemas.ts` (`createTransactionSchema`, `updateTransactionSchema`)
 - Re-export: `packages/shared/src/schemas/index.ts`
 
 ### i18n
+
 - Klucze auth + transactions w `packages/shared/src/features/i18n/{en,de,pl,es}.json`
 - Helper `t()` i `translateError()` w `packages/shared/src/features/i18n/index.ts`
 
 ### Auth Web (`apps/web`)
+
 - t3-env: `apps/web/src/env.ts`
 - Route Handlers: `/api/auth/{register,login,logout,me,refresh,google,google/callback}`
 - Serwisy: `apps/web/src/features/auth/services/auth.service.ts`
@@ -40,6 +44,7 @@
 - Web sesje: httpOnly cookie `sec_session`; Mobile: JWT + refresh token (header `x-client-platform: mobile`)
 
 ### Auth Mobile (`apps/mobile`)
+
 - Env: `apps/mobile/src/env.ts` (Zod)
 - SecureStore: `apps/mobile/src/features/auth/lib/token-storage.ts`
 - Serwis API: `apps/mobile/src/features/auth/services/auth.service.ts`

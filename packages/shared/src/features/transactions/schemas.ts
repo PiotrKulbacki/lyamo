@@ -26,10 +26,11 @@ const transactionBaseSchema = z.object({
 
 export const createTransactionSchema = transactionBaseSchema;
 
-export const updateTransactionSchema = transactionBaseSchema.partial().refine(
-  (data) => Object.keys(data).length > 0,
-  { message: TRANSACTION_ERROR_CODES.INVALID_AMOUNT },
-);
+export const updateTransactionSchema = transactionBaseSchema
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: TRANSACTION_ERROR_CODES.INVALID_AMOUNT,
+  });
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
 export type UpdateTransactionInput = z.infer<typeof updateTransactionSchema>;
