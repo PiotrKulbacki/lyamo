@@ -11,6 +11,36 @@
 
 ## Latest Handoff Log
 
+**2026-07-09 — Faza 2.1 (utwardzenie fundamentu przed Fazą 3)**
+
+### Auth guard
+
+- **Web:** `apps/web/src/middleware.ts` — przekierowanie niezalogowanych na `/login`, zalogowanych z `/login`/`/register` na `/`
+- Publiczne ścieżki: `/login`, `/register`, `/api/auth/*`, `/api/health`
+- **Mobile:** `apps/mobile/src/features/auth/components/AuthGuard.tsx` — redirect + loader w `app/_layout.tsx`
+
+### Supabase — dual connection strings
+
+- `DATABASE_URL` — Transaction Pooler (port **6543**, `?pgbouncer=true`) — runtime aplikacji
+- `DIRECT_DATABASE_URL` — Direct connection (port **5432**) — migracje Prisma
+- Schemat: `packages/database/prisma/schema.prisma` (`directUrl`)
+- Dokumentacja w `.env.example`
+
+### Seed danych deweloperskich
+
+- `packages/database/prisma/seed.ts`
+- Skrypt: `npm run db:seed`
+- Dev user: `dev@smart-expense.local` / `Secure1!`
+- Przykładowe transakcje (PLN/EUR/GBP), recurring expense, kursy walut
+
+### Health check
+
+- `GET /api/health` — status `ok` + ping bazy (`SELECT 1`), publiczny endpoint
+
+**Następny agent:** Rozpocznij Fazę 3 — moduł wielowalutowości (ExchangeRate API + fallback) i skaner AI z In-Memory Buffer.
+
+---
+
 **2026-07-09 — Faza 2 zakończona (Baza, Auth, i18n)**
 
 ### ORM & Baza danych
@@ -21,7 +51,7 @@
 - Tabele: `users`, `accounts`, `sessions`, `refresh_tokens`, `transactions`, `recurring_expenses`, `exchange_rates`
 - Indeksy: `transactions(userId, date)`, `recurring_expenses(userId, nextDueDate)`
 - Klient Prisma: `packages/database/src/index.ts` → import `@smart-expense-control/database`
-- Skrypty root: `db:generate`, `db:migrate`, `db:migrate:deploy`, `db:status`
+- Skrypty root: `db:generate`, `db:migrate`, `db:migrate:deploy`, `db:status`, `db:seed`
 - Build web: `migrate deploy && next build` (Vercel-ready)
 
 ### Walidacja Zod (shared)
@@ -51,9 +81,14 @@
 - Ekrany: `app/login.tsx`, `app/register.tsx` z toast (`react-native-toast-message`)
 - Context: `AuthProvider` w `app/_layout.tsx`
 
-**Następny agent:** Rozpocznij Fazę 3 — moduł wielowalutowości (ExchangeRate API + fallback) i skaner AI z In-Memory Buffer.
-
 ## Ostatnie zmiany
+
+**2026-07-09 — Faza 2.1 (utwardzenie fundamentu)**
+
+- Dodano auth guard (middleware web + AuthGuard mobile).
+- Skonfigurowano dual Supabase connection strings (`DATABASE_URL` pooler + `DIRECT_DATABASE_URL`).
+- Dodano seed deweloperski (`npm run db:seed`) z przykładowym użytkownikiem i danymi.
+- Dodano endpoint `GET /api/health` do monitoringu deployu.
 
 **2026-07-09 — Faza 2 zakończona**
 
