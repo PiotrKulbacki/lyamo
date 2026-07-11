@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { registerSchema } from '@shared/features/auth/schemas';
+import { getFinancialMonthStartDayFromDate } from '@shared/features/billing/financial-month';
 import { prisma } from '@smart-expense-control/database';
 import {
   buildAuthResponse,
@@ -30,12 +31,15 @@ export async function POST(request: Request) {
     }
 
     const passwordHash = await hashPassword(password);
+    const now = new Date();
 
     const user = await prisma.user.create({
       data: {
         email,
         passwordHash,
         name: name ?? null,
+        financialMonthStartDay: getFinancialMonthStartDayFromDate(now),
+        lastQuotaResetAt: now,
       },
     });
 

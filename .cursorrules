@@ -6,6 +6,7 @@
 2. **Nie cofaj kodu:** Nigdy nie cofaj kodu do wcześniejszego stanu (nie usuwaj działających implementacji) bez wyraźnego polecenia od użytkownika.
 3. **Błędy UI przez toast:** Błędy dla użytkownika (np. błędy autoryzacji czy logowania) muszą być zawsze obsługiwane za pomocą wyskakujących powiadomień typu `toast`. Nigdy nie renderuj błędów jako statycznego tekstu pod przyciskami lub inputami.
 4. **i18n bez hardkodu:** Zakaz hardkodowania tekstów w komponentach. Zawsze używaj funkcji tłumaczeń i plików JSON z pakietu `@shared/features/i18n`.
+5. **Zakaz autonomicznego rozszerzania zakresu:** Agentowi surowo zabrania się autonomicznego dodawania, planowania lub sugerowania nowych funkcji systemu w kolejnych fazach bez wcześniejszego, wyraźnego zapytania użytkownika i uzyskania jego jednoznacznej zgody. Każda nowa funkcja przed wpisaniem do kamieni milowych musi zostać zatwierdzona przez użytkownika.
 
 ## Architektura Monorepo
 

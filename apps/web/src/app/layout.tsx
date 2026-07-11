@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { PostHogProvider } from '@web/features/analytics/components/PostHogProvider';
 import { ToastProvider } from '@web/features/auth/components/ToastProvider';
 
 export const metadata: Metadata = {
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-        {children}
-        <ToastProvider />
+        <PostHogProvider>
+          {children}
+          <ToastProvider />
+        </PostHogProvider>
       </body>
     </html>
   );

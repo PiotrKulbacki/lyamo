@@ -1,32 +1,60 @@
 export type PlanType = 'FREE' | 'PRO';
 
+export const UNLIMITED_QUOTA = Number.MAX_SAFE_INTEGER;
+
 export const PLAN_LIMITS = {
-  FREE: { aiScansPerMonth: 3 },
-  PRO: { aiScansPerMonth: 150 },
+  FREE: {
+    aiScansPerMonth: 3,
+    aiChatMessagesPerMonth: 10,
+  },
+  PRO: {
+    aiScansPerMonth: 150,
+    aiChatMessagesPerMonth: UNLIMITED_QUOTA,
+  },
 } as const;
 
-export type AiScanQuotaStatus = {
+export type QuotaStatus = {
   limit: number;
   used: number;
   remaining: number;
-  canScan: boolean;
+  canUse: boolean;
   isBlocked: boolean;
 };
+
+export type AiScanQuotaStatus = QuotaStatus & {
+  canScan: boolean;
+};
+
+function buildQuotaStatus(limit: number, used: number): QuotaStatus {
+  const remaining = Math.max(0, limit - used);
+  const canUse = used < limit;
+
+  return {
+    limit,
+    used,
+    remaining,
+    canUse,
+    isBlocked: !canUse,
+  };
+}
 
 export function getAiScanLimit(plan: PlanType): number {
   return PLAN_LIMITS[plan].aiScansPerMonth;
 }
 
+export function getAiChatLimit(plan: PlanType): number {
+  return PLAN_LIMITS[plan].aiChatMessagesPerMonth;
+}
+
 export function getAiScanQuotaStatus(plan: PlanType, scansUsed: number): AiScanQuotaStatus {
-  const limit = getAiScanLimit(plan);
-  const remaining = Math.max(0, limit - scansUsed);
-  const canScan = scansUsed < limit;
+  const status = buildQuotaStatus(getAiScanLimit(plan), scansUsed);
 
   return {
-    limit,
-    used: scansUsed,
-    remaining,
-    canScan,
-    isBlocked: !canScan,
+    ...status,
+    canScan: status.canUse,
   };
+}
+
+export function getAiChatQuotaStatus(plan: PlanType, messagesUsed: number): QuotaStatus {
+  return buildQuotaStatus(getAiChatLimit(plan), messagesUsed);
 }

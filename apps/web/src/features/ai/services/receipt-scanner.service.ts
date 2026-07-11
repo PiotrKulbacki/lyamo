@@ -12,6 +12,8 @@ import {
   type ReceiptScanResult,
 } from '@shared/features/transactions/schemas';
 import { env } from '@web/env';
+import { ANALYTICS_EVENTS } from '@web/features/analytics/events';
+import { captureServerEvent } from '@web/features/analytics/posthog-server';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = 'gpt-4o-mini';
@@ -115,26 +117,34 @@ async function callOpenAiVision(base64: string, mimeType: string): Promise<strin
   return content;
 }
 
-export async function checkAiScanQuota(userId: string): Promise<string | null> {
+export type AiScanQuotaCheckResult =
+  | { ok: true; plan: PlanType }
+  | { ok: false; error: string };
+
+export async function checkAiScanQuota(userId: string): Promise<AiScanQuotaCheckResult> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { currentPlan: true, monthlyAiScansCount: true },
   });
 
   if (!user) {
-    return RECEIPT_SCAN_ERROR_CODES.AI_FAILED;
+    return { ok: false, error: RECEIPT_SCAN_ERROR_CODES.AI_FAILED };
   }
 
   const plan = user.currentPlan as PlanType;
   const limit = getAiScanLimit(plan);
 
   if (user.monthlyAiScansCount >= limit) {
-    return plan === 'FREE'
-      ? RECEIPT_SCAN_ERROR_CODES.QUOTA_EXCEEDED
-      : RECEIPT_SCAN_ERROR_CODES.MONTHLY_LIMIT_REACHED;
+    return {
+      ok: false,
+      error:
+        plan === 'FREE'
+          ? RECEIPT_SCAN_ERROR_CODES.QUOTA_EXCEEDED
+          : RECEIPT_SCAN_ERROR_CODES.MONTHLY_LIMIT_REACHED,
+    };
   }
 
-  return null;
+  return { ok: true, plan };
 }
 
 export async function getUserAiScanQuota(userId: string): Promise<AiScanQuotaStatus | null> {
@@ -166,9 +176,9 @@ export async function scanReceiptFromFile(
     return { error: fileError };
   }
 
-  const quotaError = await checkAiScanQuota(userId);
-  if (quotaError) {
-    return { error: quotaError };
+  const quota = await checkAiScanQuota(userId);
+  if (!quota.ok) {
+    return { error: quota.error };
   }
 
   try {
@@ -188,6 +198,12 @@ export async function scanReceiptFromFile(
     }
 
     await incrementAiScanCount(userId);
+
+    captureServerEvent(userId, ANALYTICS_EVENTS.AI_SCAN_COMPLETED, {
+      userId,
+      plan: quota.plan,
+      needsManualReview: result.needsManualReview,
+    });
 
     return {
       draft: {

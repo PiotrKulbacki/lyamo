@@ -109,5 +109,29 @@
       "fetchFailed": "Nie udało się pobrać kursów walut. Używam zapisanych kursów",
       "rateUnavailable": "Kurs wymiany niedostępny dla tej pary walut"
     }
+  },
+  "api": {
+    "errors": {
+      "rateLimitExceeded": "Zbyt wiele żądań. Poczekaj chwilę i spróbuj ponownie"
+    }
+  },
+  "chat": {
+    "labels": {
+      "sendMessage": "Wyślij wiadomość",
+      "upgradeToPro": "Przejdź na Pro"
+    },
+    "status": {
+      "thinking": "Myślę...",
+      "messagesRemaining": "Pozostało {{count}} wiadomości w tym miesiącu"
+    },
+    "success": {
+      "replied": "Otrzymano odpowiedź"
+    },
+    "errors": {
+      "invalidMessage": "Wprowadź prawidłową wiadomość",
+      "quotaExceeded": "Wykorzystałeś 10 darmowych wiadomości czatu. Przejdź na Pro, aby korzystać bez limitu",
+      "monthlyLimitReached": "Osiągnięto miesięczny limit wiadomości czatu. Spróbuj ponownie w przyszłym miesiącu",
+      "aiFailed": "Zapytanie do czatu nie powiodło się. Spróbuj ponownie"
+    }
   }
 }
