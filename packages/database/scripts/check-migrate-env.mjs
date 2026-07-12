@@ -3,8 +3,7 @@
  * Used to debug Vercel P1001 connection failures.
  */
 
-const DEBUG_ENDPOINT =
-  'http://127.0.0.1:7528/ingest/e3c1f8a3-0097-405d-aadf-389a4a28577c';
+const DEBUG_ENDPOINT = 'http://127.0.0.1:7528/ingest/e3c1f8a3-0097-405d-aadf-389a4a28577c';
 const SESSION_ID = '1200b1';
 
 function parseDbUrl(url) {
