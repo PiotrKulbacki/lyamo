@@ -22,7 +22,7 @@
   - `checkout.session.completed` → PRO, `stripeCustomerId`, reset liczników, `financialMonthStartDay` = dzień wykupu.
   - `customer.subscription.updated` → PRO przy `active`/`trialing`/`past_due` (grace 24h); FREE po wygaśnięciu grace lub `canceled`/`unpaid`; **anulowanie na koniec okresu** (`cancel_at_period_end`) = nadal PRO do końca opłaconego okresu.
   - `customer.subscription.deleted` → FREE (koniec opłaconego okresu).
-- **Grace `past_due`:** 24h PRO, potem downgrade (cron `GET /api/cron/downgrade-past-due` co godzinę).
+- **Grace `past_due`:** 24h PRO, potem downgrade (`GET /api/cron/downgrade-past-due` co godzinę — zewnętrzny scheduler, np. cron-job.org; nie w `vercel.json` z powodu limitu Hobby).
 - **Analityka:** `subscription_upgraded` przy FREE → PRO.
 
 ### Reset limitów AI (Vercel Cron)
@@ -105,7 +105,7 @@ Klucze `chat.*`, `scanner.*`, `api.errors.rateLimitExceeded` w `en`, `pl`, `de`,
 **2026-07-10 — Utwardzenie Fazy 5 (idempotency, grace past_due, cykl limitów, rate limit)**
 
 - Idempotency webhooków Stripe (`processed_stripe_events`, `stripe-webhook-idempotency.ts`).
-- Grace `past_due`: 24h PRO, cron `downgrade-past-due` co godzinę.
+- Grace `past_due`: 24h PRO, cron `downgrade-past-due` co godzinę (cron-job.org + `CRON_SECRET`).
 - Anulowanie subskrypcji: PRO do końca opłaconego okresu (`active` + `cancel_at_period_end`).
 - Reset limitów: `financialMonthStartDay` (rejestracja / dzień wykupu PRO), cron dzienny.
 - Rate limit: osobne kubełki scan/chat, fail-closed w produkcji.

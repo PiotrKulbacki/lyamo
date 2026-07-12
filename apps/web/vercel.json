@@ -3,10 +3,6 @@
     {
       "path": "/api/cron/reset-quotas",
       "schedule": "5 0 * * *"
-    },
-    {
-      "path": "/api/cron/downgrade-past-due",
-      "schedule": "0 * * * *"
     }
   ]
 }
