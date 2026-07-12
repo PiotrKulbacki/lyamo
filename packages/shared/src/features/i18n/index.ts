@@ -63,7 +63,9 @@ export function translateError(code: string, locale: Locale = DEFAULT_LOCALE): s
     code.startsWith('transactions.') ||
     code.startsWith('recurring.') ||
     code.startsWith('scanner.') ||
-    code.startsWith('currency.')
+    code.startsWith('chat.') ||
+    code.startsWith('currency.') ||
+    code.startsWith('api.')
   ) {
     return t(code, locale);
   }

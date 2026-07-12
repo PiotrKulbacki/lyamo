@@ -1,10 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { getAiScanLimit, getAiScanQuotaStatus, PLAN_LIMITS } from './plan-limits';
+import {
+  getAiChatLimit,
+  getAiChatQuotaStatus,
+  getAiScanLimit,
+  getAiScanQuotaStatus,
+  PLAN_LIMITS,
+  UNLIMITED_QUOTA,
+} from './plan-limits';
 
 describe('plan-limits', () => {
   it('defines FREE and PRO scan limits', () => {
     expect(PLAN_LIMITS.FREE.aiScansPerMonth).toBe(3);
     expect(PLAN_LIMITS.PRO.aiScansPerMonth).toBe(150);
+  });
+
+  it('defines chat limits', () => {
+    expect(PLAN_LIMITS.FREE.aiChatMessagesPerMonth).toBe(10);
+    expect(PLAN_LIMITS.PRO.aiChatMessagesPerMonth).toBe(UNLIMITED_QUOTA);
   });
 
   it('reports remaining scans for FREE user', () => {
@@ -25,5 +37,18 @@ describe('plan-limits', () => {
     const status = getAiScanQuotaStatus('PRO', 150);
     expect(status.canScan).toBe(false);
     expect(status.isBlocked).toBe(true);
+  });
+
+  it('blocks FREE user after 10 chat messages', () => {
+    const status = getAiChatQuotaStatus('FREE', 10);
+    expect(status.canUse).toBe(false);
+    expect(status.isBlocked).toBe(true);
+    expect(getAiChatLimit('FREE')).toBe(10);
+  });
+
+  it('allows PRO user unlimited chat messages in practice', () => {
+    const status = getAiChatQuotaStatus('PRO', 10_000);
+    expect(status.canUse).toBe(true);
+    expect(status.isBlocked).toBe(false);
   });
 });

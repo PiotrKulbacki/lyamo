@@ -109,5 +109,29 @@
       "fetchFailed": "No se pudieron obtener los tipos de cambio. Usando tipos guardados",
       "rateUnavailable": "Tipo de cambio no disponible para este par de divisas"
     }
+  },
+  "api": {
+    "errors": {
+      "rateLimitExceeded": "Demasiadas solicitudes. Espera un momento e inténtalo de nuevo"
+    }
+  },
+  "chat": {
+    "labels": {
+      "sendMessage": "Enviar mensaje",
+      "upgradeToPro": "Actualizar a Pro"
+    },
+    "status": {
+      "thinking": "Pensando...",
+      "messagesRemaining": "{{count}} mensajes restantes este mes"
+    },
+    "success": {
+      "replied": "Respuesta recibida"
+    },
+    "errors": {
+      "invalidMessage": "Introduce un mensaje válido",
+      "quotaExceeded": "Has usado los 10 mensajes de chat gratuitos. Actualiza a Pro para chat ilimitado",
+      "monthlyLimitReached": "Límite mensual de chat alcanzado. Inténtalo de nuevo el próximo mes",
+      "aiFailed": "La solicitud de chat falló. Inténtalo de nuevo"
+    }
   }
 }

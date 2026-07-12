@@ -109,5 +109,29 @@
       "fetchFailed": "Could not fetch exchange rates. Using cached rates",
       "rateUnavailable": "Exchange rate unavailable for this currency pair"
     }
+  },
+  "api": {
+    "errors": {
+      "rateLimitExceeded": "Too many requests. Please wait a moment and try again"
+    }
+  },
+  "chat": {
+    "labels": {
+      "sendMessage": "Send message",
+      "upgradeToPro": "Upgrade to Pro"
+    },
+    "status": {
+      "thinking": "Thinking...",
+      "messagesRemaining": "{{count}} messages remaining this month"
+    },
+    "success": {
+      "replied": "Response received"
+    },
+    "errors": {
+      "invalidMessage": "Please enter a valid message",
+      "quotaExceeded": "You've used all 10 free chat messages. Upgrade to Pro for unlimited chat",
+      "monthlyLimitReached": "Monthly chat limit reached. Try again next month",
+      "aiFailed": "Chat request failed. Please try again"
+    }
   }
 }

@@ -1,6 +1,6 @@
 # Architektura — Smart Expense Control
 
-Aplikacja webowa (Next.js) + mobilna (Expo) do zarządzania finansami osobistymi z modułami AI (skaner paragonów, predykcyjny czat, analiza PDF).
+Aplikacja webowa (Next.js) + mobilna (Expo) do zarządzania finansami osobistymi z modułami AI (skaner paragonów, predykcyjny czat asystenta finansowego).
 
 ## Stack technologiczny
 
@@ -79,7 +79,7 @@ Zakaz hardkodowania tekstów w komponentach.
 
 - Rate limiting na API Route Handlers (nie globalne Middleware)
 - Fallback kursów walut z lokalnej bazy przy awarii zewnętrznego API
-- Quota limits AI (`monthly_ai_scans_count`) — ochrona przed nadużyciami
+- Quota limits AI (`monthly_ai_scans_count`, `monthly_ai_chat_count`) — ochrona przed nadużyciami
 - In-Memory Buffer dla OCR — brak permanentnego storage paragonów
 
 ## UX

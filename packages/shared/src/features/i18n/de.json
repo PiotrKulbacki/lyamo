@@ -109,5 +109,29 @@
       "fetchFailed": "Wechselkurse konnten nicht abgerufen werden. Gespeicherte Kurse werden verwendet",
       "rateUnavailable": "Wechselkurs für dieses Währungspaar nicht verfügbar"
     }
+  },
+  "api": {
+    "errors": {
+      "rateLimitExceeded": "Zu viele Anfragen. Bitte warten Sie einen Moment und versuchen Sie es erneut"
+    }
+  },
+  "chat": {
+    "labels": {
+      "sendMessage": "Nachricht senden",
+      "upgradeToPro": "Auf Pro upgraden"
+    },
+    "status": {
+      "thinking": "Denke nach...",
+      "messagesRemaining": "{{count}} Nachrichten verbleiben diesen Monat"
+    },
+    "success": {
+      "replied": "Antwort erhalten"
+    },
+    "errors": {
+      "invalidMessage": "Bitte geben Sie eine gültige Nachricht ein",
+      "quotaExceeded": "Sie haben alle 10 kostenlosen Chat-Nachrichten verbraucht. Upgraden Sie auf Pro für unbegrenzten Chat",
+      "monthlyLimitReached": "Monatliches Chat-Limit erreicht. Versuchen Sie es nächsten Monat erneut",
+      "aiFailed": "Chat-Anfrage fehlgeschlagen. Bitte versuchen Sie es erneut"
+    }
   }
 }

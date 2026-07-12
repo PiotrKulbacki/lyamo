@@ -2,12 +2,20 @@ import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import { jsonError } from '@web/features/auth/services/auth.service';
 import { scanReceiptFromFile } from '@web/features/ai/services/receipt-scanner.service';
+import { checkAiRateLimit } from '@web/lib/rate-limit';
+
+const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
 
 export async function POST(request: Request) {
   try {
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);
+    }
+
+    const rateLimit = await checkAiRateLimit(request, 'scan', user.id);
+    if (!rateLimit.allowed) {
+      return jsonError(RATE_LIMIT_ERROR, 429);
     }
 
     const formData = await request.formData();

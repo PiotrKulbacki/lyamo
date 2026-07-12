@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { prisma } from '@smart-expense-control/database';
+import { getFinancialMonthStartDayFromDate } from '@shared/features/billing/financial-month';
 import { env } from '@web/env';
 import { exchangeGoogleCode } from '@web/features/auth/lib/tokens';
 import { createWebSession, setSessionCookie } from '@web/features/auth/services/auth.service';
@@ -58,11 +59,14 @@ export async function GET(request: Request) {
           },
         });
       } else {
+        const now = new Date();
         user = await prisma.user.create({
           data: {
             email: googleProfile.email,
             name: googleProfile.name,
             avatarUrl: googleProfile.avatarUrl,
+            financialMonthStartDay: getFinancialMonthStartDayFromDate(now),
+            lastQuotaResetAt: now,
             accounts: {
               create: {
                 provider: 'google',
