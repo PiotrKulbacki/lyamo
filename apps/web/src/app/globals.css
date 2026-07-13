@@ -1,3 +1,108 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --void: #08080c;
+  --surface: #111118;
+  --elevated: #181820;
+  --border: rgba(232, 168, 73, 0.12);
+  --border-cool: rgba(61, 214, 195, 0.15);
+  --text: #e8e8ed;
+  --muted: #8888a0;
+  --warm: #e8a849;
+  --cool: #3dd6c3;
+}
+
+body {
+  @apply bg-void font-display text-[var(--text)] antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(232, 168, 73, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(61, 214, 195, 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(255, 107, 74, 0.04), transparent);
+  min-height: 100vh;
+}
+
+@layer components {
+  .panel {
+    @apply bg-surface/80 relative overflow-hidden rounded-2xl border border-[var(--border)] backdrop-blur-md;
+  }
+
+  .panel::before {
+    content: '';
+    @apply pointer-events-none absolute inset-0 opacity-30;
+    background: linear-gradient(
+      135deg,
+      rgba(232, 168, 73, 0.06) 0%,
+      transparent 40%,
+      rgba(61, 214, 195, 0.04) 100%
+    );
+  }
+
+  .panel-cut {
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-xs;
+  }
+
+  .chip-ready {
+    @apply border-cool/30 bg-cool/10 text-cool;
+  }
+
+  .chip-needed {
+    @apply border-muted/30 bg-elevated text-muted;
+  }
+
+  .chip-new {
+    @apply border-warm/40 bg-warm/10 text-warm;
+  }
+
+  .nav-link {
+    @apply text-muted hover:text-warm font-mono text-xs uppercase tracking-[0.2em] transition-colors;
+  }
+
+  .nav-link-active {
+    @apply text-warm;
+  }
+
+  .btn-primary {
+    @apply text-void relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg px-5 py-2.5 font-mono text-sm font-medium transition-transform hover:scale-[1.02];
+    background: linear-gradient(135deg, var(--warm) 0%, #f0c060 50%, var(--cool) 100%);
+  }
+
+  .btn-ghost {
+    @apply bg-elevated/50 text-muted hover:border-warm/30 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border)] px-4 py-2 font-mono text-sm transition-colors hover:text-[var(--text)];
+  }
+
+  .auth-input {
+    @apply bg-elevated/50 font-display placeholder:text-muted focus:border-warm/30 focus:ring-warm/20 mt-1 w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm text-[var(--text)] transition-colors focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .auth-label {
+    @apply text-muted block text-sm font-medium;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(4px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(4px) rotate(-360deg);
+  }
+}
+
+.orbit-dot {
+  animation: orbit 12s linear infinite;
+}
+
+.grid-floor {
+  background-image:
+    linear-gradient(rgba(232, 168, 73, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 168, 73, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+}

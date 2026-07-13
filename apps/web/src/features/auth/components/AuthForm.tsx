@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { loginSchema, registerSchema } from '@shared/features/auth/schemas';
 import { translateError } from '@shared/features/i18n';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
+import { AuthDivider, OAuthGoogleButton } from '@web/features/auth/components/OAuthGoogleButton';
 
 type AuthFormProps = {
   mode: 'login' | 'register';
@@ -74,87 +75,86 @@ export function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-4">
-      {mode === 'register' && (
+    <div className="panel relative z-10 w-full max-w-md p-8">
+      <OAuthGoogleButton label={t('auth.labels.continueWithGoogle')} disabled={isLoading} />
+      <div className="mt-3">
+        <AuthDivider label={t('auth.labels.or')} />
+      </div>
+      <form onSubmit={handleSubmit} className="relative z-10 mt-4 flex flex-col gap-4">
+        {mode === 'register' && (
+          <div>
+            <label htmlFor="name" className="auth-label">
+              {t('auth.labels.name')}
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
+              className="auth-input"
+            />
+          </div>
+        )}
+
         <div>
-          <label htmlFor="name" className="mb-1 block text-sm font-medium text-gray-700">
-            {t('auth.labels.name')}
+          <label htmlFor="email" className="auth-label">
+            {t('auth.labels.email')}
           </label>
           <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={isLoading}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
-          />
-        </div>
-      )}
-
-      <div>
-        <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
-          {t('auth.labels.email')}
-        </label>
-        <input
-          id="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
-          {t('auth.labels.password')}
-        </label>
-        <input
-          id="password"
-          type="password"
-          autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
-        />
-      </div>
-
-      {mode === 'register' && (
-        <div>
-          <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium text-gray-700">
-            {t('auth.labels.confirmPassword')}
-          </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            autoComplete="new-password"
+            id="email"
+            type="email"
+            autoComplete="email"
             required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+            className="auth-input"
           />
         </div>
-      )}
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {t(mode === 'login' ? 'auth.labels.login' : 'auth.labels.register')}
-      </button>
+        <div>
+          <label htmlFor="password" className="auth-label">
+            {t('auth.labels.password')}
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
+            className="auth-input"
+          />
+        </div>
 
-      <a
-        href="/api/auth/google"
-        className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-      >
-        {t('auth.labels.continueWithGoogle')}
-      </a>
-    </form>
+        {mode === 'register' && (
+          <div>
+            <label htmlFor="confirmPassword" className="auth-label">
+              {t('auth.labels.confirmPassword')}
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={isLoading}
+              className="auth-input"
+            />
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="btn-primary relative z-10 w-full disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+        >
+          {t(mode === 'login' ? 'auth.labels.login' : 'auth.labels.register')}
+        </button>
+      </form>
+    </div>
   );
 }

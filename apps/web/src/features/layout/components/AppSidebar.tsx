@@ -62,10 +62,16 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
   const initials = (userName ?? userEmail).slice(0, 2).toUpperCase();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-full shrink-0 flex-col border-r border-gray-200 bg-white md:w-64">
-      <div className="border-b border-gray-200 px-4 py-5">
-        <Link href="/dashboard" className="text-lg font-bold tracking-tight text-gray-900">
-          {t('layout.brand')}
+    <aside className="bg-surface/80 sticky top-0 flex h-screen w-full shrink-0 flex-col border-r border-[var(--border)] backdrop-blur-md md:w-64">
+      <div className="border-b border-[var(--border)] px-4 py-5">
+        <Link href="/dashboard" className="group flex items-center gap-3">
+          <div className="relative flex h-9 w-9 items-center justify-center">
+            <div className="from-warm/20 to-cool/20 absolute inset-0 rounded-lg bg-gradient-to-br" />
+            <div className="text-warm relative font-mono text-sm font-bold">◈</div>
+          </div>
+          <span className="font-display text-lg font-semibold tracking-tight text-[var(--text)]">
+            {t('layout.brand')}
+          </span>
         </Link>
       </div>
 
@@ -76,10 +82,10 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+              className={`rounded-lg px-3 py-2 font-mono text-sm transition ${
                 isActive
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-warm/10 text-warm'
+                  : 'text-muted hover:bg-elevated/50 hover:text-[var(--text)]'
               }`}
             >
               {t(item.key)}
@@ -88,26 +94,28 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
         })}
       </nav>
 
-      <div className="border-t border-gray-200 px-4 py-4">
+      <div className="border-t border-[var(--border)] px-4 py-4">
         <div className="mb-3 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
+          <div className="from-warm/20 to-cool/20 text-warm flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br font-mono text-sm font-semibold">
             {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-gray-900">{userName ?? userEmail}</p>
-            <p className="truncate text-xs text-gray-500">{userPlan}</p>
+            <p className="truncate text-sm font-medium text-[var(--text)]">
+              {userName ?? userEmail}
+            </p>
+            <p className="text-muted truncate font-mono text-xs">{userPlan}</p>
           </div>
         </div>
 
         <div className="mb-3">
-          <LocaleSwitcher className="w-full rounded-lg border border-gray-300 bg-white px-2 py-2 text-sm" />
+          <LocaleSwitcher className="auth-input w-full py-2 text-sm" />
         </div>
 
         {userPlan === 'PRO' && (
           <button
             type="button"
             onClick={handleManageSubscription}
-            className="mb-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            className="btn-ghost mb-2 w-full"
           >
             {t('billing.labels.manageSubscription')}
           </button>
@@ -116,7 +124,7 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
         <button
           type="button"
           onClick={handleLogout}
-          className="w-full rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+          className="text-glow hover:bg-glow/10 w-full rounded-lg px-3 py-2 font-mono text-sm transition"
         >
           {t('auth.labels.logout')}
         </button>

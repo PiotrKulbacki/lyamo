@@ -43,10 +43,10 @@ function formatMoney(amount: number, currency: string, locale: string): string {
 function ChartSkeleton() {
   return (
     <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
-      <div className="mx-auto h-64 w-full max-w-sm animate-pulse rounded-full bg-gray-100" />
+      <div className="bg-elevated mx-auto h-64 w-full max-w-sm animate-pulse rounded-full" />
       <div className="space-y-3">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="h-5 animate-pulse rounded-lg bg-gray-100" />
+          <div key={index} className="bg-elevated h-5 animate-pulse rounded-lg" />
         ))}
       </div>
     </div>
@@ -149,9 +149,11 @@ export function CategoryDonutChart({
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <section className="panel relative z-10 p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">{t('dashboard.categories.title')}</h2>
+        <h2 className="font-display relative z-10 text-lg font-semibold text-[var(--text)]">
+          {t('dashboard.categories.title')}
+        </h2>
         <div ref={filterContainerRef} className="relative w-full sm:w-auto sm:min-w-[12rem]">
           <Select
             value={filterSelection}
@@ -183,13 +185,13 @@ export function CategoryDonutChart({
       {isFiltering ? (
         <ChartSkeleton />
       ) : categoryTotals.length === 0 ? (
-        <p className="mt-6 text-sm text-gray-500">{t('dashboard.chartFilter.empty')}</p>
+        <p className="text-muted relative z-10 mt-6 text-sm">{t('dashboard.chartFilter.empty')}</p>
       ) : (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
+        <div className="relative z-10 mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
           <div className="mx-auto h-64 w-full max-w-sm">
             {visibleCategoryTotals.length === 0 ? (
-              <div className="flex h-full items-center justify-center rounded-full border border-dashed border-gray-200 bg-gray-50 px-6 text-center">
-                <p className="text-sm text-gray-500">{t('dashboard.chartFilter.allHidden')}</p>
+              <div className="bg-elevated/50 flex h-full items-center justify-center rounded-full border border-dashed border-[var(--border)] px-6 text-center">
+                <p className="text-muted text-sm">{t('dashboard.chartFilter.allHidden')}</p>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
@@ -204,7 +206,7 @@ export function CategoryDonutChart({
                     outerRadius={96}
                     paddingAngle={2}
                     strokeWidth={2}
-                    stroke="#fff"
+                    stroke="var(--surface)"
                   >
                     {chartData.map((entry) => (
                       <Cell key={entry.category} fill={entry.fill} />
@@ -223,7 +225,7 @@ export function CategoryDonutChart({
           </div>
 
           <div className="space-y-1">
-            <p className="mb-2 text-xs text-gray-500">{t('dashboard.chartFilter.toggleHint')}</p>
+            <p className="text-muted mb-2 text-xs">{t('dashboard.chartFilter.toggleHint')}</p>
             {categoryTotals.map((item) => {
               const isHidden = hiddenCategories.has(item.category);
               const percentage =
@@ -238,7 +240,7 @@ export function CategoryDonutChart({
                   onClick={() => toggleCategory(item.category)}
                   aria-pressed={!isHidden}
                   className={cn(
-                    'flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 text-left text-sm transition hover:bg-gray-50',
+                    'hover:bg-elevated/50 flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 text-left text-sm transition',
                     isHidden && 'opacity-40'
                   )}
                 >
@@ -250,15 +252,18 @@ export function CategoryDonutChart({
                       )}
                       style={{ backgroundColor: fill }}
                     />
-                    <span className={cn('truncate text-gray-700', isHidden && 'line-through')}>
+                    <span className={cn('truncate text-[var(--text)]', isHidden && 'line-through')}>
                       {label}
                     </span>
                     {!isHidden && percentage !== null && (
-                      <span className="text-xs text-gray-400">{percentage}%</span>
+                      <span className="text-muted text-xs">{percentage}%</span>
                     )}
                   </div>
                   <span
-                    className={cn('shrink-0 font-medium text-gray-900', isHidden && 'line-through')}
+                    className={cn(
+                      'shrink-0 font-medium text-[var(--text)]',
+                      isHidden && 'line-through'
+                    )}
                   >
                     {formatMoney(item.amount, primaryCurrency, locale)}
                   </span>

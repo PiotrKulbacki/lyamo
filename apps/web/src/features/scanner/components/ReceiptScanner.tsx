@@ -138,12 +138,14 @@ export function ReceiptScanner() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t('scanner.labels.scanReceipt')}</h1>
-        <p className="mt-1 text-sm text-gray-600">{t('scanner.status.readyToConfirm')}</p>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)]">
+          {t('scanner.labels.scanReceipt')}
+        </h1>
+        <p className="text-muted mt-1 text-sm">{t('scanner.status.readyToConfirm')}</p>
       </div>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-wrap items-center gap-3">
+      <section className="panel relative z-10 p-6">
+        <div className="relative z-10 flex flex-wrap items-center gap-3">
           <input
             ref={fileInputRef}
             type="file"
@@ -162,17 +164,13 @@ export function ReceiptScanner() {
             type="button"
             disabled={isScanning || isBlocked}
             onClick={() => fileInputRef.current?.click()}
-            className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
           >
             {isScanning ? t('scanner.status.analyzing') : t('scanner.labels.uploadReceipt')}
           </button>
-          {isBlocked && (
-            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
-              {t('scanner.labels.scanBlocked')}
-            </span>
-          )}
+          {isBlocked && <span className="chip chip-needed">{t('scanner.labels.scanBlocked')}</span>}
           {quota && !isBlocked && (
-            <span className="text-sm text-gray-500">
+            <span className="text-muted text-sm">
               {t('scanner.status.scansRemaining', { count: quota.remaining })}
             </span>
           )}
@@ -180,28 +178,24 @@ export function ReceiptScanner() {
       </section>
 
       {draft && (
-        <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <section className="panel relative z-10 p-6">
+          <h2 className="font-display relative z-10 text-lg font-semibold text-[var(--text)]">
             {t('scanner.labels.confirmExpense')}
           </h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="relative z-10 mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('dashboard.form.amount')}
-              </span>
+              <span className="auth-label">{t('dashboard.form.amount')}</span>
               <input
                 type="number"
                 step="0.01"
                 value={draft.amount}
                 disabled={isSaving}
                 onChange={(event) => setDraft({ ...draft, amount: Number(event.target.value) })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('dashboard.form.currency')}
-              </span>
+              <span className="auth-label">{t('dashboard.form.currency')}</span>
               <select
                 value={draft.currency}
                 disabled={isSaving}
@@ -211,7 +205,7 @@ export function ReceiptScanner() {
                     currency: event.target.value as ReceiptDraft['currency'],
                   })
                 }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               >
                 {(['PLN', 'EUR', 'GBP'] as const).map((currency) => (
                   <option key={currency} value={currency}>
@@ -221,14 +215,12 @@ export function ReceiptScanner() {
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('dashboard.form.category')}
-              </span>
+              <span className="auth-label">{t('dashboard.form.category')}</span>
               <select
                 value={draft.category}
                 disabled={isSaving}
                 onChange={(event) => setDraft({ ...draft, category: event.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               >
                 {TRANSACTION_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
@@ -238,9 +230,7 @@ export function ReceiptScanner() {
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('dashboard.form.date')}
-              </span>
+              <span className="auth-label">{t('dashboard.form.date')}</span>
               <input
                 type="date"
                 value={draft.date.slice(0, 10)}
@@ -248,28 +238,26 @@ export function ReceiptScanner() {
                 onChange={(event) =>
                   setDraft({ ...draft, date: new Date(event.target.value).toISOString() })
                 }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               />
             </label>
             <label className="block text-sm sm:col-span-2">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('dashboard.form.description')}
-              </span>
+              <span className="auth-label">{t('dashboard.form.description')}</span>
               <input
                 type="text"
                 value={draft.description ?? ''}
                 disabled={isSaving}
                 onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               />
             </label>
           </div>
-          <div className="mt-6 flex gap-3">
+          <div className="relative z-10 mt-6 flex gap-3">
             <button
               type="button"
               disabled={isSaving}
               onClick={() => void handleSave()}
-              className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+              className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
             >
               {t('transactions.labels.saveTransaction')}
             </button>
@@ -277,7 +265,7 @@ export function ReceiptScanner() {
               type="button"
               disabled={isSaving}
               onClick={() => setDraft(null)}
-              className="rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+              className="btn-ghost disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('dashboard.form.cancel')}
             </button>

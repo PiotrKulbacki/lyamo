@@ -289,41 +289,42 @@ export function AiChatView() {
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t('chat.page.title')}</h1>
-        <p className="mt-1 text-sm text-gray-600">{t('chat.page.subtitle')}</p>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)]">
+          {t('chat.page.title')}
+        </h1>
+        <p className="text-muted mt-1 text-sm">{t('chat.page.subtitle')}</p>
         {quota && !isBlocked && quota.remaining < Number.MAX_SAFE_INTEGER && (
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="text-muted mt-2 text-xs">
             {t('chat.status.messagesRemaining', { count: quota.remaining })}
           </p>
         )}
         {isBlocked && (
-          <p className="mt-2 text-xs font-medium text-amber-700">
-            {t('chat.errors.quotaExceeded')}
-          </p>
+          <p className="text-warm mt-2 text-xs font-medium">{t('chat.errors.quotaExceeded')}</p>
         )}
-        <p className="mt-2 text-xs text-gray-400">{t('chat.page.disclaimer')}</p>
+        <p className="text-muted mt-2 text-xs">{t('chat.page.disclaimer')}</p>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div ref={scrollContainerRef} className="flex-1 space-y-4 overflow-y-auto p-4">
+      <div className="panel relative z-10 flex flex-1 flex-col overflow-hidden">
+        <div
+          ref={scrollContainerRef}
+          className="relative z-10 flex-1 space-y-4 overflow-y-auto p-4"
+        >
           <div ref={topSentinelRef} className="h-px w-full shrink-0" aria-hidden />
 
           {isLoadingMore && (
-            <p className="py-1 text-center text-xs text-gray-500">
-              {t('chat.history.loadingOlder')}
-            </p>
+            <p className="text-muted py-1 text-center text-xs">{t('chat.history.loadingOlder')}</p>
           )}
 
           {isLoadingHistory && messages.length === 0 && (
             <div className="space-y-3">
-              <div className="h-5 w-28 animate-pulse rounded bg-gray-200" />
-              <div className="h-10 w-64 animate-pulse rounded-2xl bg-gray-200" />
-              <div className="h-10 w-56 animate-pulse rounded-2xl bg-gray-200" />
+              <div className="bg-elevated h-5 w-28 animate-pulse rounded" />
+              <div className="bg-elevated h-10 w-64 animate-pulse rounded-2xl" />
+              <div className="bg-elevated h-10 w-56 animate-pulse rounded-2xl" />
             </div>
           )}
 
           {!isLoadingHistory && messages.length === 0 && (
-            <p className="text-sm text-gray-500">{t('chat.page.empty')}</p>
+            <p className="text-muted text-sm">{t('chat.page.empty')}</p>
           )}
 
           {messages.map((message, index) => {
@@ -339,17 +340,17 @@ export function AiChatView() {
               <div key={message.id} className="space-y-2">
                 {headerLabel && (
                   <div className="flex items-center gap-3 py-2">
-                    <div className="h-px flex-1 bg-gray-200" />
-                    <p className="text-xs font-medium text-gray-500">{headerLabel}</p>
-                    <div className="h-px flex-1 bg-gray-200" />
+                    <div className="h-px flex-1 bg-[var(--border)]" />
+                    <p className="text-muted text-xs font-medium">{headerLabel}</p>
+                    <div className="h-px flex-1 bg-[var(--border)]" />
                   </div>
                 )}
 
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 ${
                     message.role === 'user'
-                      ? 'ml-auto bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
+                      ? 'btn-primary ml-auto'
+                      : 'bg-elevated text-[var(--text)]'
                   }`}
                 >
                   {message.content}
@@ -358,14 +359,17 @@ export function AiChatView() {
             );
           })}
           {isSending && (
-            <div className="max-w-[85%] rounded-2xl bg-gray-100 px-4 py-3 text-sm text-gray-600">
+            <div className="bg-elevated text-muted max-w-[85%] rounded-2xl px-4 py-3 text-sm">
               {t('chat.status.thinking')}
             </div>
           )}
           <div ref={bottomRef} />
         </div>
 
-        <form onSubmit={(event) => void handleSend(event)} className="border-t border-gray-200 p-4">
+        <form
+          onSubmit={(event) => void handleSend(event)}
+          className="relative z-10 border-t border-[var(--border)] p-4"
+        >
           <div className="flex gap-3">
             <input
               type="text"
@@ -373,12 +377,12 @@ export function AiChatView() {
               disabled={isSending || isBlocked}
               onChange={(event) => setInput(event.target.value)}
               placeholder={t('chat.page.placeholder')}
-              className="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+              className="auth-input flex-1"
             />
             <button
               type="submit"
               disabled={isSending || isBlocked || !input.trim()}
-              className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
             >
               {t('chat.labels.sendMessage')}
             </button>

@@ -191,7 +191,7 @@ export function SettingsView() {
   }
 
   if (isLoading) {
-    return <div className="h-64 animate-pulse rounded-2xl bg-gray-200" />;
+    return <div className="bg-elevated h-64 animate-pulse rounded-2xl" />;
   }
 
   if (!user) {
@@ -201,35 +201,37 @@ export function SettingsView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t('settings.title')}</h1>
-        <p className="mt-1 text-sm text-gray-600">{t('settings.subtitle')}</p>
+        <h1 className="font-display text-2xl font-bold text-[var(--text)]">
+          {t('settings.title')}
+        </h1>
+        <p className="text-muted mt-1 text-sm">{t('settings.subtitle')}</p>
       </div>
 
       <form onSubmit={(event) => void handleSave(event)} className="space-y-6">
-        <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">{t('settings.profile.title')}</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <section className="panel relative z-10 p-6">
+          <h2 className="font-display relative z-10 text-lg font-semibold text-[var(--text)]">
+            {t('settings.profile.title')}
+          </h2>
+          <div className="relative z-10 mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block text-sm sm:col-span-2">
-              <span className="mb-1 block font-medium text-gray-700">{t('auth.labels.name')}</span>
+              <span className="auth-label">{t('auth.labels.name')}</span>
               <input
                 type="text"
                 value={name}
                 disabled={isSaving}
                 onChange={(event) => setName(event.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('settings.labels.primaryCurrency')}
-              </span>
+              <span className="auth-label">{t('settings.labels.primaryCurrency')}</span>
               <select
                 value={primaryCurrency}
                 disabled={isSaving}
                 onChange={(event) =>
                   setPrimaryCurrency(event.target.value as typeof primaryCurrency)
                 }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               >
                 {(['PLN', 'EUR', 'GBP'] as const).map((currency) => (
                   <option key={currency} value={currency}>
@@ -239,9 +241,7 @@ export function SettingsView() {
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('settings.labels.financialMonthStartDay')}
-              </span>
+              <span className="auth-label">{t('settings.labels.financialMonthStartDay')}</span>
               <input
                 type="number"
                 min={FINANCIAL_MONTH_DAY_MIN}
@@ -249,13 +249,11 @@ export function SettingsView() {
                 value={financialMonthStartDay}
                 disabled={isSaving}
                 onChange={(event) => setFinancialMonthStartDay(Number(event.target.value))}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               />
             </label>
             <label className="block text-sm sm:col-span-2">
-              <span className="mb-1 block font-medium text-gray-700">
-                {t('settings.labels.defaultMonthlyBudget')}
-              </span>
+              <span className="auth-label">{t('settings.labels.defaultMonthlyBudget')}</span>
               <input
                 type="number"
                 min={1}
@@ -264,9 +262,9 @@ export function SettingsView() {
                 disabled={isSaving}
                 onChange={(event) => setDefaultMonthlyBudget(event.target.value)}
                 placeholder={t('settings.labels.defaultMonthlyBudgetPlaceholder')}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 disabled:opacity-50"
+                className="auth-input"
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="text-muted mt-1 text-xs">
                 {t('settings.labels.defaultMonthlyBudgetHint')}
               </p>
             </label>
@@ -274,7 +272,7 @@ export function SettingsView() {
           <button
             type="submit"
             disabled={isSaving}
-            className="mt-6 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+            className="btn-primary relative z-10 mt-6 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
           >
             {t('settings.labels.saveChanges')}
           </button>
@@ -283,31 +281,33 @@ export function SettingsView() {
 
       <RecurringExpensesSection primaryCurrency={primaryCurrency} />
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">{t('billing.labels.subscription')}</h2>
-        <p className="mt-2 text-sm text-gray-600">
+      <section className="panel relative z-10 p-6">
+        <h2 className="font-display relative z-10 text-lg font-semibold text-[var(--text)]">
+          {t('billing.labels.subscription')}
+        </h2>
+        <p className="text-muted relative z-10 mt-2 text-sm">
           {t('billing.labels.currentPlan', { plan: user.currentPlan })}
         </p>
         {user.currentPlan === 'FREE' && (
           <>
-            <div className="mt-4">
+            <div className="relative z-10 mt-4">
               <ProPriceDisplay currency={checkoutCurrency} />
             </div>
-            <div className="mt-4">
-              <p className="mb-2 text-sm font-medium text-gray-700">
+            <div className="relative z-10 mt-4">
+              <p className="mb-2 text-sm font-medium text-[var(--text)]">
                 {t('billing.labels.paymentCurrency')}
               </p>
               <BillingCurrencySwitcher value={checkoutCurrency} onChange={setCheckoutCurrency} />
             </div>
           </>
         )}
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="relative z-10 mt-4 flex flex-wrap gap-3">
           {user.currentPlan === 'FREE' ? (
             <button
               type="button"
               disabled={isBillingLoading}
               onClick={() => void handleUpgrade()}
-              className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+              className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
             >
               {t('billing.labels.upgradeToPro')}
             </button>
@@ -316,7 +316,7 @@ export function SettingsView() {
               type="button"
               disabled={isBillingLoading}
               onClick={() => void handleManageSubscription()}
-              className="rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+              className="btn-ghost disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('billing.labels.manageSubscription')}
             </button>
@@ -324,11 +324,13 @@ export function SettingsView() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-red-200 bg-red-50 p-6">
-        <h2 className="text-lg font-semibold text-red-900">{t('settings.danger.title')}</h2>
-        <p className="mt-2 text-sm text-red-800">{t('settings.danger.description')}</p>
-        <label className="mt-4 block text-sm">
-          <span className="mb-1 block font-medium text-red-900">
+      <section className="panel border-glow/30 relative z-10 p-6">
+        <h2 className="font-display text-glow relative z-10 text-lg font-semibold">
+          {t('settings.danger.title')}
+        </h2>
+        <p className="text-muted relative z-10 mt-2 text-sm">{t('settings.danger.description')}</p>
+        <label className="relative z-10 mt-4 block text-sm">
+          <span className="auth-label text-glow">
             {t('settings.danger.confirmLabel', { email: user.email })}
           </span>
           <input
@@ -336,14 +338,14 @@ export function SettingsView() {
             value={deleteConfirmation}
             disabled={isDeleting}
             onChange={(event) => setDeleteConfirmation(event.target.value)}
-            className="w-full rounded-lg border border-red-300 bg-white px-3 py-2 disabled:opacity-50"
+            className="auth-input border-glow/30 focus:border-glow/50 focus:ring-glow/20"
           />
         </label>
         <button
           type="button"
           disabled={isDeleting}
           onClick={() => void handleDeleteAccount()}
-          className="mt-4 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
+          className="bg-glow text-void hover:bg-glow/90 relative z-10 mt-4 rounded-xl px-4 py-2.5 font-mono text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
         >
           {t('settings.danger.deleteAccount')}
         </button>
