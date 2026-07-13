@@ -14,7 +14,8 @@ import { useT } from '@web/features/i18n/LocaleProvider';
 import {
   getCategoryIcon,
   getCategoryIconStyles,
-  getCategoryLabelKey,
+  resolveCategoryLabel,
+  type CategoryDisplayContext,
 } from '@web/features/transactions/lib/category-config';
 
 export type RecentTransaction = {
@@ -31,6 +32,7 @@ type RecentTransactionsListProps = {
   transactions: RecentTransaction[];
   primaryCurrency: string;
   locale: string;
+  categoryDisplayContext?: CategoryDisplayContext;
   isRefreshing?: boolean;
   onEdit: (transaction: RecentTransaction) => void;
   onDelete: (transactionId: string) => void;
@@ -68,6 +70,7 @@ export function RecentTransactionsList({
   transactions,
   primaryCurrency,
   locale,
+  categoryDisplayContext,
   isRefreshing = false,
   onEdit,
   onDelete,
@@ -125,7 +128,7 @@ export function RecentTransactionsList({
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-[var(--text)]">
-                        {t(getCategoryLabelKey(transaction.category))}
+                        {resolveCategoryLabel(transaction.category, t, categoryDisplayContext)}
                       </p>
                       {transaction.description && (
                         <p className="text-muted mt-0.5 truncate text-sm">

@@ -8,10 +8,13 @@ import { Button } from '@web/components/ui/button';
 import { Input } from '@web/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@web/components/ui/popover';
 import { Progress } from '@web/components/ui/progress';
+import { DashboardDailyStats } from '@web/features/dashboard/components/DashboardDailyStats';
+import type { DailyBudgetStats } from '@web/features/dashboard/lib/dashboard-daily-stats';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
 
 type BudgetProgressProps = {
   totalSpent: number;
+  dailyStats: DailyBudgetStats;
   currentMonthBudget: number | null;
   primaryCurrency: string;
   locale: string;
@@ -28,6 +31,7 @@ function formatMoney(amount: number, currency: string, locale: string): string {
 
 export function BudgetProgress({
   totalSpent,
+  dailyStats,
   currentMonthBudget,
   primaryCurrency,
   locale,
@@ -40,7 +44,17 @@ export function BudgetProgress({
   const [isSaving, setIsSaving] = useState(false);
 
   if (currentMonthBudget == null || currentMonthBudget <= 0) {
-    return null;
+    return (
+      <div className="mt-4">
+        <DashboardDailyStats
+          avgSpentPerDay={dailyStats.avgSpentPerDay}
+          avgRemainingPerDay={dailyStats.avgRemainingPerDay}
+          cycleEnded={dailyStats.cycleEnded}
+          primaryCurrency={primaryCurrency}
+          locale={locale}
+        />
+      </div>
+    );
   }
 
   const budget = currentMonthBudget;
@@ -144,6 +158,13 @@ export function BudgetProgress({
           })}
         </span>
       </div>
+      <DashboardDailyStats
+        avgSpentPerDay={dailyStats.avgSpentPerDay}
+        avgRemainingPerDay={dailyStats.avgRemainingPerDay}
+        cycleEnded={dailyStats.cycleEnded}
+        primaryCurrency={primaryCurrency}
+        locale={locale}
+      />
     </div>
   );
 }

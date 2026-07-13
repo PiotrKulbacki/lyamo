@@ -1,4 +1,13 @@
 import { z } from 'zod';
+import { parseCalendarDateInput } from './calendar-date';
+
+export { TRANSACTION_CATEGORIES, type TransactionCategory } from './categories';
+export {
+  getInclusiveTransactionPeriodEnd,
+  parseCalendarDateInput,
+  toCalendarDateInputValue,
+  toLocalDateInputValue,
+} from './calendar-date';
 
 export const TRANSACTION_ERROR_CODES = {
   INVALID_AMOUNT: 'transactions.errors.invalidAmount',
@@ -28,20 +37,6 @@ export const RECEIPT_SCAN_ERROR_CODES = {
   PARSE_FAILED: 'scanner.errors.parseFailed',
 } as const;
 
-export const TRANSACTION_CATEGORIES = [
-  'Groceries',
-  'Transport',
-  'Coffee',
-  'Restaurants',
-  'Entertainment',
-  'Shopping',
-  'Utilities',
-  'Health',
-  'Other',
-] as const;
-
-export type TransactionCategory = (typeof TRANSACTION_CATEGORIES)[number];
-
 const currencyEnum = z.enum(['PLN', 'EUR', 'GBP']);
 
 const transactionBaseSchema = z.object({
@@ -50,11 +45,15 @@ const transactionBaseSchema = z.object({
     .positive(TRANSACTION_ERROR_CODES.INVALID_AMOUNT)
     .max(999_999_999.99, TRANSACTION_ERROR_CODES.INVALID_AMOUNT),
   currency: currencyEnum,
-  category: z.enum(TRANSACTION_CATEGORIES, {
-    errorMap: () => ({ message: TRANSACTION_ERROR_CODES.INVALID_CATEGORY }),
-  }),
+  category: z
+    .string()
+    .min(1, TRANSACTION_ERROR_CODES.INVALID_CATEGORY)
+    .max(100, TRANSACTION_ERROR_CODES.INVALID_CATEGORY),
   description: z.string().max(500, TRANSACTION_ERROR_CODES.INVALID_DESCRIPTION).optional(),
-  date: z.coerce.date({ invalid_type_error: TRANSACTION_ERROR_CODES.INVALID_DATE }),
+  date: z.preprocess(
+    parseCalendarDateInput,
+    z.date({ invalid_type_error: TRANSACTION_ERROR_CODES.INVALID_DATE })
+  ),
   isAiScanned: z.boolean().optional().default(false),
 });
 
@@ -78,11 +77,15 @@ export const receiptScanResultSchema = z.object({
     .positive(TRANSACTION_ERROR_CODES.INVALID_AMOUNT)
     .max(999_999_999.99, TRANSACTION_ERROR_CODES.INVALID_AMOUNT),
   currency: currencyEnum,
-  category: z.enum(TRANSACTION_CATEGORIES, {
-    errorMap: () => ({ message: TRANSACTION_ERROR_CODES.INVALID_CATEGORY }),
-  }),
+  category: z
+    .string()
+    .min(1, TRANSACTION_ERROR_CODES.INVALID_CATEGORY)
+    .max(100, TRANSACTION_ERROR_CODES.INVALID_CATEGORY),
   description: z.string().max(500, TRANSACTION_ERROR_CODES.INVALID_DESCRIPTION).optional(),
-  date: z.coerce.date({ invalid_type_error: TRANSACTION_ERROR_CODES.INVALID_DATE }),
+  date: z.preprocess(
+    parseCalendarDateInput,
+    z.date({ invalid_type_error: TRANSACTION_ERROR_CODES.INVALID_DATE })
+  ),
   needsManualReview: z.boolean().default(false),
 });
 

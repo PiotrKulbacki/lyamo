@@ -61,7 +61,7 @@ async function main() {
         userId: user.id,
         amount: 12.4,
         currency: 'GBP',
-        category: 'Coffee',
+        category: 'CoffeeShop',
         description: '[seed] Coffee shop',
         date: new Date('2026-07-05'),
         isAiScanned: true,

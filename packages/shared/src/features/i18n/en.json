@@ -43,18 +43,23 @@
       "editTransaction": "Edit expense",
       "editTransactionHint": "Update amount, category, or date for this expense.",
       "deleteTransaction": "Delete",
-      "addManualExpense": "Add expense manually",
+      "addManualExpense": "Add expense",
       "addManualExpenseHint": "Enter amount, category, and date for a new transaction."
     },
     "categories": {
       "groceries": "Groceries",
       "transport": "Transport",
-      "coffee": "Coffee",
+      "coffeeShop": "Coffee shop",
       "restaurants": "Restaurants",
       "entertainment": "Entertainment",
-      "shopping": "Shopping",
-      "utilities": "Utilities",
       "health": "Health",
+      "fuel": "Fuel",
+      "household": "Household chemicals",
+      "cosmetics": "Cosmetics",
+      "hotels": "Hotels",
+      "alcohol": "Alcohol",
+      "accounting": "Accounting",
+      "mechanic": "Mechanic",
       "other": "Other"
     },
     "success": {
@@ -92,9 +97,9 @@
   },
   "scanner": {
     "labels": {
-      "scanReceipt": "Scan receipt",
+      "scanDocument": "Scan",
       "confirmExpense": "Confirm expense",
-      "uploadReceipt": "Upload receipt photo",
+      "uploadDocument": "Upload document photo",
       "upgradeToPro": "Upgrade to Pro",
       "scanBlocked": "Scan limit reached"
     },
@@ -163,6 +168,8 @@
   },
   "layout": {
     "brand": "Smart Expense Control",
+    "brandLine1": "Smart Expense",
+    "brandLine2": "Control",
     "nav": {
       "features": "Features",
       "pricing": "Pricing",
@@ -260,6 +267,11 @@
       "editCurrentHint": "Override the budget for the current billing cycle only.",
       "updated": "Budget updated for this month"
     },
+    "daily": {
+      "avgSpent": "Avg. spent: {{amount}}/day",
+      "avgRemaining": "Avg. left to spend: {{amount}}/day",
+      "cycleEnd": "End of cycle"
+    },
     "recent": {
       "title": "Recent transactions",
       "emptyTitle": "No expenses this period",
@@ -282,9 +294,10 @@
       "cancel": "Cancel"
     },
     "cta": {
-      "addManual": "Add expense manually",
+      "addManual": "Add expense",
       "addManualHint": "Type in amount, category, and date",
-      "scanReceipt": "Scan receipt",
+      "scan": "Scan",
+      "scanWithQuota": "Scan {{used}}/{{limit}}",
       "scanReceiptHint": "AI extracts details from a photo"
     }
   },
@@ -310,6 +323,37 @@
       "defaultMonthlyBudgetPlaceholder": "e.g. 3000",
       "defaultMonthlyBudgetHint": "Renewable budget copied to each new billing cycle. First save also sets the current month.",
       "saveChanges": "Save changes"
+    },
+    "categories": {
+      "title": "Categories",
+      "subtitle": "Manage built-in and custom expense categories",
+      "add": "Add category",
+      "addTitle": "Add category",
+      "editTitle": "Edit category",
+      "edit": "Edit category",
+      "delete": "Delete category",
+      "deleteTitle": "Delete category?",
+      "deleteConfirm": "This custom category will be permanently removed.",
+      "deleteWithTransactions": "This category has {{count}} transactions. Choose a category to move them to before deleting.",
+      "migrateLabel": "Move transactions to",
+      "nameLabel": "Category name",
+      "namePlaceholder": "e.g. Subscriptions",
+      "colorLabel": "Color (optional)",
+      "success": {
+        "created": "Category created",
+        "updated": "Category updated",
+        "deleted": "Category deleted"
+      },
+      "errors": {
+        "invalidName": "Please enter a valid category name",
+        "invalidColor": "Please select a valid color",
+        "duplicateName": "A category with this name already exists",
+        "notFound": "Category not found",
+        "forbidden": "You cannot modify this category",
+        "hasTransactions": "This category contains transactions",
+        "invalidMigrateTarget": "Please choose a valid target category",
+        "builtInReadonly": "Built-in categories cannot be edited or deleted"
+      }
     },
     "success": {
       "updated": "Settings saved successfully",

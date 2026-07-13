@@ -14,22 +14,25 @@ import {
 import { useT } from '@web/features/i18n/LocaleProvider';
 import {
   getCategoryColor,
-  getCategoryLabelKey,
+  resolveCategoryLabel,
+  type CategoryDisplayContext,
 } from '@web/features/transactions/lib/category-config';
-import {
-  aggregateCategoryTotals,
-  type ChartDateRange,
-  type ChartTransaction,
-} from '@web/features/transactions/lib/chart-date-filter';
+import type { ChartDateRange } from '@web/features/transactions/lib/chart-date-filter';
 import { cn } from '@web/lib/utils';
 
 type CategoryDonutChartProps = {
-  chartTransactions: ChartTransaction[];
-  periodStart: string;
   primaryCurrency: string;
   locale: string;
+  categoryTotals: Array<{ category: string; amount: number }>;
+  filterSelection: ChartDateRange;
+  appliedFilter: ChartDateRange;
+  hiddenCategories: Set<string>;
+  onFilterSelectionChange: (value: ChartDateRange) => void;
+  onAppliedFilterChange: (value: ChartDateRange) => void;
+  onToggleCategory: (category: string) => void;
   onCustomRangeChange?: (range: DateRange | undefined) => void;
   customDateRange?: DateRange;
+  categoryDisplayContext?: CategoryDisplayContext;
 };
 
 function formatMoney(amount: number, currency: string, locale: string): string {
@@ -54,19 +57,22 @@ function ChartSkeleton() {
 }
 
 export function CategoryDonutChart({
-  chartTransactions,
-  periodStart,
   primaryCurrency,
   locale,
+  categoryTotals,
+  filterSelection,
+  appliedFilter,
+  hiddenCategories,
+  onFilterSelectionChange,
+  onAppliedFilterChange,
+  onToggleCategory,
   onCustomRangeChange,
   customDateRange,
+  categoryDisplayContext,
 }: CategoryDonutChartProps) {
   const t = useT();
-  const [filterSelection, setFilterSelection] = useState<ChartDateRange>('period');
-  const [appliedFilter, setAppliedFilter] = useState<ChartDateRange>('period');
   const [isCustomPickerOpen, setIsCustomPickerOpen] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
-  const [hiddenCategories, setHiddenCategories] = useState<Set<string>>(new Set());
   const filterContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,15 +88,6 @@ export function CategoryDonutChart({
     return () => cancelAnimationFrame(frameId);
   }, [filterSelection]);
 
-  const categoryTotals = useMemo(
-    () => aggregateCategoryTotals(chartTransactions, appliedFilter, periodStart),
-    [chartTransactions, appliedFilter, periodStart]
-  );
-
-  useEffect(() => {
-    setHiddenCategories(new Set());
-  }, [appliedFilter]);
-
   useEffect(() => {
     setIsFiltering(true);
     const timer = window.setTimeout(() => setIsFiltering(false), 200);
@@ -104,21 +101,21 @@ export function CategoryDonutChart({
 
   const chartData = visibleCategoryTotals.map((item) => ({
     ...item,
-    fill: getCategoryColor(item.category),
-    label: t(getCategoryLabelKey(item.category)),
+    fill: getCategoryColor(item.category, categoryDisplayContext),
+    label: resolveCategoryLabel(item.category, t, categoryDisplayContext),
   }));
 
   const total = visibleCategoryTotals.reduce((sum, item) => sum + item.amount, 0);
 
   function handleRangeChange(value: ChartDateRange) {
-    setFilterSelection(value);
+    onFilterSelectionChange(value);
 
     if (value === 'custom') {
       return;
     }
 
     const wasCustomApplied = appliedFilter === 'custom';
-    setAppliedFilter(value);
+    onAppliedFilterChange(value);
 
     if (wasCustomApplied && customDateRange) {
       onCustomRangeChange?.(undefined);
@@ -130,22 +127,10 @@ export function CategoryDonutChart({
       return;
     }
 
-    setAppliedFilter('custom');
-    setFilterSelection('custom');
+    onAppliedFilterChange('custom');
+    onFilterSelectionChange('custom');
     setIsCustomPickerOpen(false);
     onCustomRangeChange?.(range);
-  }
-
-  function toggleCategory(category: string) {
-    setHiddenCategories((current) => {
-      const next = new Set(current);
-      if (next.has(category)) {
-        next.delete(category);
-      } else {
-        next.add(category);
-      }
-      return next;
-    });
   }
 
   return (
@@ -230,14 +215,14 @@ export function CategoryDonutChart({
               const isHidden = hiddenCategories.has(item.category);
               const percentage =
                 !isHidden && total > 0 ? Math.round((item.amount / total) * 100) : null;
-              const fill = getCategoryColor(item.category);
-              const label = t(getCategoryLabelKey(item.category));
+              const fill = getCategoryColor(item.category, categoryDisplayContext);
+              const label = resolveCategoryLabel(item.category, t, categoryDisplayContext);
 
               return (
                 <button
                   key={item.category}
                   type="button"
-                  onClick={() => toggleCategory(item.category)}
+                  onClick={() => onToggleCategory(item.category)}
                   aria-pressed={!isHidden}
                   className={cn(
                     'hover:bg-elevated/50 flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 text-left text-sm transition',

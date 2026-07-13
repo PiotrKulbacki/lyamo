@@ -49,12 +49,17 @@
     "categories": {
       "groceries": "Comestibles",
       "transport": "Transporte",
-      "coffee": "Café",
+      "coffeeShop": "Cafetería",
       "restaurants": "Restaurantes",
       "entertainment": "Ocio",
-      "shopping": "Compras",
-      "utilities": "Servicios",
       "health": "Salud",
+      "fuel": "Combustible",
+      "household": "Limpieza del hogar",
+      "cosmetics": "Cosmética",
+      "hotels": "Hoteles",
+      "alcohol": "Alcohol",
+      "accounting": "Contabilidad",
+      "mechanic": "Mecánico",
       "other": "Otros"
     },
     "success": {
@@ -92,9 +97,9 @@
   },
   "scanner": {
     "labels": {
-      "scanReceipt": "Escanear recibo",
+      "scanDocument": "Escanear",
       "confirmExpense": "Confirmar gasto",
-      "uploadReceipt": "Subir foto del recibo",
+      "uploadDocument": "Subir foto del documento",
       "upgradeToPro": "Actualizar a Pro",
       "scanBlocked": "Límite de escaneos alcanzado"
     },
@@ -163,6 +168,8 @@
   },
   "layout": {
     "brand": "Smart Expense Control",
+    "brandLine1": "Smart Expense",
+    "brandLine2": "Control",
     "nav": {
       "features": "Funciones",
       "pricing": "Precios",
@@ -260,6 +267,11 @@
       "editCurrentHint": "Sobrescribe el presupuesto solo para el ciclo de facturación actual.",
       "updated": "Presupuesto actualizado para este mes"
     },
+    "daily": {
+      "avgSpent": "Media gastada: {{amount}}/día",
+      "avgRemaining": "Media disponible: {{amount}}/día",
+      "cycleEnd": "Fin del ciclo"
+    },
     "recent": {
       "title": "Transacciones recientes",
       "emptyTitle": "Sin gastos en este periodo",
@@ -282,9 +294,10 @@
       "cancel": "Cancelar"
     },
     "cta": {
-      "addManual": "Añadir gasto manualmente",
+      "addManual": "Añadir gasto",
       "addManualHint": "Introduce importe, categoría y fecha",
-      "scanReceipt": "Escanear recibo",
+      "scan": "Escanear",
+      "scanWithQuota": "Escanear {{used}}/{{limit}}",
       "scanReceiptHint": "La IA extrae los datos de una foto"
     }
   },
@@ -310,6 +323,37 @@
       "defaultMonthlyBudgetPlaceholder": "p. ej. 3000",
       "defaultMonthlyBudgetHint": "Presupuesto renovable en cada ciclo de facturación. El primer guardado también establece el mes actual.",
       "saveChanges": "Guardar cambios"
+    },
+    "categories": {
+      "title": "Categorías",
+      "subtitle": "Gestiona categorías integradas y personalizadas",
+      "add": "Añadir categoría",
+      "addTitle": "Añadir categoría",
+      "editTitle": "Editar categoría",
+      "edit": "Editar categoría",
+      "delete": "Eliminar categoría",
+      "deleteTitle": "¿Eliminar categoría?",
+      "deleteConfirm": "Esta categoría personalizada se eliminará permanentemente.",
+      "deleteWithTransactions": "Esta categoría tiene {{count}} transacciones. ¿A qué categoría moverlas?",
+      "migrateLabel": "Mover transacciones a",
+      "nameLabel": "Nombre de la categoría",
+      "namePlaceholder": "p. ej. Suscripciones",
+      "colorLabel": "Color (opcional)",
+      "success": {
+        "created": "Categoría creada",
+        "updated": "Categoría actualizada",
+        "deleted": "Categoría eliminada"
+      },
+      "errors": {
+        "invalidName": "Introduce un nombre de categoría válido",
+        "invalidColor": "Selecciona un color válido",
+        "duplicateName": "Ya existe una categoría con este nombre",
+        "notFound": "Categoría no encontrada",
+        "forbidden": "No puedes modificar esta categoría",
+        "hasTransactions": "Esta categoría contiene transacciones",
+        "invalidMigrateTarget": "Elige una categoría de destino válida",
+        "builtInReadonly": "Las categorías integradas no se pueden editar ni eliminar"
+      }
     },
     "success": {
       "updated": "Ajustes guardados correctamente",

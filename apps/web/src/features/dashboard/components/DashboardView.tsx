@@ -1,11 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { endOfDay, startOfDay } from 'date-fns';
 import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
+import { toCalendarDateInputValue } from '@shared/features/transactions/schemas';
 import type { CurrencyCode } from '@shared/features/transactions/schemas';
+import { useCategories } from '@web/features/categories/hooks/useCategories';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
 import { BudgetProgress } from '@web/features/transactions/components/BudgetProgress';
 import { CategoryDonutChart } from '@web/features/transactions/components/CategoryDonutChart';
@@ -17,11 +19,19 @@ import {
 } from '@web/features/transactions/components/RecentTransactionsList';
 import { TransactionFormModal } from '@web/features/transactions/components/TransactionFormModal';
 import type { TransactionFormInitialValues } from '@web/features/transactions/components/TransactionForm';
-import type { ChartTransaction } from '@web/features/transactions/lib/chart-date-filter';
+import {
+  aggregateCategoryTotals,
+  getChartFilterDayMetrics,
+  type ChartDateRange,
+  type ChartTransaction,
+} from '@web/features/transactions/lib/chart-date-filter';
+import { computeDailyBudgetStats } from '@web/features/dashboard/lib/dashboard-daily-stats';
 
 type DashboardSummary = {
   primaryCurrency: CurrencyCode;
+  financialMonthStartDay: number;
   periodStart: string;
+  periodEnd: string;
   totalSpent: number;
   billingPeriodTotalSpent: number;
   transactionCount: number;
@@ -30,8 +40,12 @@ type DashboardSummary = {
 };
 
 type ScanQuota = {
+  used: number;
+  limit: number;
   remaining: number;
 };
+
+type UserPlan = 'FREE' | 'PRO';
 
 function formatMoney(amount: number, currency: string, locale: string): string {
   return new Intl.NumberFormat(locale, {
@@ -42,11 +56,7 @@ function formatMoney(amount: number, currency: string, locale: string): string {
 }
 
 function toDateInputValue(isoDate: string): string {
-  const date = new Date(isoDate);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return toCalendarDateInputValue(isoDate);
 }
 
 function toFormInitialValues(transaction: RecentTransaction): TransactionFormInitialValues {
@@ -73,17 +83,72 @@ function buildDashboardUrl(customDateRange?: DateRange): string {
 export function DashboardView() {
   const t = useT();
   const { locale } = useLocale();
+  const { colorMap, nameMap } = useCategories();
+  const categoryDisplayContext = useMemo(() => ({ colorMap, nameMap }), [colorMap, nameMap]);
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [transactions, setTransactions] = useState<RecentTransaction[]>([]);
   const [chartTransactions, setChartTransactions] = useState<ChartTransaction[]>([]);
   const [scanQuota, setScanQuota] = useState<ScanQuota | null>(null);
+  const [userPlan, setUserPlan] = useState<UserPlan>('FREE');
   const [customDateRange, setCustomDateRange] = useState<DateRange | undefined>();
+  const [filterSelection, setFilterSelection] = useState<ChartDateRange>('period');
+  const [appliedFilter, setAppliedFilter] = useState<ChartDateRange>('period');
+  const [hiddenCategories, setHiddenCategories] = useState<Set<string>>(() => new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<RecentTransaction | null>(null);
   const [deletingTransactionId, setDeletingTransactionId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const categoryTotals = useMemo(() => {
+    if (!summary) {
+      return [];
+    }
+
+    return aggregateCategoryTotals(chartTransactions, appliedFilter, summary.periodStart);
+  }, [chartTransactions, appliedFilter, summary]);
+
+  const visibleTotalSpent = useMemo(
+    () =>
+      categoryTotals
+        .filter((item) => !hiddenCategories.has(item.category))
+        .reduce((sum, item) => sum + item.amount, 0),
+    [categoryTotals, hiddenCategories]
+  );
+
+  const hiddenTotalSpent = useMemo(
+    () =>
+      categoryTotals
+        .filter((item) => hiddenCategories.has(item.category))
+        .reduce((sum, item) => sum + item.amount, 0),
+    [categoryTotals, hiddenCategories]
+  );
+
+  const dailyStats = useMemo(() => {
+    if (!summary) {
+      return null;
+    }
+
+    const dayMetrics = getChartFilterDayMetrics({
+      range: appliedFilter,
+      periodStart: summary.periodStart,
+      periodEnd: summary.periodEnd,
+      financialMonthStartDay: summary.financialMonthStartDay,
+    });
+
+    return computeDailyBudgetStats({
+      visibleTotalSpent,
+      hiddenTotalSpent,
+      currentMonthBudget: summary.currentMonthBudget,
+      daysElapsed: dayMetrics.daysElapsed,
+      daysUntilPayday: dayMetrics.daysUntilPayday,
+    });
+  }, [summary, appliedFilter, visibleTotalSpent, hiddenTotalSpent]);
+
+  useEffect(() => {
+    setHiddenCategories(new Set());
+  }, [appliedFilter]);
 
   const loadDashboard = useCallback(
     async (options?: { silent?: boolean; dateRange?: DateRange }) => {
@@ -120,9 +185,19 @@ export function DashboardView() {
 
         if (quotaResponse.ok) {
           const quotaData = (await quotaResponse.json()) as {
-            quota?: { remaining: number };
+            plan?: UserPlan;
+            quota?: { used: number; limit: number; remaining: number };
           };
-          setScanQuota(quotaData.quota ? { remaining: quotaData.quota.remaining } : null);
+          setUserPlan(quotaData.plan ?? 'FREE');
+          setScanQuota(
+            quotaData.quota
+              ? {
+                  used: quotaData.quota.used,
+                  limit: quotaData.quota.limit,
+                  remaining: quotaData.quota.remaining,
+                }
+              : null
+          );
         }
       } catch {
         toast.error(t('auth.errors.networkError'));
@@ -149,6 +224,18 @@ export function DashboardView() {
       setCustomDateRange(undefined);
       void loadDashboard({ silent: true });
     }
+  }
+
+  function toggleCategory(category: string) {
+    setHiddenCategories((current) => {
+      const next = new Set(current);
+      if (next.has(category)) {
+        next.delete(category);
+      } else {
+        next.add(category);
+      }
+      return next;
+    });
   }
 
   function openCreateForm() {
@@ -212,7 +299,7 @@ export function DashboardView() {
           </h1>
           <p className="text-muted mt-1 text-sm">{t('dashboard.subtitle')}</p>
         </div>
-        <DashboardCtas onAddManual={openCreateForm} scanQuota={scanQuota} />
+        <DashboardCtas onAddManual={openCreateForm} scanQuota={scanQuota} plan={userPlan} />
       </div>
 
       <section className="grid gap-4 sm:grid-cols-2">
@@ -221,15 +308,18 @@ export function DashboardView() {
             {t('dashboard.summary.totalSpent')}
           </p>
           <p className="font-display relative z-10 mt-2 text-3xl font-bold text-[var(--text)]">
-            {formatMoney(summary.totalSpent, summary.primaryCurrency, locale)}
+            {formatMoney(visibleTotalSpent, summary.primaryCurrency, locale)}
           </p>
-          <BudgetProgress
-            totalSpent={summary.billingPeriodTotalSpent}
-            currentMonthBudget={summary.currentMonthBudget}
-            primaryCurrency={summary.primaryCurrency}
-            locale={locale}
-            onBudgetUpdated={handleBudgetUpdated}
-          />
+          {dailyStats && (
+            <BudgetProgress
+              totalSpent={summary.billingPeriodTotalSpent}
+              dailyStats={dailyStats}
+              currentMonthBudget={summary.currentMonthBudget}
+              primaryCurrency={summary.primaryCurrency}
+              locale={locale}
+              onBudgetUpdated={handleBudgetUpdated}
+            />
+          )}
         </article>
         <article className="panel relative z-10 p-6">
           <p className="text-muted relative z-10 text-sm font-medium">
@@ -242,10 +332,16 @@ export function DashboardView() {
       </section>
 
       <CategoryDonutChart
-        chartTransactions={chartTransactions}
-        periodStart={summary.periodStart}
+        categoryTotals={categoryTotals}
+        filterSelection={filterSelection}
+        appliedFilter={appliedFilter}
+        hiddenCategories={hiddenCategories}
+        onFilterSelectionChange={setFilterSelection}
+        onAppliedFilterChange={setAppliedFilter}
+        onToggleCategory={toggleCategory}
         primaryCurrency={summary.primaryCurrency}
         locale={locale}
+        categoryDisplayContext={categoryDisplayContext}
         customDateRange={customDateRange}
         onCustomRangeChange={handleCustomRangeApply}
       />
@@ -254,6 +350,7 @@ export function DashboardView() {
         transactions={transactions}
         primaryCurrency={summary.primaryCurrency}
         locale={locale}
+        categoryDisplayContext={categoryDisplayContext}
         isRefreshing={isRefreshing}
         onEdit={openEditForm}
         onDelete={openDeleteDialog}

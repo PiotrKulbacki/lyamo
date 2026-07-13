@@ -6,15 +6,18 @@ import { Button } from '@web/components/ui/button';
 import { useT } from '@web/features/i18n/LocaleProvider';
 
 type ScanQuota = {
+  used: number;
+  limit: number;
   remaining: number;
 };
 
 type DashboardCtasProps = {
   onAddManual: () => void;
   scanQuota: ScanQuota | null;
+  plan: 'FREE' | 'PRO';
 };
 
-export function DashboardCtas({ onAddManual, scanQuota }: DashboardCtasProps) {
+export function DashboardCtas({ onAddManual, scanQuota, plan }: DashboardCtasProps) {
   const t = useT();
 
   return (
@@ -27,8 +30,12 @@ export function DashboardCtas({ onAddManual, scanQuota }: DashboardCtasProps) {
       <Button asChild variant="outline" size="default" className="relative">
         <Link href="/scanner">
           <Camera className="h-4 w-4" />
-          {t('dashboard.cta.scanReceipt')}
-          {scanQuota && <span className="chip chip-ready ml-1">{scanQuota.remaining}</span>}
+          {plan === 'FREE' && scanQuota
+            ? t('dashboard.cta.scanWithQuota', {
+                used: scanQuota.used,
+                limit: scanQuota.limit,
+              })
+            : t('dashboard.cta.scan')}
         </Link>
       </Button>
     </section>

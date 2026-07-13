@@ -33,7 +33,7 @@ describe('chat-context', () => {
         {
           amount: 15,
           currency: 'PLN',
-          category: 'Coffee',
+          category: 'CoffeeShop',
           description: 'Cafe',
           date: new Date('2026-07-05T10:00:00.000Z'),
         },
@@ -45,7 +45,7 @@ describe('chat-context', () => {
         date: '2026-07-05',
         amount: 15,
         currency: 'PLN',
-        category: 'Coffee',
+        category: 'CoffeeShop',
         description: 'Cafe',
       },
     ]);

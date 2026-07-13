@@ -49,12 +49,17 @@
     "categories": {
       "groceries": "Lebensmittel",
       "transport": "Transport",
-      "coffee": "Kaffee",
+      "coffeeShop": "Café",
       "restaurants": "Restaurants",
       "entertainment": "Unterhaltung",
-      "shopping": "Einkäufe",
-      "utilities": "Nebenkosten",
       "health": "Gesundheit",
+      "fuel": "Kraftstoff",
+      "household": "Haushaltschemie",
+      "cosmetics": "Kosmetik",
+      "hotels": "Hotels",
+      "alcohol": "Alkohol",
+      "accounting": "Buchhaltung",
+      "mechanic": "Mechaniker",
       "other": "Sonstiges"
     },
     "success": {
@@ -92,9 +97,9 @@
   },
   "scanner": {
     "labels": {
-      "scanReceipt": "Beleg scannen",
+      "scanDocument": "Scannen",
       "confirmExpense": "Ausgabe bestätigen",
-      "uploadReceipt": "Belegfoto hochladen",
+      "uploadDocument": "Dokumentfoto hochladen",
       "upgradeToPro": "Auf Pro upgraden",
       "scanBlocked": "Scan-Limit erreicht"
     },
@@ -163,6 +168,8 @@
   },
   "layout": {
     "brand": "Smart Expense Control",
+    "brandLine1": "Smart Expense",
+    "brandLine2": "Control",
     "nav": {
       "features": "Funktionen",
       "pricing": "Preise",
@@ -260,6 +267,11 @@
       "editCurrentHint": "Überschreibt das Budget nur für den aktuellen Abrechnungszyklus.",
       "updated": "Budget für diesen Monat aktualisiert"
     },
+    "daily": {
+      "avgSpent": "Ø ausgegeben: {{amount}}/Tag",
+      "avgRemaining": "Ø verfügbar: {{amount}}/Tag",
+      "cycleEnd": "Ende des Zyklus"
+    },
     "recent": {
       "title": "Letzte Transaktionen",
       "emptyTitle": "Keine Ausgaben in diesem Zeitraum",
@@ -282,9 +294,10 @@
       "cancel": "Abbrechen"
     },
     "cta": {
-      "addManual": "Ausgabe manuell hinzufügen",
+      "addManual": "Ausgabe hinzufügen",
       "addManualHint": "Betrag, Kategorie und Datum eingeben",
-      "scanReceipt": "Beleg scannen",
+      "scan": "Scannen",
+      "scanWithQuota": "Scannen {{used}}/{{limit}}",
       "scanReceiptHint": "KI extrahiert Details aus einem Foto"
     }
   },
@@ -310,6 +323,37 @@
       "defaultMonthlyBudgetPlaceholder": "z. B. 3000",
       "defaultMonthlyBudgetHint": "Erneuerbares Budget, das jeden neuen Abrechnungszyklus übernommen wird. Beim ersten Speichern wird auch der aktuelle Monat gesetzt.",
       "saveChanges": "Änderungen speichern"
+    },
+    "categories": {
+      "title": "Kategorien",
+      "subtitle": "Integrierte und eigene Ausgabenkategorien verwalten",
+      "add": "Kategorie hinzufügen",
+      "addTitle": "Kategorie hinzufügen",
+      "editTitle": "Kategorie bearbeiten",
+      "edit": "Kategorie bearbeiten",
+      "delete": "Kategorie löschen",
+      "deleteTitle": "Kategorie löschen?",
+      "deleteConfirm": "Diese eigene Kategorie wird dauerhaft entfernt.",
+      "deleteWithTransactions": "Diese Kategorie enthält {{count}} Transaktionen. Wohin sollen sie verschoben werden?",
+      "migrateLabel": "Transaktionen verschieben nach",
+      "nameLabel": "Kategoriename",
+      "namePlaceholder": "z. B. Abos",
+      "colorLabel": "Farbe (optional)",
+      "success": {
+        "created": "Kategorie erstellt",
+        "updated": "Kategorie aktualisiert",
+        "deleted": "Kategorie gelöscht"
+      },
+      "errors": {
+        "invalidName": "Bitte einen gültigen Kategorienamen eingeben",
+        "invalidColor": "Bitte eine gültige Farbe wählen",
+        "duplicateName": "Eine Kategorie mit diesem Namen existiert bereits",
+        "notFound": "Kategorie nicht gefunden",
+        "forbidden": "Diese Kategorie kann nicht geändert werden",
+        "hasTransactions": "Diese Kategorie enthält Transaktionen",
+        "invalidMigrateTarget": "Bitte eine gültige Zielkategorie wählen",
+        "builtInReadonly": "Integrierte Kategorien können nicht bearbeitet oder gelöscht werden"
+      }
     },
     "success": {
       "updated": "Einstellungen erfolgreich gespeichert",

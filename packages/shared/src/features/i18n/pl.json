@@ -43,18 +43,23 @@
       "editTransaction": "Edytuj wydatek",
       "editTransactionHint": "Zaktualizuj kwotę, kategorię lub datę tego wydatku.",
       "deleteTransaction": "Usuń",
-      "addManualExpense": "Dodaj wydatek ręcznie",
+      "addManualExpense": "Dodaj wydatek",
       "addManualExpenseHint": "Wprowadź kwotę, kategorię i datę nowej transakcji."
     },
     "categories": {
       "groceries": "Zakupy spożywcze",
       "transport": "Transport",
-      "coffee": "Kawa",
+      "coffeeShop": "Kawiarnia",
       "restaurants": "Restauracje",
       "entertainment": "Rozrywka",
-      "shopping": "Zakupy",
-      "utilities": "Rachunki",
       "health": "Zdrowie",
+      "fuel": "Paliwo",
+      "household": "Chemia",
+      "cosmetics": "Kosmetyki",
+      "hotels": "Hotele",
+      "alcohol": "Alkohol",
+      "accounting": "Księgowość",
+      "mechanic": "Mechanik",
       "other": "Inne"
     },
     "success": {
@@ -92,9 +97,9 @@
   },
   "scanner": {
     "labels": {
-      "scanReceipt": "Skanuj paragon",
+      "scanDocument": "Skanuj",
       "confirmExpense": "Zatwierdź wydatek",
-      "uploadReceipt": "Prześlij zdjęcie paragonu",
+      "uploadDocument": "Prześlij zdjęcie dokumentu",
       "upgradeToPro": "Przejdź na Pro",
       "scanBlocked": "Limit skanów wyczerpany"
     },
@@ -163,6 +168,8 @@
   },
   "layout": {
     "brand": "Smart Expense Control",
+    "brandLine1": "Smart Expense",
+    "brandLine2": "Control",
     "nav": {
       "features": "Funkcje",
       "pricing": "Cennik",
@@ -260,6 +267,11 @@
       "editCurrentHint": "Nadpisz budżet tylko na bieżący cykl rozliczeniowy.",
       "updated": "Budżet na ten miesiąc zaktualizowany"
     },
+    "daily": {
+      "avgSpent": "Średnio wydano: {{amount}}/dzień",
+      "avgRemaining": "Średnio do wydania: {{amount}}/dzień",
+      "cycleEnd": "Koniec cyklu"
+    },
     "recent": {
       "title": "Ostatnie transakcje",
       "emptyTitle": "Brak wydatków w tym okresie",
@@ -282,9 +294,10 @@
       "cancel": "Anuluj"
     },
     "cta": {
-      "addManual": "Dodaj wydatek ręcznie",
+      "addManual": "Dodaj wydatek",
       "addManualHint": "Wpisz kwotę, kategorię i datę",
-      "scanReceipt": "Skanuj paragon",
+      "scan": "Skanuj",
+      "scanWithQuota": "Skanuj {{used}}/{{limit}}",
       "scanReceiptHint": "AI odczyta dane ze zdjęcia"
     }
   },
@@ -310,6 +323,37 @@
       "defaultMonthlyBudgetPlaceholder": "np. 3000",
       "defaultMonthlyBudgetHint": "Budżet odnawialny co cykl rozliczeniowy. Pierwsze ustawienie ustawia też bieżący miesiąc.",
       "saveChanges": "Zapisz zmiany"
+    },
+    "categories": {
+      "title": "Kategorie",
+      "subtitle": "Zarządzaj wbudowanymi i własnymi kategoriami wydatków",
+      "add": "Dodaj kategorię",
+      "addTitle": "Dodaj kategorię",
+      "editTitle": "Edytuj kategorię",
+      "edit": "Edytuj kategorię",
+      "delete": "Usuń kategorię",
+      "deleteTitle": "Usunąć kategorię?",
+      "deleteConfirm": "Ta własna kategoria zostanie trwale usunięta.",
+      "deleteWithTransactions": "W tej kategorii znajdują się transakcje ({{count}}). Do jakiej kategorii je przenieść?",
+      "migrateLabel": "Przenieś transakcje do",
+      "nameLabel": "Nazwa kategorii",
+      "namePlaceholder": "np. Subskrypcje",
+      "colorLabel": "Kolor (opcjonalnie)",
+      "success": {
+        "created": "Kategoria utworzona",
+        "updated": "Kategoria zaktualizowana",
+        "deleted": "Kategoria usunięta"
+      },
+      "errors": {
+        "invalidName": "Podaj prawidłową nazwę kategorii",
+        "invalidColor": "Wybierz prawidłowy kolor",
+        "duplicateName": "Kategoria o tej nazwie już istnieje",
+        "notFound": "Nie znaleziono kategorii",
+        "forbidden": "Nie możesz modyfikować tej kategorii",
+        "hasTransactions": "Ta kategoria zawiera transakcje",
+        "invalidMigrateTarget": "Wybierz prawidłową kategorię docelową",
+        "builtInReadonly": "Kategorii wbudowanych nie można edytować ani usuwać"
+      }
     },
     "success": {
       "updated": "Ustawienia zapisane pomyślnie",
