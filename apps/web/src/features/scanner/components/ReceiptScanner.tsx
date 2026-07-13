@@ -239,9 +239,7 @@ export function ReceiptScanner() {
                 type="date"
                 value={toCalendarDateInputValue(draft.date)}
                 disabled={isSaving}
-                onChange={(event) =>
-                  setDraft({ ...draft, date: event.target.value })
-                }
+                onChange={(event) => setDraft({ ...draft, date: event.target.value })}
                 className="auth-input"
               />
             </label>

@@ -10,10 +10,7 @@ import {
   getQuotaPeriodStart,
 } from '@shared/features/billing/financial-month';
 import { translateError } from '@shared/features/i18n';
-import {
-  toCalendarDateInputValue,
-  type CurrencyCode,
-} from '@shared/features/transactions/schemas';
+import { toCalendarDateInputValue, type CurrencyCode } from '@shared/features/transactions/schemas';
 import { Button } from '@web/components/ui/button';
 import { useCategories } from '@web/features/categories/hooks/useCategories';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
