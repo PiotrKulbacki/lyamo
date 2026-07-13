@@ -1,4 +1,4 @@
-export type ChartDateRange = 'period' | '7d' | 'today';
+export type ChartDateRange = 'period' | '7d' | 'today' | 'custom';
 
 export type ChartTransaction = {
   date: string;
@@ -7,6 +7,10 @@ export type ChartTransaction = {
 };
 
 export function getChartRangeStart(range: ChartDateRange, periodStart: string, now = new Date()): Date {
+  if (range === 'custom') {
+    return new Date(periodStart);
+  }
+
   if (range === 'today') {
     return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   }
@@ -26,6 +30,21 @@ export function aggregateCategoryTotals(
   range: ChartDateRange,
   periodStart: string
 ): Array<{ category: string; amount: number }> {
+  if (range === 'custom') {
+    const categoryMap = new Map<string, number>();
+
+    for (const transaction of transactions) {
+      categoryMap.set(
+        transaction.category,
+        (categoryMap.get(transaction.category) ?? 0) + transaction.convertedAmount
+      );
+    }
+
+    return Array.from(categoryMap.entries())
+      .map(([category, amount]) => ({ category, amount: Math.round(amount * 100) / 100 }))
+      .sort((a, b) => b.amount - a.amount);
+  }
+
   const rangeStart = getChartRangeStart(range, periodStart);
   const categoryMap = new Map<string, number>();
 

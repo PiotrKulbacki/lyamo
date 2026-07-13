@@ -10,8 +10,40 @@
 6. **UI Dashboard, i18n UI i Sentry** — [✅ Zrobione]
 7. **Dashboard UX: formularz ręczny, wykresy, CTA** — [✅ Zrobione]
 8. **Dashboard Premium: filtry wykresu, CRUD transakcji, budżet preview** — [✅ Zrobione]
+9. **Faza 8.1: layout, budżet, historia, koszty stałe** — [✅ Zrobione]
+10. **Faza 8.1.2: poprawki filtra wykresu i kalendarza** — [✅ Zrobione]
 
 ## Latest Handoff Log
+
+**2026-07-13 — Faza 8.1.2 zamknięta: eliminacja podwójnego odświeżania wykresu, logika „Własny zakres", naprawa kalendarza Shadcn.**
+
+### Faza 8.1.2 — Poprawki filtra wykresu i kalendarza
+
+- **Podwójne odświeżanie** — rozdzielono `filterSelection` (UI dropdown) od `appliedFilter` (dane wykresu); przełączanie opcji predefiniowanych nie wywołuje API; skeleton tylko przy zmianie `appliedFilter`.
+- **Własny zakres** — wybór „Własny zakres" otwiera popover bezpośrednio (bez pośredniego przycisku); dane i API odświeżają się dopiero po „Zastosuj".
+- **Kalendarz** — `collisionPadding={20}`, `align="end"`; `navLayout="around"` ze strzałkami po bokach nagłówka; `endMonth` + `aria-disabled` blokują nawigację do przyszłości.
+- **Legenda wykresu** — zawsze widoczna na podstawie pełnych `categoryTotals`; przy 0 widocznych kategoriach donut pokazuje pusty stan, legenda pozostaje klikalna.
+- **Ostatni dzień zakresu** — `startOfDay` / `endOfDay` (date-fns) przy budowaniu URL i w `dashboard.service.ts`, aby wydatki z końcowej daty nie były ucinane.
+
+---
+
+**2026-07-13 — Faza 8.1.2 hotfix: legenda, kalendarz bez pośredniego przycisku, strzałki, blokada przyszłości, endOfDay.**
+
+**2026-07-13 — Faza 8.1 zamknięta: layout sidebar, budżet, historia transakcji, koszty stałe, UX dashboardu.**
+
+### Faza 8.1 — Layout, budżet, historia, koszty stałe
+
+- **Layout** — `(app)/layout.tsx`: sidebar `h-screen sticky top-0`, główna zawartość z `overflow-y-auto`; sidebar nie rozciąga się z tabelą dashboardu.
+- **Własny zakres dat** — filtr „Własny zakres" na wykresie donut + `DatePickerWithRange` (Shadcn Calendar/Popover); `GET /api/dashboard?from=&to=` przelicza wykres i podsumowanie; przycisk „Zastosuj" — odświeżenie dopiero po zatwierdzeniu; `collisionPadding`, padding nagłówka kalendarza, blokada dat i miesięcy przyszłych.
+- **System budżetu** — pola `User.defaultMonthlyBudget` i `User.currentMonthBudget` (migracja `20260713180000_add_user_budget_fields`); ustawienia domyślnego budżetu (pierwsze ustawienie kopiuje też `currentMonthBudget`); `BudgetProgress` z `Progress` + Popover edycji bieżącego miesiąca; cron `reset-quotas` kopiuje `defaultMonthlyBudget` → `currentMonthBudget` w dniu `financialMonthStartDay`.
+- **Historia transakcji** — strona `(app)/history/page.tsx`, pozycja „Historia" w sidebarze; nawigacja cykli rozliczeniowych (domyślnie poprzedni cykl); tabela z Edytuj/Usuń (`DropdownMenu`); `GET /api/transactions?from=&to=`.
+- **Koszty stałe** — sekcja w Ustawieniach (CRUD przez istniejące API `RecurringExpense`); dynamiczne podsumowanie sumy miesięcznej; na wykresie donut jedna kategoria „Koszty stałe" / `FIXED_COSTS_CATEGORY`.
+- **Suma wydatków** — panel łączy wydatki transakcyjne i koszty stałe; `billingPeriodTotalSpent` w `BudgetProgress` też uwzględnia koszty stałe.
+- **Interaktywny wykres donut** — klikalna legenda kategorii (show/hide); wykres i procenty przeliczają się dynamicznie.
+- **i18n** — klucze `history.*`, `settings.recurring.*`, `settings.labels.defaultMonthlyBudget*`, `dashboard.chartFilter.customRange*|apply|toggleHint|allHidden`, `dashboard.budget.editCurrent*`, `dashboard.categories.fixedCosts`, `dashboard.summary.totalSpent` w en/pl/de/es.
+- **Shadcn UI** — `Popover`, `Calendar`, `DatePickerWithRange`.
+
+---
 
 **2026-07-13 — Faza 8 zamknięta: tuning Premium dashboardu (filtry, CRUD, budżet preview).**
 
@@ -210,6 +242,17 @@ _(Brak zaplanowanych faz — każda nowa funkcja wymaga zatwierdzenia przez uży
 ---
 
 ## Ostatnie zmiany
+
+**2026-07-13 — Faza 8.1: layout sidebar, budżet, historia, koszty stałe, UX dashboardu**
+
+- Naprawiono layout: sidebar stała wysokość ekranu, niezależny scroll treści.
+- Własny zakres dat na wykresie donut + API `from`/`to`; przycisk Zastosuj, poprawki stylu kalendarza, blokada dat przyszłych.
+- Budżet: `defaultMonthlyBudget` / `currentMonthBudget`, edycja w ustawieniach i Popover na dashboardzie, reset w cronie.
+- Strona Historia z nawigacją cykli rozliczeniowych i CRUD transakcji.
+- Koszty stałe w ustawieniach (CRUD + suma miesięczna) i jako osobna kategoria na wykresie.
+- Panel „Suma wydatków" łączy transakcje i koszty stałe; interaktywna legenda wykresu donut.
+- Migracja `20260713180000_add_user_budget_fields`.
+- i18n w 4 językach; komponenty Popover, Calendar, DatePickerWithRange.
 
 **2026-07-13 — Dashboard Premium (Faza 8): filtry wykresu, CRUD transakcji, budżet preview**
 

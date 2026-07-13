@@ -161,6 +161,7 @@
       "features": "Funktionen",
       "pricing": "Preise",
       "dashboard": "Dashboard",
+      "history": "Verlauf",
       "scanner": "Scanner",
       "chat": "KI-Chat",
       "settings": "Einstellungen"
@@ -227,23 +228,31 @@
     "title": "Dashboard",
     "subtitle": "Ihre Ausgabenübersicht für den aktuellen Abrechnungszeitraum",
     "summary": {
-      "totalSpent": "Gesamtausgaben in diesem Zeitraum",
+      "totalSpent": "Ausgabensumme",
       "transactions": "Transaktionen"
     },
     "categories": {
-      "title": "Ausgaben nach Kategorie"
+      "title": "Ausgaben nach Kategorie",
+      "fixedCosts": "Fixkosten"
     },
     "chartFilter": {
       "period": "Aktueller Zeitraum",
       "last7Days": "Letzte 7 Tage",
       "today": "Heute",
+      "customRange": "Eigener Zeitraum",
+      "customRangePlaceholder": "Datumsbereich wählen",
+      "apply": "Anwenden",
+      "toggleHint": "Kategorie anklicken, um sie im Diagramm ein- oder auszublenden",
+      "allHidden": "Alle Kategorien sind ausgeblendet. Klicken Sie unten auf eine Kategorie, um sie anzuzeigen.",
       "empty": "Keine Ausgaben in diesem Datumsbereich."
     },
     "budget": {
       "label": "Monatsbudget",
-      "preview": "Vorschau",
       "spent": "{{amount}} ausgegeben",
-      "remaining": "{{amount}} übrig"
+      "remaining": "{{amount}} übrig",
+      "editCurrent": "Budget dieses Monats bearbeiten",
+      "editCurrentHint": "Überschreibt das Budget nur für den aktuellen Abrechnungszyklus.",
+      "updated": "Budget für diesen Monat aktualisiert"
     },
     "recent": {
       "title": "Letzte Transaktionen",
@@ -273,6 +282,15 @@
       "scanReceiptHint": "KI extrahiert Details aus einem Foto"
     }
   },
+  "history": {
+    "title": "Transaktionsverlauf",
+    "subtitle": "Ausgaben vergangener Abrechnungszyklen durchsuchen und verwalten",
+    "previousMonth": "Vorheriger Abrechnungszyklus",
+    "nextMonth": "Nächster Abrechnungszyklus",
+    "transactionsTitle": "Transaktionen",
+    "emptyTitle": "Keine Transaktionen in diesem Zyklus",
+    "empty": "Für den gewählten Abrechnungszeitraum sind keine Ausgaben erfasst."
+  },
   "settings": {
     "title": "Einstellungen",
     "subtitle": "Profil, Währung und Abonnement verwalten",
@@ -282,6 +300,9 @@
     "labels": {
       "primaryCurrency": "Hauptwährung",
       "financialMonthStartDay": "Starttag des Abrechnungsmonats (1–28)",
+      "defaultMonthlyBudget": "Standard-Monatsbudget",
+      "defaultMonthlyBudgetPlaceholder": "z. B. 3000",
+      "defaultMonthlyBudgetHint": "Erneuerbares Budget, das jeden neuen Abrechnungszyklus übernommen wird. Beim ersten Speichern wird auch der aktuelle Monat gesetzt.",
       "saveChanges": "Änderungen speichern"
     },
     "success": {
@@ -292,6 +313,7 @@
       "invalidName": "Name muss zwischen 2 und 100 Zeichen lang sein",
       "invalidCurrency": "Bitte wählen Sie eine gültige Währung",
       "invalidFinancialDay": "Abrechnungstag muss zwischen 1 und 28 liegen",
+      "invalidBudget": "Bitte geben Sie einen gültigen positiven Budgetbetrag ein",
       "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte erneut versuchen",
       "updateFailed": "Einstellungen konnten nicht gespeichert werden. Bitte erneut versuchen",
       "confirmEmailMismatch": "E-Mail-Bestätigung stimmt nicht überein"
@@ -301,6 +323,16 @@
       "description": "Konto und alle zugehörigen Daten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
       "confirmLabel": "Geben Sie Ihre E-Mail ein ({{email}}), um zu bestätigen",
       "deleteAccount": "Mein Konto dauerhaft löschen"
+    },
+    "recurring": {
+      "title": "Fixkosten (Abos, Miete)",
+      "description": "Monatliche wiederkehrende Ausgaben, separat im Dashboard-Diagramm angezeigt.",
+      "namePlaceholder": "Name / Beschreibung",
+      "amountPlaceholder": "Betrag",
+      "add": "Fixkosten hinzufügen",
+      "empty": "Noch keine Fixkosten hinzugefügt.",
+      "monthlyTotal": "Monatliche Summe",
+      "actions": "Fixkosten-Aktionen"
     }
   },
   "billing": {

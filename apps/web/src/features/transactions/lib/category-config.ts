@@ -10,6 +10,11 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
+import {
+  FIXED_COSTS_CATEGORY,
+  FIXED_COSTS_CHART_COLOR,
+  FIXED_COSTS_I18N_KEY,
+} from '@shared/features/transactions/fixed-costs';
 import type { TransactionCategory } from '@shared/features/transactions/schemas';
 
 export const CATEGORY_I18N_KEYS: Record<TransactionCategory, string> = {
@@ -73,6 +78,10 @@ export function getCategoryIcon(category: string): LucideIcon {
 }
 
 export function getCategoryColor(category: string): string {
+  if (category === FIXED_COSTS_CATEGORY) {
+    return FIXED_COSTS_CHART_COLOR;
+  }
+
   if (isTransactionCategory(category)) {
     return CATEGORY_CHART_COLORS[category];
   }
@@ -81,6 +90,10 @@ export function getCategoryColor(category: string): string {
 }
 
 export function getCategoryLabelKey(category: string): string {
+  if (category === FIXED_COSTS_CATEGORY) {
+    return FIXED_COSTS_I18N_KEY;
+  }
+
   if (isTransactionCategory(category)) {
     return CATEGORY_I18N_KEYS[category];
   }

@@ -35,6 +35,10 @@ type RecentTransactionsListProps = {
   onEdit: (transaction: RecentTransaction) => void;
   onDelete: (transactionId: string) => void;
   onAddFirst: () => void;
+  titleKey?: string;
+  emptyTitleKey?: string;
+  emptyDescriptionKey?: string;
+  hideEmptyCta?: boolean;
 };
 
 function formatMoney(amount: number, currency: string, locale: string): string {
@@ -68,12 +72,16 @@ export function RecentTransactionsList({
   onEdit,
   onDelete,
   onAddFirst,
+  titleKey = 'dashboard.recent.title',
+  emptyTitleKey = 'dashboard.recent.emptyTitle',
+  emptyDescriptionKey = 'dashboard.recent.empty',
+  hideEmptyCta = false,
 }: RecentTransactionsListProps) {
   const t = useT();
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900">{t('dashboard.recent.title')}</h2>
+      <h2 className="text-lg font-semibold text-gray-900">{t(titleKey)}</h2>
 
       {isRefreshing ? (
         <div className="mt-4 divide-y divide-gray-100">
@@ -87,12 +95,14 @@ export function RecentTransactionsList({
             <Receipt className="h-7 w-7" />
           </span>
           <p className="mt-4 max-w-xs text-sm font-medium text-gray-900">
-            {t('dashboard.recent.emptyTitle')}
+            {t(emptyTitleKey)}
           </p>
-          <p className="mt-1 max-w-xs text-sm text-gray-500">{t('dashboard.recent.empty')}</p>
-          <Button type="button" className="mt-5" onClick={onAddFirst}>
-            {t('dashboard.recent.emptyCta')}
-          </Button>
+          <p className="mt-1 max-w-xs text-sm text-gray-500">{t(emptyDescriptionKey)}</p>
+          {!hideEmptyCta && (
+            <Button type="button" className="mt-5" onClick={onAddFirst}>
+              {t('dashboard.recent.emptyCta')}
+            </Button>
+          )}
         </div>
       ) : (
         <ScrollArea className="mt-4 max-h-[28rem]">

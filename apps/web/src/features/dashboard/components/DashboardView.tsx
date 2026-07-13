@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { endOfDay, startOfDay } from 'date-fns';
+import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
 import type { CurrencyCode } from '@shared/features/transactions/schemas';
@@ -21,8 +23,10 @@ type DashboardSummary = {
   primaryCurrency: CurrencyCode;
   periodStart: string;
   totalSpent: number;
+  billingPeriodTotalSpent: number;
   transactionCount: number;
   categoryTotals: Array<{ category: string; amount: number }>;
+  currentMonthBudget: number | null;
 };
 
 type ScanQuota = {
@@ -55,6 +59,17 @@ function toFormInitialValues(transaction: RecentTransaction): TransactionFormIni
   };
 }
 
+function buildDashboardUrl(customDateRange?: DateRange): string {
+  if (!customDateRange?.from || !customDateRange?.to) {
+    return '/api/dashboard';
+  }
+
+  const params = new URLSearchParams();
+  params.set('from', startOfDay(customDateRange.from).toISOString());
+  params.set('to', endOfDay(customDateRange.to).toISOString());
+  return `/api/dashboard?${params.toString()}`;
+}
+
 export function DashboardView() {
   const t = useT();
   const { locale } = useLocale();
@@ -62,6 +77,7 @@ export function DashboardView() {
   const [transactions, setTransactions] = useState<RecentTransaction[]>([]);
   const [chartTransactions, setChartTransactions] = useState<ChartTransaction[]>([]);
   const [scanQuota, setScanQuota] = useState<ScanQuota | null>(null);
+  const [customDateRange, setCustomDateRange] = useState<DateRange | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -70,8 +86,9 @@ export function DashboardView() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const loadDashboard = useCallback(
-    async (options?: { silent?: boolean }) => {
+    async (options?: { silent?: boolean; dateRange?: DateRange }) => {
       const silent = options?.silent ?? false;
+      const dateRange = options?.dateRange;
 
       if (!silent) {
         setIsLoading(true);
@@ -81,7 +98,7 @@ export function DashboardView() {
 
       try {
         const [dashboardResponse, quotaResponse] = await Promise.all([
-          fetch('/api/dashboard'),
+          fetch(buildDashboardUrl(dateRange)),
           fetch('/api/ai/scan-quota'),
         ]);
 
@@ -121,6 +138,19 @@ export function DashboardView() {
     void loadDashboard();
   }, [loadDashboard]);
 
+  function handleCustomRangeApply(range: DateRange | undefined) {
+    if (range?.from && range?.to) {
+      setCustomDateRange(range);
+      void loadDashboard({ silent: true, dateRange: range });
+      return;
+    }
+
+    if (!range && customDateRange) {
+      setCustomDateRange(undefined);
+      void loadDashboard({ silent: true });
+    }
+  }
+
   function openCreateForm() {
     setEditingTransaction(null);
     setIsFormOpen(true);
@@ -148,6 +178,12 @@ export function DashboardView() {
     if (!open) {
       setDeletingTransactionId(null);
     }
+  }
+
+  function handleBudgetUpdated(budget: number | null) {
+    setSummary((current) =>
+      current ? { ...current, currentMonthBudget: budget } : current
+    );
   }
 
   if (isLoading) {
@@ -188,9 +224,11 @@ export function DashboardView() {
             {formatMoney(summary.totalSpent, summary.primaryCurrency, locale)}
           </p>
           <BudgetProgress
-            totalSpent={summary.totalSpent}
+            totalSpent={summary.billingPeriodTotalSpent}
+            currentMonthBudget={summary.currentMonthBudget}
             primaryCurrency={summary.primaryCurrency}
             locale={locale}
+            onBudgetUpdated={handleBudgetUpdated}
           />
         </article>
         <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -204,6 +242,8 @@ export function DashboardView() {
         periodStart={summary.periodStart}
         primaryCurrency={summary.primaryCurrency}
         locale={locale}
+        customDateRange={customDateRange}
+        onCustomRangeChange={handleCustomRangeApply}
       />
 
       <RecentTransactionsList
@@ -224,14 +264,14 @@ export function DashboardView() {
         initialValues={
           editingTransaction ? toFormInitialValues(editingTransaction) : undefined
         }
-        onSuccess={() => void loadDashboard({ silent: true })}
+        onSuccess={() => void loadDashboard({ silent: true, dateRange: customDateRange })}
       />
 
       <DeleteTransactionDialog
         transactionId={deletingTransactionId}
         open={isDeleteDialogOpen}
         onOpenChange={handleDeleteDialogOpenChange}
-        onSuccess={() => void loadDashboard({ silent: true })}
+        onSuccess={() => void loadDashboard({ silent: true, dateRange: customDateRange })}
       />
     </div>
   );
