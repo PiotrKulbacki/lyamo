@@ -30,15 +30,18 @@ export default function RegisterPage() {
         <RegisterCurrencySync />
       </Suspense>
       <div className="w-full space-y-6">
-        <h1 className="text-center text-2xl font-bold text-gray-900">
-          {t('auth.labels.register')}
-        </h1>
+        <div className="text-center">
+          <h1 className="font-display text-2xl font-bold text-[var(--text)]">
+            {t('auth.labels.register')}
+          </h1>
+          <p className="mt-2 text-sm text-muted">{t('auth.labels.signUp')}</p>
+        </div>
         <Suspense fallback={null}>
           <AuthForm mode="register" />
         </Suspense>
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-muted">
           {t('auth.labels.hasAccount')}{' '}
-          <Link href="/login" className="font-medium text-blue-600 hover:underline">
+          <Link href="/login" className="font-medium text-cool hover:text-warm">
             {t('auth.labels.signIn')}
           </Link>
         </p>

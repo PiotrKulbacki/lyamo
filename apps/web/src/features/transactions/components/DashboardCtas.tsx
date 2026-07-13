@@ -29,7 +29,7 @@ export function DashboardCtas({ onAddManual, scanQuota }: DashboardCtasProps) {
           <Camera className="h-4 w-4" />
           {t('dashboard.cta.scanReceipt')}
           {scanQuota && (
-            <span className="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700">
+            <span className="chip chip-ready ml-1">
               {scanQuota.remaining}
             </span>
           )}

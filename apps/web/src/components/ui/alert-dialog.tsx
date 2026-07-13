@@ -16,7 +16,7 @@ export const AlertDialogOverlay = forwardRef<
   <AlertDialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'data-[state=open]:animate-in data-[state=closed]:animate-out fixed inset-0 z-50 bg-black/40',
+      'data-[state=open]:animate-in data-[state=closed]:animate-out fixed inset-0 z-50 bg-void/80 backdrop-blur-sm',
       className
     )}
     {...props}
@@ -33,7 +33,7 @@ export const AlertDialogContent = forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-50 grid w-full max-w-md -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-xl duration-200',
+        'panel data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-50 grid w-full max-w-md -translate-x-1/2 -translate-y-1/2 gap-4 p-6 duration-200',
         className
       )}
       {...props}
@@ -44,14 +44,14 @@ AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 export function AlertDialogHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
+    <div className={cn('relative z-10 flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
   );
 }
 
 export function AlertDialogFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)}
+      className={cn('relative z-10 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)}
       {...props}
     />
   );
@@ -63,7 +63,7 @@ export const AlertDialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn('text-lg font-semibold text-gray-900', className)}
+    className={cn('font-display text-lg font-semibold text-[var(--text)]', className)}
     {...props}
   />
 ));
@@ -75,7 +75,7 @@ export const AlertDialogDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm text-gray-600', className)}
+    className={cn('text-sm text-muted', className)}
     {...props}
   />
 ));

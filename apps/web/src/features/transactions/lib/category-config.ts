@@ -54,15 +54,15 @@ export const CATEGORY_CHART_COLORS: Record<TransactionCategory, string> = {
 };
 
 export const CATEGORY_ICON_STYLES: Record<TransactionCategory, { bg: string; text: string }> = {
-  Groceries: { bg: 'bg-emerald-50', text: 'text-emerald-600' },
-  Transport: { bg: 'bg-blue-50', text: 'text-blue-600' },
-  Coffee: { bg: 'bg-amber-50', text: 'text-amber-600' },
-  Restaurants: { bg: 'bg-orange-50', text: 'text-orange-600' },
-  Entertainment: { bg: 'bg-purple-50', text: 'text-purple-600' },
-  Shopping: { bg: 'bg-pink-50', text: 'text-pink-600' },
-  Utilities: { bg: 'bg-slate-100', text: 'text-slate-600' },
-  Health: { bg: 'bg-red-50', text: 'text-red-600' },
-  Other: { bg: 'bg-gray-100', text: 'text-gray-500' },
+  Groceries: { bg: 'bg-emerald-500/15', text: 'text-emerald-400' },
+  Transport: { bg: 'bg-cool/15', text: 'text-cool' },
+  Coffee: { bg: 'bg-warm/15', text: 'text-warm' },
+  Restaurants: { bg: 'bg-orange-500/15', text: 'text-orange-400' },
+  Entertainment: { bg: 'bg-purple-500/15', text: 'text-purple-400' },
+  Shopping: { bg: 'bg-pink-500/15', text: 'text-pink-400' },
+  Utilities: { bg: 'bg-elevated', text: 'text-muted' },
+  Health: { bg: 'bg-glow/15', text: 'text-glow' },
+  Other: { bg: 'bg-elevated', text: 'text-muted' },
 };
 
 export function isTransactionCategory(value: string): value is TransactionCategory {

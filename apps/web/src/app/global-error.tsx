@@ -15,16 +15,14 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en">
-      <body className="flex min-h-screen items-center justify-center bg-gray-50 p-8">
-        <div className="max-w-md text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Something went wrong</h1>
-          <p className="mt-2 text-sm text-gray-600">An unexpected error occurred.</p>
-          <button
-            type="button"
-            onClick={reset}
-            className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
-          >
+    <html lang="en" className="dark">
+      <body className="flex min-h-screen items-center justify-center bg-void p-8">
+        <div className="panel max-w-md p-8 text-center">
+          <h1 className="relative z-10 font-display text-2xl font-bold text-[var(--text)]">
+            Something went wrong
+          </h1>
+          <p className="relative z-10 mt-2 text-sm text-muted">An unexpected error occurred.</p>
+          <button type="button" onClick={reset} className="btn-primary relative z-10 mt-6">
             Try again
           </button>
         </div>

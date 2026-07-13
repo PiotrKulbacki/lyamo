@@ -77,7 +77,7 @@ export function DatePickerWithRange({
               variant="outline"
               className={cn(
                 'h-8 w-full justify-start text-left text-xs font-normal',
-                !dateRange && 'text-gray-500'
+                !dateRange && 'text-muted'
               )}
             >
               <CalendarIcon className="mr-2 h-3.5 w-3.5" />
@@ -115,7 +115,7 @@ export function DatePickerWithRange({
             disabled={{ after: today }}
             endMonth={today}
           />
-          <div className="border-t border-gray-100 p-3">
+          <div className="border-t border-[var(--border)] p-3">
             <Button
               type="button"
               size="default"

@@ -118,7 +118,7 @@ export function TransactionForm({
             {...register('amount', { valueAsNumber: true })}
           />
           {errors.amount?.message && (
-            <p className="mt-1 text-xs text-red-600">
+            <p className="mt-1 text-xs text-glow">
               {translateError(errors.amount.message, locale)}
             </p>
           )}
@@ -129,7 +129,7 @@ export function TransactionForm({
           <select
             id="currency"
             disabled={isSubmitting}
-            className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="auth-input flex h-10 w-full"
             {...register('currency')}
           >
             {(['PLN', 'EUR', 'GBP'] as const).map((currency) => (
@@ -139,7 +139,7 @@ export function TransactionForm({
             ))}
           </select>
           {errors.currency?.message && (
-            <p className="mt-1 text-xs text-red-600">
+            <p className="mt-1 text-xs text-glow">
               {translateError(errors.currency.message, locale)}
             </p>
           )}
@@ -150,7 +150,7 @@ export function TransactionForm({
           <select
             id="category"
             disabled={isSubmitting}
-            className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="auth-input flex h-10 w-full"
             {...register('category')}
           >
             {TRANSACTION_CATEGORIES.map((category) => (
@@ -160,7 +160,7 @@ export function TransactionForm({
             ))}
           </select>
           {errors.category?.message && (
-            <p className="mt-1 text-xs text-red-600">
+            <p className="mt-1 text-xs text-glow">
               {translateError(errors.category.message, locale)}
             </p>
           )}
@@ -170,9 +170,7 @@ export function TransactionForm({
           <Label htmlFor="date">{t('dashboard.form.date')}</Label>
           <Input id="date" type="date" disabled={isSubmitting} {...register('date')} />
           {errors.date?.message && (
-            <p className="mt-1 text-xs text-red-600">
-              {translateError(errors.date.message, locale)}
-            </p>
+            <p className="mt-1 text-xs text-glow">{translateError(errors.date.message, locale)}</p>
           )}
         </div>
       </div>
@@ -187,7 +185,7 @@ export function TransactionForm({
           {...register('description')}
         />
         {errors.description?.message && (
-          <p className="mt-1 text-xs text-red-600">
+          <p className="mt-1 text-xs text-glow">
             {translateError(errors.description.message, locale)}
           </p>
         )}

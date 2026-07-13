@@ -187,14 +187,14 @@ export function DashboardView() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-10 w-48 animate-pulse rounded-lg bg-gray-200" />
-        <div className="h-10 w-72 animate-pulse rounded-lg bg-gray-200" />
+        <div className="h-10 w-48 animate-pulse rounded-lg bg-elevated" />
+        <div className="h-10 w-72 animate-pulse rounded-lg bg-elevated" />
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-32 animate-pulse rounded-2xl bg-gray-200" />
-          <div className="h-32 animate-pulse rounded-2xl bg-gray-200" />
+          <div className="h-32 animate-pulse rounded-2xl bg-elevated" />
+          <div className="h-32 animate-pulse rounded-2xl bg-elevated" />
         </div>
-        <div className="h-64 animate-pulse rounded-2xl bg-gray-200" />
-        <div className="h-72 animate-pulse rounded-2xl bg-gray-200" />
+        <div className="h-64 animate-pulse rounded-2xl bg-elevated" />
+        <div className="h-72 animate-pulse rounded-2xl bg-elevated" />
       </div>
     );
   }
@@ -207,18 +207,18 @@ export function DashboardView() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-[var(--text)]">
             {t('dashboard.title')}
           </h1>
-          <p className="mt-1 text-sm text-gray-600">{t('dashboard.subtitle')}</p>
+          <p className="mt-1 text-sm text-muted">{t('dashboard.subtitle')}</p>
         </div>
         <DashboardCtas onAddManual={openCreateForm} scanQuota={scanQuota} />
       </div>
 
       <section className="grid gap-4 sm:grid-cols-2">
-        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">{t('dashboard.summary.totalSpent')}</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">
+        <article className="panel relative z-10 p-6">
+          <p className="relative z-10 text-sm font-medium text-muted">{t('dashboard.summary.totalSpent')}</p>
+          <p className="relative z-10 mt-2 font-display text-3xl font-bold text-[var(--text)]">
             {formatMoney(summary.totalSpent, summary.primaryCurrency, locale)}
           </p>
           <BudgetProgress
@@ -229,9 +229,9 @@ export function DashboardView() {
             onBudgetUpdated={handleBudgetUpdated}
           />
         </article>
-        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">{t('dashboard.summary.transactions')}</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">{summary.transactionCount}</p>
+        <article className="panel relative z-10 p-6">
+          <p className="relative z-10 text-sm font-medium text-muted">{t('dashboard.summary.transactions')}</p>
+          <p className="relative z-10 mt-2 font-display text-3xl font-bold text-[var(--text)]">{summary.transactionCount}</p>
         </article>
       </section>
 

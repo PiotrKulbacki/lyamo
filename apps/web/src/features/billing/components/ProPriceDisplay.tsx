@@ -34,15 +34,15 @@ export function ProPriceDisplay({ currency, forcePromo, className }: ProPriceDis
     <div className={className}>
       {isPromoActive && (
         <div className="mb-1 flex flex-wrap items-center gap-2">
-          <span className="text-lg font-medium text-gray-500 line-through">{formattedRegular}</span>
-          <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
+          <span className="text-lg font-medium text-muted line-through">{formattedRegular}</span>
+          <span className="chip chip-ready">
             {t('landing.pricing.pro.discount', { percent: discountPercent })}
           </span>
         </div>
       )}
-      <p className="text-3xl font-bold text-gray-900">
+      <p className="font-display text-3xl font-bold text-[var(--text)]">
         {formattedDisplay}
-        <span className="ml-1 text-base font-medium text-gray-600">
+        <span className="ml-1 text-base font-medium text-muted">
           {t('landing.pricing.perMonth')}
         </span>
       </p>

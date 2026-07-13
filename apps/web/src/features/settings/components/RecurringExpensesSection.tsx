@@ -177,25 +177,28 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <section className="panel relative z-10 p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">{t('settings.recurring.title')}</h2>
-          <p className="mt-1 text-sm text-gray-600">{t('settings.recurring.description')}</p>
+          <h2 className="relative z-10 font-display text-lg font-semibold text-[var(--text)]">
+            {t('settings.recurring.title')}
+          </h2>
+          <p className="relative z-10 mt-1 text-sm text-muted">{t('settings.recurring.description')}</p>
         </div>
         {!isLoading && expenses.length > 0 && (
-          <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-right">
-            <p className="text-xs font-medium text-indigo-600">
-              {t('settings.recurring.monthlyTotal')}
-            </p>
-            <p className="mt-0.5 text-lg font-bold text-indigo-900">
+          <div className="relative z-10 rounded-xl border border-cool/30 bg-cool/10 px-4 py-3 text-right">
+            <p className="text-xs font-medium text-cool">{t('settings.recurring.monthlyTotal')}</p>
+            <p className="mt-0.5 font-display text-lg font-bold text-[var(--text)]">
               {formatMoney(monthlyTotal, primaryCurrency, locale)}
             </p>
           </div>
         )}
       </div>
 
-      <form onSubmit={(event) => void handleAdd(event)} className="mt-4 grid gap-3 sm:grid-cols-4">
+      <form
+        onSubmit={(event) => void handleAdd(event)}
+        className="relative z-10 mt-4 grid gap-3 sm:grid-cols-4"
+      >
         <Input
           type="text"
           value={name}
@@ -217,7 +220,7 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
           value={currency}
           disabled={isSaving}
           onChange={(event) => setCurrency(event.target.value as CurrencyCode)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm disabled:opacity-50"
+          className="auth-input"
         >
           {(['PLN', 'EUR', 'GBP'] as const).map((option) => (
             <option key={option} value={option}>
@@ -232,16 +235,16 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
       </form>
 
       {isLoading ? (
-        <div className="mt-6 h-24 animate-pulse rounded-xl bg-gray-100" />
+        <div className="relative z-10 mt-6 h-24 animate-pulse rounded-xl bg-elevated" />
       ) : expenses.length === 0 ? (
-        <p className="mt-6 text-sm text-gray-500">{t('settings.recurring.empty')}</p>
+        <p className="relative z-10 mt-6 text-sm text-muted">{t('settings.recurring.empty')}</p>
       ) : (
-        <ul className="mt-6 divide-y divide-gray-100">
+        <ul className="relative z-10 mt-6 divide-y divide-[var(--border)]">
           {expenses.map((expense) => (
             <li key={expense.id} className="flex items-center justify-between gap-3 py-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-gray-900">{expense.category}</p>
-                <p className="text-xs text-gray-500">
+                <p className="truncate text-sm font-medium text-[var(--text)]">{expense.category}</p>
+                <p className="text-xs text-muted">
                   {formatMoney(expense.amount, expense.currency, locale)}
                 </p>
               </div>
@@ -251,7 +254,7 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-gray-500"
+                    className="h-8 w-8 text-muted"
                     aria-label={t('settings.recurring.actions')}
                   >
                     <MoreHorizontal className="h-4 w-4" />
@@ -259,7 +262,7 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
-                    className="text-red-600 focus:bg-red-50 focus:text-red-600"
+                    className="text-glow focus:bg-glow/10 focus:text-glow"
                     onClick={() => void handleDelete(expense.id)}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />

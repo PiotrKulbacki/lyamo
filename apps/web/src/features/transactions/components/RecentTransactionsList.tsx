@@ -53,13 +53,13 @@ function TransactionRowSkeleton() {
   return (
     <div className="flex items-start justify-between gap-4 py-4">
       <div className="flex items-start gap-3">
-        <div className="h-10 w-10 animate-pulse rounded-xl bg-gray-100" />
+        <div className="h-10 w-10 animate-pulse rounded-xl bg-elevated" />
         <div className="space-y-2">
-          <div className="h-4 w-28 animate-pulse rounded bg-gray-100" />
-          <div className="h-3 w-20 animate-pulse rounded bg-gray-100" />
+          <div className="h-4 w-28 animate-pulse rounded bg-elevated" />
+          <div className="h-3 w-20 animate-pulse rounded bg-elevated" />
         </div>
       </div>
-      <div className="h-4 w-16 animate-pulse rounded bg-gray-100" />
+      <div className="h-4 w-16 animate-pulse rounded bg-elevated" />
     </div>
   );
 }
@@ -80,22 +80,22 @@ export function RecentTransactionsList({
   const t = useT();
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900">{t(titleKey)}</h2>
+    <section className="panel relative z-10 p-6">
+      <h2 className="relative z-10 font-display text-lg font-semibold text-[var(--text)]">{t(titleKey)}</h2>
 
       {isRefreshing ? (
-        <div className="mt-4 divide-y divide-gray-100">
+        <div className="relative z-10 mt-4 divide-y divide-[var(--border)]">
           {Array.from({ length: 3 }).map((_, index) => (
             <TransactionRowSkeleton key={index} />
           ))}
         </div>
       ) : transactions.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center justify-center py-6 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-50 text-gray-400">
+        <div className="relative z-10 mt-8 flex flex-col items-center justify-center py-6 text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-elevated text-muted">
             <Receipt className="h-7 w-7" />
           </span>
-          <p className="mt-4 max-w-xs text-sm font-medium text-gray-900">{t(emptyTitleKey)}</p>
-          <p className="mt-1 max-w-xs text-sm text-gray-500">{t(emptyDescriptionKey)}</p>
+          <p className="mt-4 max-w-xs text-sm font-medium text-[var(--text)]">{t(emptyTitleKey)}</p>
+          <p className="mt-1 max-w-xs text-sm text-muted">{t(emptyDescriptionKey)}</p>
           {!hideEmptyCta && (
             <Button type="button" className="mt-5" onClick={onAddFirst}>
               {t('dashboard.recent.emptyCta')}
@@ -103,8 +103,8 @@ export function RecentTransactionsList({
           )}
         </div>
       ) : (
-        <ScrollArea className="mt-4 max-h-[28rem]">
-          <div className="divide-y divide-gray-100 pr-3">
+        <ScrollArea className="relative z-10 mt-4 max-h-[28rem]">
+          <div className="divide-y divide-[var(--border)] pr-3">
             {transactions.map((transaction) => {
               const Icon = getCategoryIcon(transaction.category);
               const iconStyles = getCategoryIconStyles(transaction.category);
@@ -122,15 +122,15 @@ export function RecentTransactionsList({
                       <Icon className="h-5 w-5" />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-gray-900">
+                      <p className="truncate text-sm font-semibold text-[var(--text)]">
                         {t(getCategoryLabelKey(transaction.category))}
                       </p>
                       {transaction.description && (
-                        <p className="mt-0.5 truncate text-sm text-gray-600">
+                        <p className="mt-0.5 truncate text-sm text-muted">
                           {transaction.description}
                         </p>
                       )}
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1 text-xs text-muted">
                         {new Date(transaction.date).toLocaleDateString(locale, {
                           day: 'numeric',
                           month: 'short',
@@ -142,11 +142,11 @@ export function RecentTransactionsList({
 
                   <div className="flex shrink-0 items-start gap-1">
                     <div className="text-right">
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-sm font-bold text-[var(--text)]">
                         {formatMoney(transaction.convertedAmount, primaryCurrency, locale)}
                       </p>
                       {showOriginal && (
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-muted">
                           {formatMoney(transaction.amount, transaction.currency, locale)}
                         </p>
                       )}
@@ -158,7 +158,7 @@ export function RecentTransactionsList({
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-gray-500"
+                          className="h-8 w-8 text-muted"
                           aria-label={t('dashboard.recent.actions')}
                         >
                           <MoreHorizontal className="h-4 w-4" />
@@ -170,7 +170,7 @@ export function RecentTransactionsList({
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          className="text-red-600 focus:bg-red-50 focus:text-red-600"
+                          className="text-glow focus:bg-glow/10 focus:text-glow"
                           onClick={() => onDelete(transaction.id)}
                         >
                           {t('transactions.labels.deleteTransaction')}

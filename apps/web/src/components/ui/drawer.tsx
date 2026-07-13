@@ -21,7 +21,7 @@ export const DrawerOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn('fixed inset-0 z-50 bg-black/40', className)}
+    className={cn('fixed inset-0 z-50 bg-void/80 backdrop-blur-sm', className)}
     {...props}
   />
 ));
@@ -36,12 +36,12 @@ export const DrawerContent = forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[92vh] flex-col rounded-t-2xl border border-gray-200 bg-white',
+        'fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[92vh] flex-col rounded-t-2xl border border-[var(--border)] bg-surface',
         className
       )}
       {...props}
     >
-      <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-gray-300" />
+      <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-elevated" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -50,16 +50,16 @@ DrawerContent.displayName = DrawerPrimitive.Content.displayName;
 
 export function DrawerHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('border-b border-gray-100 px-6 py-4 text-left', className)} {...props} />
+    <div className={cn('border-b border-[var(--border)] px-6 py-4 text-left', className)} {...props} />
   );
 }
 
 export function DrawerTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={cn('text-lg font-semibold text-gray-900', className)} {...props} />;
+  return <h2 className={cn('font-display text-lg font-semibold text-[var(--text)]', className)} {...props} />;
 }
 
 export function DrawerDescription({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm text-gray-500', className)} {...props} />;
+  return <p className={cn('text-sm text-muted', className)} {...props} />;
 }
 
 export function DrawerBody({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
