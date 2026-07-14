@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
   const rows = await prisma.chatMessage.findMany({
     where: { userId: user.id },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: limit + 1,
     skip: page * limit,
     select: {

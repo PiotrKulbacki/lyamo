@@ -19,6 +19,8 @@ import { captureServerEvent } from '@web/features/analytics/posthog-server';
 import {
   aggregateFinancialContext,
   buildChatSystemPrompt,
+  resolveActiveMonthlyBudget,
+  type ActiveMonthlyBudget,
   type FinancialCycleMeta,
 } from '@web/features/ai/services/chat-context';
 import { getQuotaPeriodEnd, getQuotaPeriodStart } from '@shared/features/billing/financial-month';
@@ -49,10 +51,16 @@ function toIsoDate(date: Date): string {
 async function fetchFinancialContext(userId: string): Promise<{
   context: Awaited<ReturnType<typeof aggregateFinancialContext>>;
   cycleMeta: FinancialCycleMeta;
+  activeBudget: ActiveMonthlyBudget | null;
 }> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { financialMonthStartDay: true },
+    select: {
+      financialMonthStartDay: true,
+      currentMonthBudget: true,
+      defaultMonthlyBudget: true,
+      primaryCurrency: true,
+    },
   });
 
   if (!user) {
@@ -70,6 +78,12 @@ async function fetchFinancialContext(userId: string): Promise<{
     cycleStartIso: toIsoDate(cycleStart),
     cycleEndIso: toIsoDate(cycleEnd),
   };
+
+  const activeBudget = resolveActiveMonthlyBudget({
+    currentMonthBudget: user.currentMonthBudget,
+    defaultMonthlyBudget: user.defaultMonthlyBudget,
+    primaryCurrency: user.primaryCurrency,
+  });
 
   const [monthlyTransactions, recentTransactions]: [
     MonthlyTransactionRow[],
@@ -119,7 +133,7 @@ async function fetchFinancialContext(userId: string): Promise<{
     }))
   );
 
-  return { context, cycleMeta };
+  return { context, cycleMeta, activeBudget };
 }
 
 async function callOpenAiChat(
@@ -169,7 +183,7 @@ async function callOpenAiChat(
 async function fetchChatHistoryForModel(userId: string): Promise<ChatMessage[]> {
   const rows = await prisma.chatMessage.findMany({
     where: { userId },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: CHAT_HISTORY_LIMIT,
     select: { role: true, content: true },
   });
@@ -240,22 +254,23 @@ export async function sendChatMessage(
   }
 
   try {
-    const [{ context, cycleMeta }, modelHistory] = await Promise.all([
+    const [{ context, cycleMeta, activeBudget }, modelHistory] = await Promise.all([
       fetchFinancialContext(userId),
       fetchChatHistoryForModel(userId),
     ]);
 
-    const systemPrompt = buildChatSystemPrompt(context, input.locale, cycleMeta);
+    const systemPrompt = buildChatSystemPrompt(context, input.locale, cycleMeta, activeBudget);
     const rawReply = await callOpenAiChat(systemPrompt, modelHistory, input.message);
 
     const validated = chatResponseSchema.safeParse({ reply: rawReply });
     const reply = validated.success ? validated.data.reply : rawReply;
 
-    await prisma.chatMessage.createMany({
-      data: [
-        { userId, role: 'user', content: input.message },
-        { userId, role: 'assistant', content: reply },
-      ],
+    await prisma.chatMessage.create({
+      data: { userId, role: 'user', content: input.message },
+    });
+
+    await prisma.chatMessage.create({
+      data: { userId, role: 'assistant', content: reply },
     });
 
     await incrementAiChatCount(userId);

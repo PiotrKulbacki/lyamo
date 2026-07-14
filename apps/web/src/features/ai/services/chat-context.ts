@@ -20,6 +20,31 @@ export type FinancialCycleMeta = {
   cycleEndIso: string;
 };
 
+export type ActiveMonthlyBudget = {
+  amount: number;
+  currency: string;
+  source: 'current_override' | 'default';
+};
+
+export function resolveActiveMonthlyBudget(params: {
+  currentMonthBudget: number | null;
+  defaultMonthlyBudget: number | null;
+  primaryCurrency: string;
+}): ActiveMonthlyBudget | null {
+  const hasCurrentOverride = params.currentMonthBudget != null && params.currentMonthBudget > 0;
+  const amount = hasCurrentOverride ? params.currentMonthBudget : params.defaultMonthlyBudget;
+
+  if (amount == null || amount <= 0) {
+    return null;
+  }
+
+  return {
+    amount,
+    currency: params.primaryCurrency,
+    source: hasCurrentOverride ? 'current_override' : 'default',
+  };
+}
+
 export type MonthlyTransactionSnapshot = {
   amount: number;
   currency: string;
@@ -84,12 +109,23 @@ export function aggregateFinancialContext(
   };
 }
 
+function formatBudgetPromptLine(budget: ActiveMonthlyBudget): string {
+  const priorityNote =
+    budget.source === 'current_override'
+      ? 'The user changed this value in the dashboard; it takes priority over general default settings.'
+      : 'This is the default monthly budget from user settings (no dashboard override for this cycle).';
+
+  return `User's active monthly budget for the current billing cycle: ${budget.amount} ${budget.currency}. This amount is binding for the current period. ${priorityNote}`;
+}
+
 export function buildChatSystemPrompt(
   context: FinancialContext,
   locale: Locale,
-  cycleMeta: FinancialCycleMeta
+  cycleMeta: FinancialCycleMeta,
+  activeBudget: ActiveMonthlyBudget | null = null
 ): string {
   const language = LOCALE_NAMES[locale];
+  const budgetSection = activeBudget ? `${formatBudgetPromptLine(activeBudget)}\n\n` : '';
 
   return `You are a helpful personal finance assistant for Smart Expense Control.
 Always respond in ${language}.
@@ -101,7 +137,7 @@ Keep answers concise, practical, and friendly.
 Today is ${cycleMeta.todayIso}. User's financial cycle starts on day ${cycleMeta.financialMonthStartDay}.
 Current cycle: ${cycleMeta.cycleStartIso} to ${cycleMeta.cycleEndIso}. Use this range to calculate averages or statistics.
 
-Current cycle label: ${context.currentCycleLabel}
+${budgetSection}Current cycle label: ${context.currentCycleLabel}
 Total spent this cycle (all currencies, not converted): ${context.totalSpentThisCycle}
 
 Category totals this cycle:

@@ -14,8 +14,56 @@
 10. **Faza 8.1.2: poprawki filtra wykresu i kalendarza** — [✅ Zrobione]
 11. **Faza 8.3: integracja dashboardu — sync filtrów, statystyki dzienne** — [✅ Zrobione]
 12. **Faza 8.4: kategorie, CTA, sidebar, tryb analizy średnich** — [✅ Zrobione]
+13. **Faza 8.5: UX czatu AI — awatary, kolejność wiadomości, ikona wysyłania** — [✅ Zrobione]
+14. **Faza 8.6: dynamiczny budżet miesięczny w kontekście czatu AI** — [✅ Zrobione]
+
+## Żelazne zasady agentów (obowiązkowe)
+
+### Formatowanie Prettier — zawsze na koniec pracy
+
+Każdy agent AI **musi** wykonać poniższe kroki przed zakończeniem sesji, jeśli w trakcie pracy zmodyfikował jakiekolwiek pliki kodu lub konfiguracji objęte Prettierem.
+
+1. **Napraw formatowanie** — z katalogu głównego repozytorium:
+
+   ```bash
+   npx prettier --write .
+   ```
+
+   (Dopuszczalna wariantacja: `--write` tylko na zmienionych plikach, jeśli zakres zmian jest wąski.)
+
+2. **Zweryfikuj** — CI uruchamia dokładnie ten check; musi przejść bez ostrzeżeń:
+
+   ```bash
+   npm run format
+   ```
+
+3. **Jeśli krok 2 zwraca błąd** — napraw pliki wskazane przez Prettier i powtórz kroki 1–2 aż `npm run format` zakończy się sukcesem (`All matched files use Prettier code style!`).
+
+**Nie pomijaj tego kroku.** Brak formatowania powoduje fail joba `format` w GitHub Actions (`prettier --check .`).
 
 ## Latest Handoff Log
+
+**2026-07-14 — Faza 8.6 zamknięta: dynamiczny budżet miesięczny w kontekście czatu AI (override z dashboardu).**
+
+### Faza 8.6 — Dynamiczny budżet w czacie AI
+
+- **Pobieranie budżetu** — `resolveActiveMonthlyBudget()` w `chat-context.ts`: priorytet `User.currentMonthBudget` (nadpisanie z dashboardu na bieżący cykl), fallback `User.defaultMonthlyBudget`; waluta z `primaryCurrency`.
+- **Prompt systemowy** — `buildChatSystemPrompt()` wstrzykuje wiążącą kwotę na bieżący cykl rozliczeniowy z adnotacją o priorytecie nadpisania z dashboardu.
+- **Chat service** — `fetchFinancialContext()` pobiera oba pola budżetu + walutę w jednym zapytaniu Prisma; przekazuje `activeBudget` do promptu.
+- **Testy** — `chat-context.test.ts`: override vs default, brak budżetu, scenariusz „po zmianie w dashboardzie AI widzi nową kwotę".
+
+---
+
+**2026-07-14 — Faza 8.5 zamknięta: UX czatu AI (awatary, kolejność wiadomości, ikona wysyłania).**
+
+### Faza 8.5 — UX czatu AI
+
+- **Awatary nadawców** — ikona `User` (warm) przy wiadomościach użytkownika, `Bot` (cool) przy odpowiedziach asystenta; spójne z paletą `--warm` / `--cool` z `globals.css`.
+- **Kolejność wiadomości** — sortowanie chronologiczne przed renderem (`createdAt`, tiebreaker: rola user → assistant, potem `id`); naprawa `mergeOlderMessages`; API historii z `orderBy: [{ createdAt, id }]`; zapis pary user/assistant jako dwa osobne `create` zamiast `createMany` (eliminacja identycznego `createdAt`).
+- **Input** — ikona `Send` w przycisku „Wyślij wiadomość".
+- **Rollback optymistyczny** — przy błędzie API wiadomość użytkownika jest usuwana ze stanu lokalnego.
+
+---
 
 **2026-07-14 — Hotfix: czat AI 429 mimo dostępnej quota (FREE plan).**
 
@@ -27,7 +75,6 @@
   - **FREE:** pominięcie Redis per-minute — limit miesięczny w DB (`monthlyAiChatCount`) jest jedynym limitem biznesowym.
   - **PRO:** Redis jako ochrona przed spamem (30 req/min zamiast 5).
   - **Chat bez Upstash:** fail-open (quota DB chroni koszty); skan paragonów nadal fail-closed bez Redis.
-- **Debug:** logi `[AI Chat 429]` / `[RateLimit]` w route handlerze i `rate-limit.ts` (do usunięcia po weryfikacji na produkcji).
 
 ---
 
@@ -129,6 +176,7 @@
 
 ### Następny agent — start tutaj
 
+0. **Przed zakończeniem sesji:** obowiązkowo `npx prettier --write .` → `npm run format` (szczegóły w sekcji **Żelazne zasady agentów** powyżej).
 1. Produkcja live — zmiany przez `dev` → PR → merge `main`.
 2. **Vercel env:** `STRIPE_PRO_PRICE_PLN|EUR|GBP`, `NEXT_PUBLIC_SENTRY_DSN` (opcjonalnie org/project/token).
 3. **PostHog:** flaga `pro-promo-pricing` — rollout 100% = promocja włączona; 0% lub Disabled = ceny standardowe. MCP wizard (`npx @posthog/wizard mcp add`) opcjonalny — nie wymagany do działania flag.
@@ -285,6 +333,18 @@ _(Brak zaplanowanych faz — każda nowa funkcja wymaga zatwierdzenia przez uży
 ---
 
 ## Ostatnie zmiany
+
+**2026-07-14 — Faza 8.6: dynamiczny budżet miesięczny w kontekście czatu AI**
+
+- Czat AI używa aktywnego budżetu bieżącego cyklu: `currentMonthBudget` (override z dashboardu) z fallbackiem do `defaultMonthlyBudget`.
+- Prompt systemowy komunikuje wiążącą kwotę i priorytet nadpisania z panelu dashboardu.
+- Testy jednostkowe scenariusza override vs domyślny budżet.
+
+**2026-07-14 — Faza 8.5: UX czatu AI (awatary, kolejność wiadomości, ikona wysyłania)**
+
+- Awatary nadawców: `User` (użytkownik) i `Bot` (asystent) w okrągłych badge'ach warm/cool.
+- Naprawiono kolejność wiadomości: sortowanie chronologiczne w UI, stabilny tiebreaker, osobny zapis user/assistant w DB.
+- Ikona `Send` w przycisku wysyłania; rollback optymistycznej wiadomości przy błędzie API.
 
 **2026-07-14 — Hotfix: czat AI 429 mimo dostępnej quota FREE**
 
