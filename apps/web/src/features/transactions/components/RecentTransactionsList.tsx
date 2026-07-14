@@ -41,6 +41,7 @@ type RecentTransactionsListProps = {
   categoryDisplayContext?: CategoryDisplayContext;
   isRefreshing?: boolean;
   groupReceiptSplits?: boolean;
+  initialExpandedGroupIds?: string[];
   onEdit: (transaction: RecentTransaction) => void;
   onDelete: (transactionId: string) => void;
   onEditGroup?: (group: SplitTransactionGroup) => void;
@@ -172,6 +173,7 @@ function SplitGroupRow({
   onDelete,
   onEditGroup,
   onDeleteGroup,
+  initialExpanded,
 }: {
   group: SplitTransactionGroup;
   primaryCurrency: string;
@@ -181,9 +183,10 @@ function SplitGroupRow({
   onDelete: (transactionId: string) => void;
   onEditGroup?: (group: SplitTransactionGroup) => void;
   onDeleteGroup?: (receiptGroupId: string) => void;
+  initialExpanded?: boolean;
 }) {
   const t = useT();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(initialExpanded ?? false);
   const showOriginal = group.currency !== primaryCurrency;
   const title = group.description ?? t('history.split.untitledReceipt');
 
@@ -339,6 +342,7 @@ export function RecentTransactionsList({
   categoryDisplayContext,
   isRefreshing = false,
   groupReceiptSplits = false,
+  initialExpandedGroupIds,
   onEdit,
   onDelete,
   onEditGroup,
@@ -396,6 +400,7 @@ export function RecentTransactionsList({
                       onDelete={onDelete}
                       onEditGroup={onEditGroup}
                       onDeleteGroup={onDeleteGroup}
+                      initialExpanded={initialExpandedGroupIds?.includes(entry.receiptGroupId)}
                     />
                   ) : (
                     <SingleTransactionRow

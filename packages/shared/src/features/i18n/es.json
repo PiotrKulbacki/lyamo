@@ -103,6 +103,9 @@
       "scanDocument": "Escanear",
       "confirmExpense": "Confirmar gasto",
       "uploadDocument": "Subir foto del documento",
+      "chooseFile": "Elegir foto",
+      "dropDocument": "Suelta el recibo aquí",
+      "dragDropHint": "Arrastra y suelta una imagen de recibo o factura, o elige un archivo de tu dispositivo",
       "upgradeToPro": "Actualizar a Pro",
       "scanBlocked": "Límite de escaneos alcanzado"
     },
@@ -124,7 +127,26 @@
       "quotaExceeded": "Has usado los 5 escaneos gratuitos. Actualiza a Pro para seguir escaneando recibos",
       "monthlyLimitReached": "Límite mensual de escaneos alcanzado. Inténtalo de nuevo el próximo mes",
       "aiFailed": "El análisis del recibo falló. Inténtalo de nuevo",
-      "parseFailed": "No se pudieron procesar los datos del recibo. Introdúcelos manualmente"
+      "parseFailed": "No se pudieron procesar los datos del recibo. Introdúcelos manualmente",
+      "storageNotConfigured": "El almacenamiento de recibos no está configurado. Contacta con soporte",
+      "storageUploadFailed": "No se pudo guardar la imagen del recibo. Inténtalo de nuevo"
+    },
+    "archive": {
+      "title": "Tu archivo de documentos",
+      "subtitle": "Escaneos de recibos y facturas guardados, organizados por mes",
+      "documentCount": "{{count}} escaneos",
+      "documentCount_one": "{{count}} escaneo",
+      "emptyTitle": "Aún no hay documentos guardados",
+      "emptyHint": "Escanea un recibo y guarda el gasto para crear tu archivo",
+      "untitledDocument": "Recibo sin título",
+      "previewTitle": "Vista previa del recibo",
+      "previewAction": "Vista previa de {{name}}",
+      "previewActionShort": "Vista previa",
+      "closePreview": "Cerrar vista previa",
+      "viewTransactions": "Ver transacciones",
+      "errors": {
+        "loadFailed": "No se pudo cargar el archivo de documentos"
+      }
     },
     "split": {
       "toggleOn": "Dividir gasto",

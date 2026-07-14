@@ -32,6 +32,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const from = parseDateParam(searchParams.get('from'));
     const to = parseDateParam(searchParams.get('to'));
+    const receiptGroupId = searchParams.get('receiptGroupId') ?? undefined;
 
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
@@ -41,6 +42,7 @@ export async function GET(request: Request) {
     const transactions = await listTransactions(user.id, {
       from,
       to,
+      receiptGroupId,
       primaryCurrency: from || to ? (dbUser?.primaryCurrency as 'PLN' | 'EUR' | 'GBP') : undefined,
     });
 

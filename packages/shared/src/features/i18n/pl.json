@@ -103,6 +103,9 @@
       "scanDocument": "Skanuj",
       "confirmExpense": "Zatwierdź wydatek",
       "uploadDocument": "Prześlij zdjęcie dokumentu",
+      "chooseFile": "Wybierz zdjęcie",
+      "dropDocument": "Upuść paragon tutaj",
+      "dragDropHint": "Przeciągnij i upuść zdjęcie paragonu lub faktury albo wybierz plik z urządzenia",
       "upgradeToPro": "Przejdź na Pro",
       "scanBlocked": "Limit skanów wyczerpany"
     },
@@ -124,7 +127,28 @@
       "quotaExceeded": "Wykorzystałeś 5 darmowych skanów. Przejdź na Pro, aby dalej skanować paragony",
       "monthlyLimitReached": "Osiągnięto miesięczny limit skanów. Spróbuj ponownie w przyszłym miesiącu",
       "aiFailed": "Analiza paragonu nie powiodła się. Spróbuj ponownie",
-      "parseFailed": "Nie udało się przetworzyć danych z paragonu. Wprowadź je ręcznie"
+      "parseFailed": "Nie udało się przetworzyć danych z paragonu. Wprowadź je ręcznie",
+      "storageNotConfigured": "Magazyn paragonów nie jest skonfigurowany. Skontaktuj się z supportem",
+      "storageUploadFailed": "Nie udało się zapisać zdjęcia paragonu. Spróbuj ponownie"
+    },
+    "archive": {
+      "title": "Twoje archiwum dokumentów",
+      "subtitle": "Zapisane skany paragonów i faktur, uporządkowane miesięcznie",
+      "documentCount": "{{count}} skanów",
+      "documentCount_one": "{{count}} skan",
+      "documentCount_few": "{{count}} skany",
+      "documentCount_many": "{{count}} skanów",
+      "emptyTitle": "Brak zapisanych dokumentów",
+      "emptyHint": "Zeskanuj paragon i zapisz wydatek, aby zbudować archiwum",
+      "untitledDocument": "Paragon bez nazwy",
+      "previewTitle": "Podgląd paragonu",
+      "previewAction": "Podgląd {{name}}",
+      "previewActionShort": "Podgląd",
+      "closePreview": "Zamknij podgląd",
+      "viewTransactions": "Przejdź do transakcji",
+      "errors": {
+        "loadFailed": "Nie udało się wczytać archiwum dokumentów"
+      }
     },
     "split": {
       "toggleOn": "Rozbij wydatek",

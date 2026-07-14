@@ -114,14 +114,16 @@ model Transaction {
   category       String
   description    String?
   date           DateTime
-  isAiScanned    Boolean  @default(false)
-  receiptGroupId String?
-  createdAt      DateTime @default(now())
+  isAiScanned      Boolean  @default(false)
+  receiptGroupId   String?
+  receiptImageUrl  String?
+  createdAt        DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, date])
   @@index([userId, receiptGroupId])
+  @@index([userId, receiptImageUrl])
   @@map("transactions")
 }
 

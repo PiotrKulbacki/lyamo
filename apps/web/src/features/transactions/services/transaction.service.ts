@@ -9,6 +9,7 @@ import type {
 import { TRANSACTION_ERROR_CODES } from '@shared/features/transactions/schemas';
 import { getExchangeRates } from '@web/features/currency/services/currency.service';
 import { invalidateAggregationForTransactionDates } from '@web/features/analytics/services/period-aggregation-cache.service';
+import { deleteReceiptImageIfOrphaned } from '@web/features/scanner/services/receipt-storage.service';
 
 export type TransactionDto = {
   id: string;
@@ -20,6 +21,7 @@ export type TransactionDto = {
   date: string;
   isAiScanned: boolean;
   receiptGroupId: string | null;
+  receiptImageUrl: string | null;
   createdAt: string;
 };
 
@@ -31,6 +33,7 @@ export type ListTransactionsOptions = {
   from?: Date;
   to?: Date;
   primaryCurrency?: CurrencyCode;
+  receiptGroupId?: string;
 };
 
 function toTransactionDto(transaction: Transaction): TransactionDto {
@@ -44,6 +47,7 @@ function toTransactionDto(transaction: Transaction): TransactionDto {
     date: transaction.date.toISOString(),
     isAiScanned: transaction.isAiScanned,
     receiptGroupId: transaction.receiptGroupId,
+    receiptImageUrl: transaction.receiptImageUrl,
     createdAt: transaction.createdAt.toISOString(),
   };
 }
@@ -54,6 +58,7 @@ export async function listTransactions(
 ): Promise<TransactionDto[] | TransactionWithConversionDto[]> {
   const where = {
     userId,
+    ...(options.receiptGroupId ? { receiptGroupId: options.receiptGroupId } : {}),
     ...(options.from || options.to
       ? {
           date: {
@@ -117,6 +122,8 @@ export async function createTransaction(
       description: input.description,
       date: input.date,
       isAiScanned: input.isAiScanned ?? false,
+      receiptGroupId: input.receiptGroupId ?? null,
+      receiptImageUrl: input.receiptImageUrl ?? null,
     },
   });
 
@@ -130,7 +137,8 @@ export async function createTransactionBatch(
   input: CreateTransactionBatchInput
 ): Promise<TransactionDto[]> {
   const { shared, splits } = input;
-  const receiptGroupId = splits.length > 1 ? crypto.randomUUID() : null;
+  const receiptGroupId = shared.receiptGroupId ?? (splits.length > 1 ? crypto.randomUUID() : null);
+  const receiptImageUrl = shared.receiptImageUrl ?? null;
 
   const transactions = await prisma.$transaction(
     splits.map((split) =>
@@ -144,6 +152,7 @@ export async function createTransactionBatch(
           date: shared.date,
           isAiScanned: shared.isAiScanned ?? false,
           receiptGroupId,
+          receiptImageUrl,
         },
       })
     )
@@ -206,8 +215,15 @@ export async function deleteTransaction(userId: string, transactionId: string): 
     throw new Error(TRANSACTION_ERROR_CODES.FORBIDDEN);
   }
 
+  const { receiptGroupId, receiptImageUrl } = existing;
+
   await prisma.transaction.delete({ where: { id: transactionId } });
   await invalidateAggregationForTransactionDates(userId, [existing.date]);
+
+  if (receiptGroupId) {
+    await deleteReceiptImageIfOrphaned(userId, receiptGroupId, receiptImageUrl);
+  }
+
   return true;
 }
 
@@ -223,6 +239,10 @@ export async function deleteTransactionGroup(
     return false;
   }
 
+  const receiptImageUrl = transactions.find(
+    (transaction) => transaction.receiptImageUrl
+  )?.receiptImageUrl;
+
   await prisma.$transaction(
     transactions.map((transaction) => prisma.transaction.delete({ where: { id: transaction.id } }))
   );
@@ -231,6 +251,8 @@ export async function deleteTransactionGroup(
     userId,
     transactions.map((transaction) => transaction.date)
   );
+
+  await deleteReceiptImageIfOrphaned(userId, receiptGroupId, receiptImageUrl ?? null);
 
   return true;
 }

@@ -37,6 +37,8 @@ export const RECEIPT_SCAN_ERROR_CODES = {
   MONTHLY_LIMIT_REACHED: 'scanner.errors.monthlyLimitReached',
   AI_FAILED: 'scanner.errors.aiFailed',
   PARSE_FAILED: 'scanner.errors.parseFailed',
+  STORAGE_NOT_CONFIGURED: 'scanner.errors.storageNotConfigured',
+  STORAGE_UPLOAD_FAILED: 'scanner.errors.storageUploadFailed',
 } as const;
 
 const currencyEnum = z.enum(['PLN', 'EUR', 'GBP']);
@@ -57,6 +59,8 @@ const transactionBaseSchema = z.object({
     z.date({ invalid_type_error: TRANSACTION_ERROR_CODES.INVALID_DATE })
   ),
   isAiScanned: z.boolean().optional().default(false),
+  receiptGroupId: z.string().uuid().optional(),
+  receiptImageUrl: z.string().max(2048).optional(),
 });
 
 export const createTransactionSchema = transactionBaseSchema;
@@ -143,6 +147,8 @@ export const createTransactionBatchSchema = z
         z.date({ invalid_type_error: TRANSACTION_ERROR_CODES.INVALID_DATE })
       ),
       isAiScanned: z.boolean().optional().default(false),
+      receiptGroupId: z.string().uuid().optional(),
+      receiptImageUrl: z.string().max(2048).optional(),
     }),
     splits: z
       .array(transactionSplitLineSchema)
