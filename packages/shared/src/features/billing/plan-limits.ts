@@ -4,7 +4,7 @@ export const UNLIMITED_QUOTA = Number.MAX_SAFE_INTEGER;
 
 export const PLAN_LIMITS = {
   FREE: {
-    aiScansPerMonth: 3,
+    aiScansPerMonth: 5,
     aiChatMessagesPerMonth: 10,
   },
   PRO: {

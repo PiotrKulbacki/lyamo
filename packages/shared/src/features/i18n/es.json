@@ -118,7 +118,7 @@
       "invalidFile": "Sube un archivo de imagen válido (JPEG, PNG o WebP)",
       "fileTooLarge": "La imagen es demasiado grande. Tamaño máximo: 10 MB",
       "unreadable": "No se pudo leer el importe de este recibo",
-      "quotaExceeded": "Has usado los 3 escaneos gratuitos. Actualiza a Pro para seguir escaneando recibos",
+      "quotaExceeded": "Has usado los 5 escaneos gratuitos. Actualiza a Pro para seguir escaneando recibos",
       "monthlyLimitReached": "Límite mensual de escaneos alcanzado. Inténtalo de nuevo el próximo mes",
       "aiFailed": "El análisis del recibo falló. Inténtalo de nuevo",
       "parseFailed": "No se pudieron procesar los datos del recibo. Introdúcelos manualmente"
@@ -148,6 +148,7 @@
     },
     "status": {
       "thinking": "Pensando...",
+      "messagesQuota": "{{used}} / {{limit}} mensajes este mes",
       "messagesRemaining": "{{count}} mensajes restantes este mes"
     },
     "success": {
@@ -228,7 +229,7 @@
         "pricePln": "0 PLN / mes",
         "priceEur": "0 € / mes",
         "priceGbp": "0 £ / mes",
-        "feature1": "3 escaneos de recibos al mes",
+        "feature1": "5 escaneos de recibos al mes",
         "feature2": "10 mensajes de chat IA al mes",
         "feature3": "Panel de gastos completo",
         "cta": "Empezar gratis"

@@ -4,14 +4,14 @@ import { env } from '@web/env';
 
 const AI_RATE_LIMIT_WINDOW = '1 m';
 
-/** Scan: strict per-minute cap. Chat: abuse-only burst cap (monthly quota is enforced in DB). */
+/** Per-minute burst caps for PRO abuse protection (monthly quota is enforced in DB). */
 const AI_RATE_LIMIT_MAX: Record<AiRateLimitScope, number> = {
-  scan: 5,
+  scan: 15,
   chat: 30,
 };
 
-function shouldFailOpenWithoutRedis(scope: AiRateLimitScope): boolean {
-  return scope === 'chat';
+function shouldFailOpenWithoutRedis(_scope: AiRateLimitScope): boolean {
+  return true;
 }
 
 export type AiRateLimitScope = 'scan' | 'chat';
@@ -84,7 +84,13 @@ export type RateLimitResult = {
   allowed: boolean;
   remaining: number;
   reset: number;
+  limit: number;
+  key: string;
 };
+
+function buildRateLimitKey(scope: AiRateLimitScope, identifier: string): string {
+  return `${AI_RATE_LIMIT_PREFIX[scope]}:${identifier}`;
+}
 
 function isStrictProduction(): boolean {
   return (
@@ -98,35 +104,52 @@ export async function checkAiRateLimit(
   scope: AiRateLimitScope,
   userId?: string
 ): Promise<RateLimitResult> {
+  const limit = AI_RATE_LIMIT_MAX[scope];
+  const identifier = userId ?? `ip:${getClientIp(request)}`;
+  const key = buildRateLimitKey(scope, identifier);
   const limiter = getAiRateLimiter(scope);
 
   if (!limiter) {
     const failOpen = shouldFailOpenWithoutRedis(scope);
 
     if (isStrictProduction() && !failOpen) {
-      return { allowed: false, remaining: 0, reset: 0 };
+      console.log(
+        `Rate Limit Check: Key: ${key}, Remaining: 0, Total: ${limit} (no Redis, blocked)`
+      );
+      return { allowed: false, remaining: 0, reset: 0, limit, key };
     }
 
-    return { allowed: true, remaining: AI_RATE_LIMIT_MAX[scope], reset: 0 };
+    console.log(
+      `Rate Limit Check: Key: ${key}, Remaining: ${limit}, Total: ${limit} (no Redis, fail-open)`
+    );
+    return { allowed: true, remaining: limit, reset: 0, limit, key };
   }
-
-  const identifier = userId ?? `ip:${getClientIp(request)}`;
 
   try {
     const result = await limiter.limit(identifier);
+
+    console.log(`Rate Limit Check: Key: ${key}, Remaining: ${result.remaining}, Total: ${limit}`);
 
     return {
       allowed: result.success,
       remaining: result.remaining,
       reset: result.reset,
+      limit,
+      key,
     };
   } catch {
     const failOpen = shouldFailOpenWithoutRedis(scope);
 
     if (isStrictProduction() && !failOpen) {
-      return { allowed: false, remaining: 0, reset: 0 };
+      console.log(
+        `Rate Limit Check: Key: ${key}, Remaining: 0, Total: ${limit} (Redis error, blocked)`
+      );
+      return { allowed: false, remaining: 0, reset: 0, limit, key };
     }
 
-    return { allowed: true, remaining: AI_RATE_LIMIT_MAX[scope], reset: 0 };
+    console.log(
+      `Rate Limit Check: Key: ${key}, Remaining: ${limit}, Total: ${limit} (Redis error, fail-open)`
+    );
+    return { allowed: true, remaining: limit, reset: 0, limit, key };
   }
 }
