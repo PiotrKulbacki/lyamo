@@ -31,11 +31,8 @@ export function resolveActiveMonthlyBudget(params: {
   defaultMonthlyBudget: number | null;
   primaryCurrency: string;
 }): ActiveMonthlyBudget | null {
-  const hasCurrentOverride =
-    params.currentMonthBudget != null && params.currentMonthBudget > 0;
-  const amount = hasCurrentOverride
-    ? params.currentMonthBudget
-    : params.defaultMonthlyBudget;
+  const hasCurrentOverride = params.currentMonthBudget != null && params.currentMonthBudget > 0;
+  const amount = hasCurrentOverride ? params.currentMonthBudget : params.defaultMonthlyBudget;
 
   if (amount == null || amount <= 0) {
     return null;
@@ -128,9 +125,7 @@ export function buildChatSystemPrompt(
   activeBudget: ActiveMonthlyBudget | null = null
 ): string {
   const language = LOCALE_NAMES[locale];
-  const budgetSection = activeBudget
-    ? `${formatBudgetPromptLine(activeBudget)}\n\n`
-    : '';
+  const budgetSection = activeBudget ? `${formatBudgetPromptLine(activeBudget)}\n\n` : '';
 
   return `You are a helpful personal finance assistant for Smart Expense Control.
 Always respond in ${language}.

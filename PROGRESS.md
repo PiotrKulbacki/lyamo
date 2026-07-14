@@ -17,6 +17,30 @@
 13. **Faza 8.5: UX czatu AI — awatary, kolejność wiadomości, ikona wysyłania** — [✅ Zrobione]
 14. **Faza 8.6: dynamiczny budżet miesięczny w kontekście czatu AI** — [✅ Zrobione]
 
+## Żelazne zasady agentów (obowiązkowe)
+
+### Formatowanie Prettier — zawsze na koniec pracy
+
+Każdy agent AI **musi** wykonać poniższe kroki przed zakończeniem sesji, jeśli w trakcie pracy zmodyfikował jakiekolwiek pliki kodu lub konfiguracji objęte Prettierem.
+
+1. **Napraw formatowanie** — z katalogu głównego repozytorium:
+
+   ```bash
+   npx prettier --write .
+   ```
+
+   (Dopuszczalna wariantacja: `--write` tylko na zmienionych plikach, jeśli zakres zmian jest wąski.)
+
+2. **Zweryfikuj** — CI uruchamia dokładnie ten check; musi przejść bez ostrzeżeń:
+
+   ```bash
+   npm run format
+   ```
+
+3. **Jeśli krok 2 zwraca błąd** — napraw pliki wskazane przez Prettier i powtórz kroki 1–2 aż `npm run format` zakończy się sukcesem (`All matched files use Prettier code style!`).
+
+**Nie pomijaj tego kroku.** Brak formatowania powoduje fail joba `format` w GitHub Actions (`prettier --check .`).
+
 ## Latest Handoff Log
 
 **2026-07-14 — Faza 8.6 zamknięta: dynamiczny budżet miesięczny w kontekście czatu AI (override z dashboardu).**
@@ -152,6 +176,7 @@
 
 ### Następny agent — start tutaj
 
+0. **Przed zakończeniem sesji:** obowiązkowo `npx prettier --write .` → `npm run format` (szczegóły w sekcji **Żelazne zasady agentów** powyżej).
 1. Produkcja live — zmiany przez `dev` → PR → merge `main`.
 2. **Vercel env:** `STRIPE_PRO_PRICE_PLN|EUR|GBP`, `NEXT_PUBLIC_SENTRY_DSN` (opcjonalnie org/project/token).
 3. **PostHog:** flaga `pro-promo-pricing` — rollout 100% = promocja włączona; 0% lub Disabled = ceny standardowe. MCP wizard (`npx @posthog/wizard mcp add`) opcjonalny — nie wymagany do działania flag.
