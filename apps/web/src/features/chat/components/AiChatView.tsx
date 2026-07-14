@@ -281,6 +281,8 @@ export function AiChatView() {
       }
 
       if (data.reply) {
+        setIsSending(false);
+
         const assistantMessage: HistoryMessage = {
           id: crypto.randomUUID(),
           role: 'assistant',

@@ -215,15 +215,29 @@ function formatCycleDaysPromptLine(daysRemainingInCycle: number): string {
 }
 
 function formatDashboardBudgetSummarySection(summary: DashboardBudgetSummary): string {
+  const dailyAllowance =
+    summary.avgRemainingPerDay != null
+      ? `${summary.avgRemainingPerDay} ${summary.primaryCurrency}/day`
+      : 'not available (no budget set or cycle ended)';
+
   return `Dashboard budget summary (authoritative — matches the "Total spent" panel):
 ${JSON.stringify(summary, null, 2)}
 
+CRITICAL DEFAULTS — apply automatically without the user asking:
+- Any question about "daily budget", "how much left per day", "money for living", or "can I afford X" MUST use totalSpentIncludingFixed and remainingBudget. Fixed costs (fixedCostsTotal) are ALREADY included — never answer using transactionsSpentPrimary alone.
+- The current daily allowance is avgRemainingPerDay (${dailyAllowance}), derived from remainingBudget / daysUntilPayday. Prefer citing this value when the user asks how much they can spend per day today.
+
 Budget calculation rules:
-- totalSpentIncludingFixed already includes transactions (transactionsSpentPrimary) AND recurring fixed costs (fixedCostsTotal). Do not add fixed costs again.
-- For "how much can I spend per day", "daily limit", or hypothetical purchases (e.g. "if I buy X"), use remainingBudget and divide by daysUntilPayday — this matches dashboard "average remaining per day".
-- daysUntilPayday is for daily budget forecasting; daysRemainingInCycle is only for "how many days are left in the cycle" questions.
-- If daysUntilPayday is 0, the cycle has ended — do not divide by zero; treat remaining budget as available today only.
-- For hypothetical spending: newRemaining = remainingBudget - purchaseAmount; newDaily = newRemaining / daysUntilPayday.`;
+- totalSpentIncludingFixed = transactionsSpentPrimary + fixedCostsTotal. This is the only correct "spent so far" figure.
+- remainingBudget = budget - totalSpentIncludingFixed. Use this as the starting point for all forecasts.
+- Daily allowance = remainingBudget / daysUntilPayday (NOT daysRemainingInCycle). Current value: avgRemainingPerDay.
+
+Hypothetical purchase rules (e.g. "if I buy shoes for 160 EUR"):
+- A planned purchase REDUCES remaining budget: newRemaining = remainingBudget - purchaseAmount.
+- NEVER add the purchase amount to remainingBudget or to the daily allowance — buying something means LESS money left, not more.
+- newDailyAllowance = newRemaining / daysUntilPayday.
+- Worked example with current data: purchase 160 ${summary.primaryCurrency} → newRemaining = ${summary.remainingBudget ?? 0} - 160 = ${summary.remainingBudget != null ? Math.max(summary.remainingBudget - 160, 0) : 'N/A'}; newDaily = newRemaining / ${summary.daysUntilPayday}.
+- If daysUntilPayday is 0, the cycle has ended — do not divide by zero; treat remaining budget as available today only.`;
 }
 
 export function buildChatSystemPrompt(
@@ -254,6 +268,7 @@ Use the user's transaction data below to answer spending questions accurately.
 If data is missing, say so clearly and suggest adding transactions.
 Never invent transactions or amounts not present in the context.
 Keep answers concise, practical, and friendly.
+${context.budgetSummary ? '\nFor budget and daily spending questions, always use the Dashboard budget summary below — it already includes fixed costs. Do not recalculate from recent transactions or transactionsSpentPrimary alone.' : ''}
 
 Today is ${cycleMeta.todayIso}. User's financial cycle starts on day ${cycleMeta.financialMonthStartDay}.
 Current cycle: ${cycleMeta.cycleStartIso} to ${cycleMeta.cycleEndIso}. Use this range to calculate averages or statistics.

@@ -255,11 +255,12 @@ describe('chat-context', () => {
       expect(prompt).toContain('"fixedCostsTotal": 985');
       expect(prompt).toContain('"remainingBudget": 871.55');
       expect(prompt).toContain('"daysUntilPayday": 29');
-      expect(prompt).toContain('divide by daysUntilPayday');
-      expect(prompt).toContain('Do not add fixed costs again');
+      expect(prompt).toContain('CRITICAL DEFAULTS');
+      expect(prompt).toContain('never answer using transactionsSpentPrimary alone');
+      expect(prompt).toContain('avgRemainingPerDay');
     });
 
-    it('documents hypothetical purchase formula aligned with dashboard', () => {
+    it('includes worked subtraction example for hypothetical purchases', () => {
       const context = financialContextFromPeriodSnapshot(
         '2026-07-12 to 2026-08-11',
         sampleSnapshot,
@@ -282,7 +283,8 @@ describe('chat-context', () => {
       const summary = context.budgetSummary!;
       const afterShoes = (summary.remainingBudget! - 160) / summary.daysUntilPayday;
 
-      expect(prompt).toContain('newRemaining = remainingBudget - purchaseAmount');
+      expect(prompt).toContain('NEVER add the purchase amount');
+      expect(prompt).toContain('newRemaining = 871.55 - 160');
       expect(afterShoes).toBeCloseTo(24.54, 1);
     });
   });

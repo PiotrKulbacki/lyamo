@@ -358,6 +358,11 @@ _(Brak zaplanowanych faz — każda nowa funkcja wymaga zatwierdzenia przez uży
 
 ## Ostatnie zmiany
 
+**2026-07-14 — Hotfix: czat AI — koszty stałe domyślnie, odejmowanie zakupów hipotetycznych, UI „Myślę…".**
+
+- Wzmocniono prompt: sekcja CRITICAL DEFAULTS, zakaz liczenia z `transactionsSpentPrimary` bez kosztów stałych, przykład odejmowania zakupu (160 EUR).
+- UI czatu: dymek „Myślę…" znika przed renderem odpowiedzi (eliminacja przeskoku layoutu).
+
 **2026-07-14 — Faza 8.8: pełny kontekst panelu „Suma wydatków" w czacie AI**
 
 - Czat AI dostaje `DashboardBudgetSummary` zgodny z dashboardem: transakcje + koszty stałe, pozostały budżet, średnio wydano/dzień, średnio do wydania/dzień.
