@@ -16,6 +16,7 @@ import {
 } from '@web/features/billing/components/BillingCurrencySwitcher';
 import { ProPriceDisplay } from '@web/features/billing/components/ProPriceDisplay';
 import { RecurringExpensesSection } from '@web/features/settings/components/RecurringExpensesSection';
+import { CategoriesSection } from '@web/features/settings/components/CategoriesSection';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
 
 export function SettingsView() {
@@ -278,6 +279,8 @@ export function SettingsView() {
           </button>
         </section>
       </form>
+
+      <CategoriesSection />
 
       <RecurringExpensesSection primaryCurrency={primaryCurrency} />
 

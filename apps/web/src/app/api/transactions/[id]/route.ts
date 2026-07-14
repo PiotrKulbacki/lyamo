@@ -5,6 +5,7 @@ import {
 } from '@shared/features/transactions/schemas';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import { jsonError } from '@web/features/auth/services/auth.service';
+import { validateCategoryForUser } from '@web/features/categories/services/category.service';
 import {
   deleteTransaction,
   getTransactionById,
@@ -47,6 +48,13 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (!parsed.success) {
       const firstError = parsed.error.errors[0]?.message ?? 'auth.errors.generic';
       return jsonError(firstError, 400);
+    }
+
+    if (parsed.data.category) {
+      const isValidCategory = await validateCategoryForUser(user.id, parsed.data.category);
+      if (!isValidCategory) {
+        return jsonError('transactions.errors.invalidCategory', 400);
+      }
     }
 
     try {

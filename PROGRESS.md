@@ -12,8 +12,35 @@
 8. **Dashboard Premium: filtry wykresu, CRUD transakcji, budżet preview** — [✅ Zrobione]
 9. **Faza 8.1: layout, budżet, historia, koszty stałe** — [✅ Zrobione]
 10. **Faza 8.1.2: poprawki filtra wykresu i kalendarza** — [✅ Zrobione]
+11. **Faza 8.3: integracja dashboardu — sync filtrów, statystyki dzienne** — [✅ Zrobione]
+12. **Faza 8.4: kategorie, CTA, sidebar, tryb analizy średnich** — [✅ Zrobione]
 
 ## Latest Handoff Log
+
+**2026-07-14 — Faza 8.4 zamknięta: odświeżone kategorie, własne kategorie użytkownika, sync średnich dziennych z Sumą wydatków, CTA i sidebar.**
+
+### Faza 8.4 — Kategorie, CTA, sidebar, tryb analizy
+
+- **Średnie dzienne ↔ Suma wydatków** — `visibleTotalSpent` + `getChartFilterDayMetrics(appliedFilter)`; średnio wydano/dzień i średnio do wydania liczone z tej samej kwoty co nagłówek panelu; layout `justify-between`.
+- **Sidebar** — logo dwuwierszowe: „Smart Expense" + „Control" rozciągnięte na szerokość (`text-align-last: justify`).
+- **CTA dashboardu** — „Dodaj wydatek"; skan „Skanuj {{used}}/{{limit}}" na FREE, bez licznika na PRO; usunięto słowo „paragon" ze skanera.
+- **Kategorie wbudowane** — dodano: Fuel, Household, Cosmetics, Hotels, Alcohol, Accounting, Mechanic; Coffee → CoffeeShop; usunięto Shopping, Utilities; migracja SQL istniejących transakcji.
+- **Własne kategorie** — model `UserCategory`, API CRUD `/api/categories`, sekcja w Ustawieniach (+, edycja, safe delete z migracją transakcji).
+- **Wykres donut** — dynamiczne kolory i nazwy (w tym custom) przez `CategoryDisplayContext`.
+- **i18n** — `layout.brandLine1|2`, `dashboard.cta.scan|scanWithQuota`, `settings.categories.*`, nowe klucze kategorii w 4 językach.
+
+---
+
+**2026-07-13 — Faza 8.3 zamknięta: wspólny stan filtrów kategorii (Suma wydatków ↔ wykres), statystyki dzienne pod paskiem budżetu.**
+
+### Faza 8.3 — Integracja komponentów Dashboardu
+
+- **Sync filtrów kategorii** — stan `hiddenCategories`, `appliedFilter` i `filterSelection` wyciągnięty do `DashboardView`; `aggregateCategoryTotals` liczone w nadrzędnym komponencie; panel „Suma wydatków" subskrybuje ten sam stan co wykres donut — ukrycie kategorii natychmiast przelicza total.
+- **Statystyki dzienne** — pod paskiem postępu budżetu: „Średnio wydano" (od dnia wypłaty do dziś) i „Średnio do wydania" (pozostały budżet / dni do następnej wypłaty); `date-fns` (`differenceInCalendarDays`, `addMonths`); obsługa `daysUntilPayday <= 0` → „Koniec cyklu" (bez dzielenia przez zero).
+- **Komponenty** — `DashboardDailyStats` (ikony `TrendingUp` / `TrendingDown`, `text-xs text-muted-foreground`, separator flex); logika w `dashboard-daily-stats.ts` + testy Vitest.
+- **i18n** — klucze `dashboard.daily.avgSpent|avgRemaining|cycleEnd` w en/pl/de/es.
+
+---
 
 **2026-07-13 — Faza 8.1.2 zamknięta: eliminacja podwójnego odświeżania wykresu, logika „Własny zakres", naprawa kalendarza Shadcn.**
 
@@ -244,6 +271,19 @@ _(Brak zaplanowanych faz — każda nowa funkcja wymaga zatwierdzenia przez uży
 ---
 
 ## Ostatnie zmiany
+
+**2026-07-14 — Faza 8.4: kategorie, własne kategorie, sync średnich dziennych, CTA, sidebar**
+
+- Średnie dzienne zsynchronizowane z Sumą wydatków (ten sam filtr kategorii i zakres dat wykresu).
+- Nowe kategorie wbudowane + własne kategorie użytkownika (CRUD, safe delete z migracją transakcji).
+- CTA: „Dodaj wydatek", „Skanuj 0/3" (FREE), bez licznika na PRO; sidebar z dwuwierszową nazwą aplikacji.
+- Migracja `20260713220000_user_categories_and_category_refresh`.
+
+**2026-07-13 — Faza 8.3: sync filtrów kategorii dashboardu, statystyki dzienne budżetu**
+
+- Wspólny stan filtrów kategorii w `DashboardView` — Suma wydatków i wykres donut reagują synchronicznie na ukrywanie kategorii.
+- Statystyki dzienne pod paskiem budżetu: średnie wydatki/dzień i średnia do wydania/dzień; obsługa końca cyklu bez dzielenia przez zero.
+- Nowe komponenty: `DashboardDailyStats`, `dashboard-daily-stats.ts`; i18n `dashboard.daily.*` w 4 językach.
 
 **2026-07-13 — Faza 8.1: layout sidebar, budżet, historia, koszty stałe, UX dashboardu**
 

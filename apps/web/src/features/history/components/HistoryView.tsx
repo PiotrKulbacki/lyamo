@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -10,8 +10,9 @@ import {
   getQuotaPeriodStart,
 } from '@shared/features/billing/financial-month';
 import { translateError } from '@shared/features/i18n';
-import type { CurrencyCode } from '@shared/features/transactions/schemas';
+import { toCalendarDateInputValue, type CurrencyCode } from '@shared/features/transactions/schemas';
 import { Button } from '@web/components/ui/button';
+import { useCategories } from '@web/features/categories/hooks/useCategories';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
 import { DeleteTransactionDialog } from '@web/features/transactions/components/DeleteTransactionDialog';
 import {
@@ -27,11 +28,7 @@ type HistoryUserMeta = {
 };
 
 function toDateInputValue(isoDate: string): string {
-  const date = new Date(isoDate);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return toCalendarDateInputValue(isoDate);
 }
 
 function toFormInitialValues(transaction: RecentTransaction): TransactionFormInitialValues {
@@ -47,6 +44,8 @@ function toFormInitialValues(transaction: RecentTransaction): TransactionFormIni
 export function HistoryView() {
   const t = useT();
   const { locale } = useLocale();
+  const { colorMap, nameMap } = useCategories();
+  const categoryDisplayContext = useMemo(() => ({ colorMap, nameMap }), [colorMap, nameMap]);
   const [userMeta, setUserMeta] = useState<HistoryUserMeta | null>(null);
   const [periodStart, setPeriodStart] = useState<Date | null>(null);
   const [transactions, setTransactions] = useState<RecentTransaction[]>([]);
@@ -230,6 +229,7 @@ export function HistoryView() {
         transactions={transactions}
         primaryCurrency={userMeta.primaryCurrency}
         locale={locale}
+        categoryDisplayContext={categoryDisplayContext}
         isRefreshing={isRefreshing}
         onEdit={openEditForm}
         onDelete={openDeleteDialog}

@@ -3,9 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
-import { TRANSACTION_CATEGORIES } from '@shared/features/transactions/schemas';
+import { toCalendarDateInputValue } from '@shared/features/transactions/schemas';
+import {
+  getCategoryOptionLabel,
+  useCategories,
+} from '@web/features/categories/hooks/useCategories';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
-import { getCategoryLabelKey } from '@web/features/transactions/lib/category-config';
 
 type ScanQuota = {
   limit: number;
@@ -28,6 +31,7 @@ type ReceiptDraft = {
 export function ReceiptScanner() {
   const t = useT();
   const { locale } = useLocale();
+  const { categories } = useCategories();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [quota, setQuota] = useState<ScanQuota | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -139,7 +143,7 @@ export function ReceiptScanner() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold text-[var(--text)]">
-          {t('scanner.labels.scanReceipt')}
+          {t('scanner.labels.scanDocument')}
         </h1>
         <p className="text-muted mt-1 text-sm">{t('scanner.status.readyToConfirm')}</p>
       </div>
@@ -166,7 +170,7 @@ export function ReceiptScanner() {
             onClick={() => fileInputRef.current?.click()}
             className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
           >
-            {isScanning ? t('scanner.status.analyzing') : t('scanner.labels.uploadReceipt')}
+            {isScanning ? t('scanner.status.analyzing') : t('scanner.labels.uploadDocument')}
           </button>
           {isBlocked && <span className="chip chip-needed">{t('scanner.labels.scanBlocked')}</span>}
           {quota && !isBlocked && (
@@ -222,9 +226,9 @@ export function ReceiptScanner() {
                 onChange={(event) => setDraft({ ...draft, category: event.target.value })}
                 className="auth-input"
               >
-                {TRANSACTION_CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {t(getCategoryLabelKey(category))}
+                {categories.map((category) => (
+                  <option key={category.key} value={category.key}>
+                    {getCategoryOptionLabel(category, t)}
                   </option>
                 ))}
               </select>
@@ -233,11 +237,9 @@ export function ReceiptScanner() {
               <span className="auth-label">{t('dashboard.form.date')}</span>
               <input
                 type="date"
-                value={draft.date.slice(0, 10)}
+                value={toCalendarDateInputValue(draft.date)}
                 disabled={isSaving}
-                onChange={(event) =>
-                  setDraft({ ...draft, date: new Date(event.target.value).toISOString() })
-                }
+                onChange={(event) => setDraft({ ...draft, date: event.target.value })}
                 className="auth-input"
               />
             </label>

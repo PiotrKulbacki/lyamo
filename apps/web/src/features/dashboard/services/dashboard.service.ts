@@ -2,6 +2,7 @@ import { endOfDay, startOfDay } from 'date-fns';
 import { prisma } from '@smart-expense-control/database';
 import { getQuotaPeriodStart } from '@shared/features/billing/financial-month';
 import { convertAmount } from '@shared/features/currency';
+import { getInclusiveTransactionPeriodEnd } from '@shared/features/transactions/calendar-date';
 import { FIXED_COSTS_CATEGORY } from '@shared/features/transactions/fixed-costs';
 import type { CurrencyCode } from '@shared/features/transactions/schemas';
 import { getExchangeRates } from '@web/features/currency/services/currency.service';
@@ -141,7 +142,7 @@ export async function getDashboardData(
   const now = new Date();
   const defaultPeriodStart = getQuotaPeriodStart(user.financialMonthStartDay, now);
   const periodStart = dateRange.from ? startOfDay(dateRange.from) : defaultPeriodStart;
-  const periodEnd = dateRange.to ? endOfDay(dateRange.to) : now;
+  const periodEnd = dateRange.to ? endOfDay(dateRange.to) : getInclusiveTransactionPeriodEnd(now);
   const chartDataStart = getChartDataFetchStart(periodStart, periodEnd);
   const primaryCurrency = user.primaryCurrency as CurrencyCode;
   const rateMap = await getExchangeRates();
@@ -179,7 +180,7 @@ export async function getDashboardData(
     prisma.transaction.findMany({
       where: {
         userId,
-        date: { gte: defaultPeriodStart, lte: now },
+        date: { gte: defaultPeriodStart, lte: periodEnd },
       },
       orderBy: { date: 'desc' },
       select: {
@@ -196,7 +197,7 @@ export async function getDashboardData(
     prisma.transaction.findMany({
       where: {
         userId,
-        date: { gte: defaultPeriodStart, lte: now },
+        date: { gte: defaultPeriodStart, lte: periodEnd },
       },
       select: {
         amount: true,

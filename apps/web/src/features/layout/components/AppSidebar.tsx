@@ -65,13 +65,21 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
     <aside className="bg-surface/80 sticky top-0 flex h-screen w-full shrink-0 flex-col border-r border-[var(--border)] backdrop-blur-md md:w-64">
       <div className="border-b border-[var(--border)] px-4 py-5">
         <Link href="/dashboard" className="group flex items-center gap-3">
-          <div className="relative flex h-9 w-9 items-center justify-center">
+          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center">
             <div className="from-warm/20 to-cool/20 absolute inset-0 rounded-lg bg-gradient-to-br" />
             <div className="text-warm relative font-mono text-sm font-bold">◈</div>
           </div>
-          <span className="font-display text-lg font-semibold tracking-tight text-[var(--text)]">
-            {t('layout.brand')}
-          </span>
+          <div className="font-display min-w-0 leading-none">
+            <span className="block text-base font-semibold tracking-tight text-[var(--text)]">
+              {t('layout.brandLine1')}
+            </span>
+            <span
+              className="mt-0.5 block w-full text-base font-semibold tracking-tight text-[var(--text)]"
+              style={{ textAlign: 'justify', textAlignLast: 'justify' }}
+            >
+              {t('layout.brandLine2')}
+            </span>
+          </div>
         </Link>
       </div>
 

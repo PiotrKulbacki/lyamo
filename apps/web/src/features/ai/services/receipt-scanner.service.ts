@@ -5,10 +5,11 @@ import {
   type AiScanQuotaStatus,
   type PlanType,
 } from '@shared/features/billing/plan-limits';
+import { getAllowedCategoryKeys } from '@web/features/categories/services/category.service';
+import { normalizeLegacyCategory } from '@shared/features/transactions/categories';
 import {
   receiptScanResultSchema,
   RECEIPT_SCAN_ERROR_CODES,
-  TRANSACTION_CATEGORIES,
   type ReceiptScanResult,
 } from '@shared/features/transactions/schemas';
 import { env } from '@web/env';
@@ -27,18 +28,18 @@ export type ReceiptScanDraft = ReceiptScanResult & {
 export type { AiScanQuotaStatus };
 export { getAiScanQuotaStatus };
 
-function buildSystemPrompt(): string {
-  const categories = TRANSACTION_CATEGORIES.join(', ');
-  return `You are a receipt OCR assistant. Extract expense data from receipt images.
+function buildSystemPrompt(categoryKeys: string[]): string {
+  const categories = categoryKeys.join(', ');
+  return `You are a document OCR assistant for expenses (receipts, invoices, bills). Extract expense data from images.
 Return ONLY valid JSON with these fields:
 - amount (number, positive, total paid)
 - currency (one of: PLN, EUR, GBP)
 - date (ISO 8601 date string YYYY-MM-DD)
 - category (exactly one of: ${categories})
-- description (short string, e.g. store name)
+- description (short string, e.g. store or vendor name)
 - needsManualReview (boolean — true if any field is uncertain or unreadable)
 
-If the image is not a receipt or is completely unreadable, set needsManualReview to true and use your best guess for other fields.`;
+If the image is not a financial document or is completely unreadable, set needsManualReview to true and use your best guess for other fields.`;
 }
 
 function validateImageFile(file: File): string | null {
@@ -65,7 +66,11 @@ function extractJsonFromContent(content: string): unknown {
   return JSON.parse(jsonText);
 }
 
-async function callOpenAiVision(base64: string, mimeType: string): Promise<string> {
+async function callOpenAiVision(
+  base64: string,
+  mimeType: string,
+  categoryKeys: string[]
+): Promise<string> {
   if (!env.OPENAI_API_KEY) {
     throw new Error(RECEIPT_SCAN_ERROR_CODES.AI_FAILED);
   }
@@ -81,13 +86,13 @@ async function callOpenAiVision(base64: string, mimeType: string): Promise<strin
       temperature: 0.1,
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: buildSystemPrompt() },
+        { role: 'system', content: buildSystemPrompt(categoryKeys) },
         {
           role: 'user',
           content: [
             {
               type: 'text',
-              text: 'Analyze this receipt image and return the JSON object.',
+              text: 'Analyze this expense document image and return the JSON object.',
             },
             {
               type: 'image_url',
@@ -180,8 +185,10 @@ export async function scanReceiptFromFile(
   }
 
   try {
+    const allowedCategories = await getAllowedCategoryKeys(userId);
+    const categoryKeys = [...allowedCategories];
     const base64 = await fileToBase64(file);
-    const rawContent = await callOpenAiVision(base64, file.type);
+    const rawContent = await callOpenAiVision(base64, file.type, categoryKeys);
     const parsed = extractJsonFromContent(rawContent);
     const validated = receiptScanResultSchema.safeParse(parsed);
 
@@ -189,7 +196,12 @@ export async function scanReceiptFromFile(
       return { error: RECEIPT_SCAN_ERROR_CODES.PARSE_FAILED };
     }
 
-    const result = validated.data;
+    const normalizedCategory = normalizeLegacyCategory(validated.data.category);
+    if (!allowedCategories.has(normalizedCategory)) {
+      return { error: RECEIPT_SCAN_ERROR_CODES.PARSE_FAILED };
+    }
+
+    const result = { ...validated.data, category: normalizedCategory };
 
     if (result.needsManualReview && result.amount <= 0) {
       return { error: RECEIPT_SCAN_ERROR_CODES.UNREADABLE };

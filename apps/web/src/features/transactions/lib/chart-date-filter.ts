@@ -1,3 +1,6 @@
+import { addMonths, differenceInCalendarDays } from 'date-fns';
+import { getQuotaPeriodStart } from '@shared/features/billing/financial-month';
+
 export type ChartDateRange = 'period' | '7d' | 'today' | 'custom';
 
 export type ChartTransaction = {
@@ -75,4 +78,46 @@ export function getChartDataFetchStart(periodStart: Date, now = new Date()): Dat
   sevenDaysAgo.setUTCHours(0, 0, 0, 0);
 
   return periodStart < sevenDaysAgo ? periodStart : sevenDaysAgo;
+}
+
+function toUtcCalendarDay(date: Date): Date {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+}
+
+export function getChartFilterDayMetrics(params: {
+  range: ChartDateRange;
+  periodStart: string;
+  periodEnd?: string;
+  financialMonthStartDay: number;
+  now?: Date;
+}): { daysElapsed: number; daysUntilPayday: number } {
+  const now = params.now ?? new Date();
+  const billingPeriodStart = getQuotaPeriodStart(params.financialMonthStartDay, now);
+  const nextPayday = addMonths(billingPeriodStart, 1);
+  const daysUntilPayday = differenceInCalendarDays(
+    toUtcCalendarDay(nextPayday),
+    toUtcCalendarDay(now)
+  );
+
+  if (params.range === 'today') {
+    return { daysElapsed: 1, daysUntilPayday };
+  }
+
+  if (params.range === '7d') {
+    return { daysElapsed: 7, daysUntilPayday };
+  }
+
+  if (params.range === 'custom' && params.periodEnd) {
+    const rangeStart = toUtcCalendarDay(new Date(params.periodStart));
+    const rangeEnd = toUtcCalendarDay(new Date(params.periodEnd));
+    const daysElapsed = Math.max(1, differenceInCalendarDays(rangeEnd, rangeStart) + 1);
+    return { daysElapsed, daysUntilPayday };
+  }
+
+  const daysElapsed = Math.max(
+    1,
+    differenceInCalendarDays(toUtcCalendarDay(now), toUtcCalendarDay(billingPeriodStart)) + 1
+  );
+
+  return { daysElapsed, daysUntilPayday };
 }

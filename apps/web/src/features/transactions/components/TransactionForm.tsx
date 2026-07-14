@@ -5,7 +5,8 @@ import { useEffect } from 'react';
 import { translateError } from '@shared/features/i18n';
 import {
   transactionFormSchema,
-  TRANSACTION_CATEGORIES,
+  toCalendarDateInputValue,
+  toLocalDateInputValue,
   type CurrencyCode,
   type TransactionFormInput,
 } from '@shared/features/transactions/schemas';
@@ -15,8 +16,11 @@ import { Button } from '@web/components/ui/button';
 import { Input } from '@web/components/ui/input';
 import { Label } from '@web/components/ui/label';
 import { Textarea } from '@web/components/ui/textarea';
+import {
+  getCategoryOptionLabel,
+  useCategories,
+} from '@web/features/categories/hooks/useCategories';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
-import { getCategoryLabelKey } from '@web/features/transactions/lib/category-config';
 
 export type TransactionFormInitialValues = TransactionFormInput;
 
@@ -29,10 +33,7 @@ type TransactionFormProps = {
 };
 
 function toDateInputValue(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return toCalendarDateInputValue(date);
 }
 
 export function TransactionForm({
@@ -44,6 +45,7 @@ export function TransactionForm({
 }: TransactionFormProps) {
   const t = useT();
   const { locale } = useLocale();
+  const { categories, isLoading: isCategoriesLoading } = useCategories();
   const isEditing = Boolean(transactionId);
 
   const {
@@ -58,7 +60,7 @@ export function TransactionForm({
       currency: initialValues?.currency ?? primaryCurrency,
       category: initialValues?.category ?? 'Other',
       description: initialValues?.description ?? '',
-      date: initialValues?.date ?? toDateInputValue(new Date()),
+      date: initialValues?.date ?? toLocalDateInputValue(),
     },
   });
 
@@ -66,11 +68,11 @@ export function TransactionForm({
     reset({
       amount: initialValues?.amount ?? (undefined as unknown as number),
       currency: initialValues?.currency ?? primaryCurrency,
-      category: initialValues?.category ?? 'Other',
+      category: initialValues?.category ?? categories[0]?.key ?? 'Other',
       description: initialValues?.description ?? '',
-      date: initialValues?.date ?? toDateInputValue(new Date()),
+      date: initialValues?.date ?? toLocalDateInputValue(),
     });
-  }, [initialValues, primaryCurrency, reset, transactionId]);
+  }, [initialValues, primaryCurrency, reset, transactionId, categories]);
 
   async function onSubmit(values: TransactionFormInput) {
     try {
@@ -149,13 +151,13 @@ export function TransactionForm({
           <Label htmlFor="category">{t('dashboard.form.category')}</Label>
           <select
             id="category"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isCategoriesLoading}
             className="auth-input flex h-10 w-full"
             {...register('category')}
           >
-            {TRANSACTION_CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {t(getCategoryLabelKey(category))}
+            {categories.map((category) => (
+              <option key={category.key} value={category.key}>
+                {getCategoryOptionLabel(category, t)}
               </option>
             ))}
           </select>
@@ -193,11 +195,7 @@ export function TransactionForm({
 
       <div className="flex gap-3 pt-2">
         <Button type="submit" disabled={isSubmitting}>
-          {t(
-            isEditing
-              ? 'transactions.labels.saveTransaction'
-              : 'transactions.labels.saveTransaction'
-          )}
+          {t('transactions.labels.saveTransaction')}
         </Button>
         <Button type="button" variant="outline" disabled={isSubmitting} onClick={onCancel}>
           {t('dashboard.form.cancel')}

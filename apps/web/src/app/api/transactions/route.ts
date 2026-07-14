@@ -3,6 +3,7 @@ import { createTransactionSchema } from '@shared/features/transactions/schemas';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import { jsonError } from '@web/features/auth/services/auth.service';
 import { prisma } from '@smart-expense-control/database';
+import { validateCategoryForUser } from '@web/features/categories/services/category.service';
 import {
   createTransaction,
   listTransactions,
@@ -62,6 +63,11 @@ export async function POST(request: Request) {
     if (!parsed.success) {
       const firstError = parsed.error.errors[0]?.message ?? 'auth.errors.generic';
       return jsonError(firstError, 400);
+    }
+
+    const isValidCategory = await validateCategoryForUser(user.id, parsed.data.category);
+    if (!isValidCategory) {
+      return jsonError('transactions.errors.invalidCategory', 400);
     }
 
     const transaction = await createTransaction(user.id, parsed.data);
