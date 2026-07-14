@@ -1,6 +1,14 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 import { DEFAULT_LOCALE, isLocale, t as translate, type Locale } from '@shared/features/i18n';
 
 const LOCALE_COOKIE = 'sec_locale';
@@ -32,8 +40,38 @@ function writeLocaleCookie(locale: Locale): void {
   document.cookie = `${LOCALE_COOKIE}=${locale};path=/;max-age=31536000;samesite=lax`;
 }
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => readLocaleCookie());
+export function LocaleProvider({
+  children,
+  initialLocale = DEFAULT_LOCALE,
+}: {
+  children: ReactNode;
+  initialLocale?: Locale;
+}) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
+
+  useEffect(() => {
+    // #region agent log
+    const cookieLocale = readLocaleCookie();
+    fetch('http://127.0.0.1:7528/ingest/e3c1f8a3-0097-405d-aadf-389a4a28577c', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'ecd1ac' },
+      body: JSON.stringify({
+        sessionId: 'ecd1ac',
+        runId: 'hydration-fix',
+        hypothesisId: 'H7',
+        location: 'LocaleProvider.tsx:mount',
+        message: 'Locale hydration check',
+        data: {
+          initialLocale,
+          stateLocale: locale,
+          cookieLocale,
+          mismatch: cookieLocale !== initialLocale,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+  }, [initialLocale, locale]);
 
   const setLocale = useCallback((nextLocale: Locale) => {
     setLocaleState(nextLocale);
