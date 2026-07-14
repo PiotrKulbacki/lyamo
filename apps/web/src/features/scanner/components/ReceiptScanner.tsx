@@ -18,6 +18,8 @@ import {
 } from '@shared/features/transactions/schemas';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
 import { CategorySelectWithCreate } from '@web/features/scanner/components/CategorySelectWithCreate';
+import { ReceiptArchive } from '@web/features/scanner/components/ReceiptArchive';
+import { compressReceiptImage } from '@web/features/scanner/lib/compress-receipt-image';
 import {
   getCategoryOptionLabel,
   useCategories,
@@ -44,6 +46,8 @@ type ReceiptDraft = {
   hasMultipleCategories?: boolean;
   lineItems?: ReceiptLineItem[];
   suggestedSplits?: SplitLine[];
+  receiptGroupId: string;
+  receiptImageUrl: string;
 };
 
 function createDefaultSplitLine(draft: ReceiptDraft): SplitLine {
@@ -108,6 +112,8 @@ export function ReceiptScanner() {
   const [manualSplitLines, setManualSplitLines] = useState<SplitLine[]>([]);
   const [hasAiSuggestion, setHasAiSuggestion] = useState(false);
   const [expandedCategoryKeys, setExpandedCategoryKeys] = useState<Record<string, boolean>>({});
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [archiveRefreshKey, setArchiveRefreshKey] = useState(0);
 
   const splitLines = useMemo(() => {
     if (lineItems?.length) {
@@ -154,6 +160,31 @@ export function ReceiptScanner() {
     setManualSplitLines([]);
     setHasAiSuggestion(false);
     setExpandedCategoryKeys({});
+  }
+
+  async function discardPendingReceipt(nextDraft: ReceiptDraft | null) {
+    if (!nextDraft?.receiptGroupId || !nextDraft.receiptImageUrl) {
+      return;
+    }
+
+    try {
+      await fetch('/api/receipts/discard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          receiptGroupId: nextDraft.receiptGroupId,
+          receiptImageUrl: nextDraft.receiptImageUrl,
+        }),
+      });
+    } catch {
+      // Best-effort cleanup for unsaved scans.
+    }
+  }
+
+  async function cancelDraft() {
+    const pendingDraft = draft;
+    resetDraftState();
+    await discardPendingReceipt(pendingDraft);
   }
 
   function enableSplitMode() {
@@ -230,8 +261,9 @@ export function ReceiptScanner() {
     setIsScanning(true);
 
     try {
+      const compressedFile = await compressReceiptImage(file);
       const formData = new FormData();
-      formData.append('receipt', file);
+      formData.append('receipt', compressedFile);
 
       const response = await fetch('/api/ai/scan-receipt', {
         method: 'POST',
@@ -277,6 +309,10 @@ export function ReceiptScanner() {
 
     try {
       const shouldUseBatch = isSplitMode && splitLines.length > 1;
+      const receiptMeta = {
+        receiptGroupId: draft.receiptGroupId,
+        receiptImageUrl: draft.receiptImageUrl,
+      };
       const response = shouldUseBatch
         ? await fetch('/api/transactions/batch', {
             method: 'POST',
@@ -288,6 +324,7 @@ export function ReceiptScanner() {
                 description: draft.description,
                 date: draft.date,
                 isAiScanned: true,
+                ...receiptMeta,
               },
               splits: splitLines.map(({ category, amount }) => ({ category, amount })),
             }),
@@ -302,6 +339,7 @@ export function ReceiptScanner() {
               description: draft.description,
               date: draft.date,
               isAiScanned: true,
+              ...receiptMeta,
             }),
           });
 
@@ -316,6 +354,7 @@ export function ReceiptScanner() {
         shouldUseBatch ? t('transactions.success.batchCreated') : t('transactions.success.created')
       );
       resetDraftState();
+      setArchiveRefreshKey((current) => current + 1);
     } catch {
       toast.error(t('auth.errors.networkError'));
     } finally {
@@ -341,31 +380,73 @@ export function ReceiptScanner() {
         <p className="text-muted mt-1 text-sm">{t('scanner.status.readyToConfirm')}</p>
       </div>
 
-      <section className="panel relative z-10 p-6">
-        <div className="relative z-10 flex flex-wrap items-center gap-3">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            className="hidden"
-            disabled={isScanning || isBlocked}
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                void handleScan(file);
-              }
-              event.target.value = '';
-            }}
-          />
-          <button
-            type="button"
-            disabled={isScanning || isBlocked}
-            onClick={() => fileInputRef.current?.click()}
-            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-          >
-            {isScanning ? t('scanner.status.analyzing') : t('scanner.labels.uploadDocument')}
-          </button>
-          {isBlocked && <span className="chip chip-needed">{t('scanner.labels.scanBlocked')}</span>}
+      <section
+        className={`panel relative z-10 p-6 transition ${
+          isDragActive ? 'border-cool ring-cool/30 ring-2' : ''
+        }`}
+        onDragEnter={(event) => {
+          event.preventDefault();
+          if (!isScanning && !isBlocked) {
+            setIsDragActive(true);
+          }
+        }}
+        onDragOver={(event) => {
+          event.preventDefault();
+        }}
+        onDragLeave={(event) => {
+          event.preventDefault();
+          if (event.currentTarget === event.target) {
+            setIsDragActive(false);
+          }
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          setIsDragActive(false);
+
+          if (isScanning || isBlocked) {
+            return;
+          }
+
+          const file = event.dataTransfer.files?.[0];
+          if (file) {
+            void handleScan(file);
+          }
+        }}
+      >
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+          <div className="border-[var(--border-cool)]/80 bg-elevated/40 w-full rounded-2xl border border-dashed px-6 py-10">
+            <p className="font-display text-base font-semibold text-[var(--text)]">
+              {isDragActive ? t('scanner.labels.dropDocument') : t('scanner.labels.uploadDocument')}
+            </p>
+            <p className="text-muted mt-2 text-sm">{t('scanner.labels.dragDropHint')}</p>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="hidden"
+                disabled={isScanning || isBlocked}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    void handleScan(file);
+                  }
+                  event.target.value = '';
+                }}
+              />
+              <button
+                type="button"
+                disabled={isScanning || isBlocked}
+                onClick={() => fileInputRef.current?.click()}
+                className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+              >
+                {isScanning ? t('scanner.status.analyzing') : t('scanner.labels.chooseFile')}
+              </button>
+              {isBlocked && (
+                <span className="chip chip-needed">{t('scanner.labels.scanBlocked')}</span>
+              )}
+            </div>
+          </div>
           {quota && !isBlocked && (
             <span className="text-muted text-sm">
               {t('scanner.status.scansRemaining', { count: quota.remaining })}
@@ -625,7 +706,7 @@ export function ReceiptScanner() {
             <button
               type="button"
               disabled={isSaving}
-              onClick={resetDraftState}
+              onClick={() => void cancelDraft()}
               className="btn-ghost disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('dashboard.form.cancel')}
@@ -633,6 +714,8 @@ export function ReceiptScanner() {
           </div>
         </section>
       )}
+
+      <ReceiptArchive refreshKey={archiveRefreshKey} />
     </div>
   );
 }

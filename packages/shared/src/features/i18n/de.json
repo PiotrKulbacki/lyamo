@@ -103,6 +103,9 @@
       "scanDocument": "Scannen",
       "confirmExpense": "Ausgabe bestätigen",
       "uploadDocument": "Dokumentfoto hochladen",
+      "chooseFile": "Foto auswählen",
+      "dropDocument": "Beleg hier ablegen",
+      "dragDropHint": "Ziehen Sie ein Beleg- oder Rechnungsbild hierher oder wählen Sie eine Datei auf Ihrem Gerät",
       "upgradeToPro": "Auf Pro upgraden",
       "scanBlocked": "Scan-Limit erreicht"
     },
@@ -124,7 +127,26 @@
       "quotaExceeded": "Sie haben alle 5 kostenlosen Scans verbraucht. Upgraden Sie auf Pro, um weiter zu scannen",
       "monthlyLimitReached": "Monatliches Scan-Limit erreicht. Versuchen Sie es nächsten Monat erneut",
       "aiFailed": "Beleganalyse fehlgeschlagen. Bitte versuchen Sie es erneut",
-      "parseFailed": "Belegdaten konnten nicht verarbeitet werden. Bitte manuell eingeben"
+      "parseFailed": "Belegdaten konnten nicht verarbeitet werden. Bitte manuell eingeben",
+      "storageNotConfigured": "Belegspeicher ist nicht konfiguriert. Bitte Support kontaktieren",
+      "storageUploadFailed": "Belegbild konnte nicht gespeichert werden. Bitte erneut versuchen"
+    },
+    "archive": {
+      "title": "Ihr Dokumentenarchiv",
+      "subtitle": "Gespeicherte Beleg- und Rechnungsscan, nach Monat sortiert",
+      "documentCount": "{{count}} Scans",
+      "documentCount_one": "{{count}} Scan",
+      "emptyTitle": "Noch keine gespeicherten Dokumente",
+      "emptyHint": "Scannen Sie einen Beleg und speichern Sie die Ausgabe, um Ihr Archiv aufzubauen",
+      "untitledDocument": "Beleg ohne Titel",
+      "previewTitle": "Belegvorschau",
+      "previewAction": "{{name}} anzeigen",
+      "previewActionShort": "Vorschau",
+      "closePreview": "Vorschau schließen",
+      "viewTransactions": "Transaktionen anzeigen",
+      "errors": {
+        "loadFailed": "Dokumentenarchiv konnte nicht geladen werden"
+      }
     },
     "split": {
       "toggleOn": "Ausgabe aufteilen",

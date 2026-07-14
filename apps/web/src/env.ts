@@ -19,6 +19,8 @@ export const env = createEnv({
     CRON_SECRET: z.string().min(1).optional(),
     POSTHOG_API_KEY: z.string().min(1).optional(),
     ENABLE_AI: z.enum(['true', 'false']).optional(),
+    SUPABASE_URL: z.string().url().optional(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -45,6 +47,8 @@ export const env = createEnv({
     CRON_SECRET: process.env.CRON_SECRET,
     POSTHOG_API_KEY: process.env.POSTHOG_API_KEY,
     ENABLE_AI: process.env.ENABLE_AI,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,

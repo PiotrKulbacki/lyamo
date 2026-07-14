@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -47,6 +48,8 @@ function toFormInitialValues(transaction: RecentTransaction): TransactionFormIni
 export function HistoryView() {
   const t = useT();
   const { locale } = useLocale();
+  const searchParams = useSearchParams();
+  const highlightReceiptGroupId = searchParams.get('receiptGroupId');
   const { colorMap, nameMap } = useCategories();
   const categoryDisplayContext = useMemo(() => ({ colorMap, nameMap }), [colorMap, nameMap]);
   const [userMeta, setUserMeta] = useState<HistoryUserMeta | null>(null);
@@ -64,7 +67,12 @@ export function HistoryView() {
   const [isEditGroupDialogOpen, setIsEditGroupDialogOpen] = useState(false);
 
   const loadTransactions = useCallback(
-    async (options: { start: Date; end: Date; silent?: boolean }) => {
+    async (options: {
+      start: Date;
+      end: Date;
+      silent?: boolean;
+      receiptGroupId?: string | null;
+    }) => {
       if (!options.silent) {
         setIsLoading(true);
       } else {
@@ -73,8 +81,12 @@ export function HistoryView() {
 
       try {
         const params = new URLSearchParams();
-        params.set('from', options.start.toISOString());
-        params.set('to', options.end.toISOString());
+        if (options.receiptGroupId) {
+          params.set('receiptGroupId', options.receiptGroupId);
+        } else {
+          params.set('from', options.start.toISOString());
+          params.set('to', options.end.toISOString());
+        }
 
         const response = await fetch(`/api/transactions?${params.toString()}`);
         const data = (await response.json()) as {
@@ -121,6 +133,31 @@ export function HistoryView() {
         };
         setUserMeta(meta);
 
+        if (highlightReceiptGroupId) {
+          const groupResponse = await fetch(
+            `/api/transactions?receiptGroupId=${encodeURIComponent(highlightReceiptGroupId)}`
+          );
+          const groupData = (await groupResponse.json()) as {
+            transactions?: RecentTransaction[];
+          };
+          const anchor = groupData.transactions?.[0];
+
+          if (anchor) {
+            const anchorDate = new Date(anchor.date);
+            const periodStartForAnchor = getQuotaPeriodStart(
+              meta.financialMonthStartDay,
+              anchorDate
+            );
+            const periodEndForAnchor = getQuotaPeriodEnd(periodStartForAnchor);
+            setPeriodStart(periodStartForAnchor);
+            await loadTransactions({
+              start: periodStartForAnchor,
+              end: periodEndForAnchor,
+            });
+            return;
+          }
+        }
+
         const previousStart = getPreviousQuotaPeriodStart(meta.financialMonthStartDay);
         const previousEnd = getQuotaPeriodEnd(previousStart);
         setPeriodStart(previousStart);
@@ -131,7 +168,7 @@ export function HistoryView() {
     }
 
     void init();
-  }, [locale, loadTransactions, t]);
+  }, [highlightReceiptGroupId, locale, loadTransactions, t]);
 
   function shiftPeriod(direction: -1 | 1) {
     if (!userMeta || !periodStart) {
@@ -263,6 +300,7 @@ export function HistoryView() {
         categoryDisplayContext={categoryDisplayContext}
         isRefreshing={isRefreshing}
         groupReceiptSplits
+        initialExpandedGroupIds={highlightReceiptGroupId ? [highlightReceiptGroupId] : undefined}
         onEdit={openEditForm}
         onDelete={openDeleteDialog}
         onEditGroup={openEditGroupDialog}

@@ -17,6 +17,11 @@ import { resolveReceiptSplitDraft } from '@web/features/ai/services/receipt-scan
 import { ANALYTICS_EVENTS } from '@web/features/analytics/events';
 import { captureServerEvent } from '@web/features/analytics/posthog-server';
 import { captureServerException } from '@web/lib/sentry-server';
+import {
+  deleteReceiptImage,
+  uploadReceiptImage,
+} from '@web/features/scanner/services/receipt-storage.service';
+import { isSupabaseStorageConfigured } from '@web/lib/supabase-server';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = 'gpt-4o-mini';
@@ -25,6 +30,8 @@ const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'im
 
 export type ReceiptScanDraft = ReceiptScanResult & {
   isAiScanned: true;
+  receiptGroupId: string;
+  receiptImageUrl: string;
 };
 
 export type { AiScanQuotaStatus };
@@ -78,11 +85,6 @@ function validateImageFile(file: File): string | null {
   return null;
 }
 
-async function fileToBase64(file: File): Promise<string> {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  return buffer.toString('base64');
-}
-
 function extractJsonFromContent(content: string): unknown {
   const trimmed = content.trim();
   const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
@@ -90,11 +92,7 @@ function extractJsonFromContent(content: string): unknown {
   return JSON.parse(jsonText);
 }
 
-async function callOpenAiVision(
-  base64: string,
-  mimeType: string,
-  categoryKeys: string[]
-): Promise<string> {
+async function callOpenAiVision(imageUrl: string, categoryKeys: string[]): Promise<string> {
   if (!env.OPENAI_API_KEY) {
     throw new Error(RECEIPT_SCAN_ERROR_CODES.AI_FAILED);
   }
@@ -121,7 +119,7 @@ async function callOpenAiVision(
             {
               type: 'image_url',
               image_url: {
-                url: `data:${mimeType};base64,${base64}`,
+                url: imageUrl,
               },
             },
           ],
@@ -211,17 +209,38 @@ export async function scanReceiptFromFile(
   try {
     const allowedCategories = await getAllowedCategoryKeys(userId);
     const categoryKeys = [...allowedCategories];
-    const base64 = await fileToBase64(file);
-    const rawContent = await callOpenAiVision(base64, file.type, categoryKeys);
+    const receiptGroupId = crypto.randomUUID();
+
+    if (!isSupabaseStorageConfigured()) {
+      return { error: RECEIPT_SCAN_ERROR_CODES.STORAGE_NOT_CONFIGURED };
+    }
+
+    const uploadResult = await uploadReceiptImage(userId, receiptGroupId, file);
+    if ('error' in uploadResult) {
+      return { error: uploadResult.error };
+    }
+
+    const { storagePath, signedUrl } = uploadResult;
+
+    let rawContent: string;
+    try {
+      rawContent = await callOpenAiVision(signedUrl, categoryKeys);
+    } catch (error) {
+      await deleteReceiptImage(storagePath);
+      throw error;
+    }
+
     const parsed = extractJsonFromContent(rawContent);
     const validated = receiptScanResultSchema.safeParse(parsed);
 
     if (!validated.success) {
+      await deleteReceiptImage(storagePath);
       return { error: RECEIPT_SCAN_ERROR_CODES.PARSE_FAILED };
     }
 
     const normalizedCategory = normalizeLegacyCategory(validated.data.category);
     if (!allowedCategories.has(normalizedCategory)) {
+      await deleteReceiptImage(storagePath);
       return { error: RECEIPT_SCAN_ERROR_CODES.PARSE_FAILED };
     }
 
@@ -243,6 +262,7 @@ export async function scanReceiptFromFile(
     };
 
     if (result.needsManualReview && result.amount <= 0) {
+      await deleteReceiptImage(storagePath);
       return { error: RECEIPT_SCAN_ERROR_CODES.UNREADABLE };
     }
 
@@ -258,6 +278,8 @@ export async function scanReceiptFromFile(
       draft: {
         ...result,
         isAiScanned: true,
+        receiptGroupId,
+        receiptImageUrl: storagePath,
       },
     };
   } catch (error) {

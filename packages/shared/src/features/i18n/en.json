@@ -103,6 +103,9 @@
       "scanDocument": "Scan",
       "confirmExpense": "Confirm expense",
       "uploadDocument": "Upload document photo",
+      "chooseFile": "Choose photo",
+      "dropDocument": "Drop your receipt here",
+      "dragDropHint": "Drag and drop a receipt or invoice image, or choose a file from your device",
       "upgradeToPro": "Upgrade to Pro",
       "scanBlocked": "Scan limit reached"
     },
@@ -124,7 +127,26 @@
       "quotaExceeded": "You've used all 5 free scans. Upgrade to Pro to keep scanning receipts",
       "monthlyLimitReached": "Monthly scan limit reached. Try again next month",
       "aiFailed": "Receipt analysis failed. Please try again",
-      "parseFailed": "Could not parse receipt data. Please enter details manually"
+      "parseFailed": "Could not parse receipt data. Please enter details manually",
+      "storageNotConfigured": "Receipt storage is not configured. Contact support",
+      "storageUploadFailed": "Could not save the receipt image. Please try again"
+    },
+    "archive": {
+      "title": "Your document archive",
+      "subtitle": "Saved receipt and invoice scans, organized by month",
+      "documentCount": "{{count}} scans",
+      "documentCount_one": "{{count}} scan",
+      "emptyTitle": "No saved documents yet",
+      "emptyHint": "Scan a receipt and save the expense to build your archive",
+      "untitledDocument": "Untitled receipt",
+      "previewTitle": "Receipt preview",
+      "previewAction": "Preview {{name}}",
+      "previewActionShort": "Preview",
+      "closePreview": "Close preview",
+      "viewTransactions": "View transactions",
+      "errors": {
+        "loadFailed": "Could not load your document archive"
+      }
     },
     "split": {
       "toggleOn": "Split expense",

@@ -13,10 +13,13 @@ import { BudgetProgress } from '@web/features/transactions/components/BudgetProg
 import { CategoryDonutChart } from '@web/features/transactions/components/CategoryDonutChart';
 import { DashboardCtas } from '@web/features/transactions/components/DashboardCtas';
 import { DeleteTransactionDialog } from '@web/features/transactions/components/DeleteTransactionDialog';
+import { DeleteTransactionGroupDialog } from '@web/features/transactions/components/DeleteTransactionGroupDialog';
+import { EditTransactionGroupDialog } from '@web/features/transactions/components/EditTransactionGroupDialog';
 import {
   RecentTransactionsList,
   type RecentTransaction,
 } from '@web/features/transactions/components/RecentTransactionsList';
+import type { SplitTransactionGroup } from '@web/features/transactions/lib/transaction-groups';
 import { TransactionFormModal } from '@web/features/transactions/components/TransactionFormModal';
 import type { TransactionFormInitialValues } from '@web/features/transactions/components/TransactionForm';
 import {
@@ -100,6 +103,10 @@ export function DashboardView() {
   const [editingTransaction, setEditingTransaction] = useState<RecentTransaction | null>(null);
   const [deletingTransactionId, setDeletingTransactionId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingGroupId, setDeletingGroupId] = useState<string | null>(null);
+  const [isDeleteGroupDialogOpen, setIsDeleteGroupDialogOpen] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<SplitTransactionGroup | null>(null);
+  const [isEditGroupDialogOpen, setIsEditGroupDialogOpen] = useState(false);
 
   const categoryTotals = useMemo(() => {
     if (!summary) {
@@ -267,6 +274,30 @@ export function DashboardView() {
     }
   }
 
+  function openDeleteGroupDialog(receiptGroupId: string) {
+    setDeletingGroupId(receiptGroupId);
+    setIsDeleteGroupDialogOpen(true);
+  }
+
+  function handleDeleteGroupDialogOpenChange(open: boolean) {
+    setIsDeleteGroupDialogOpen(open);
+    if (!open) {
+      setDeletingGroupId(null);
+    }
+  }
+
+  function openEditGroupDialog(group: SplitTransactionGroup) {
+    setEditingGroup(group);
+    setIsEditGroupDialogOpen(true);
+  }
+
+  function handleEditGroupDialogOpenChange(open: boolean) {
+    setIsEditGroupDialogOpen(open);
+    if (!open) {
+      setEditingGroup(null);
+    }
+  }
+
   function handleBudgetUpdated(budget: number | null) {
     setSummary((current) => (current ? { ...current, currentMonthBudget: budget } : current));
   }
@@ -352,8 +383,11 @@ export function DashboardView() {
         locale={locale}
         categoryDisplayContext={categoryDisplayContext}
         isRefreshing={isRefreshing}
+        groupReceiptSplits
         onEdit={openEditForm}
         onDelete={openDeleteDialog}
+        onEditGroup={openEditGroupDialog}
+        onDeleteGroup={openDeleteGroupDialog}
         onAddFirst={openCreateForm}
       />
 
@@ -370,6 +404,22 @@ export function DashboardView() {
         transactionId={deletingTransactionId}
         open={isDeleteDialogOpen}
         onOpenChange={handleDeleteDialogOpenChange}
+        onSuccess={() => void loadDashboard({ silent: true, dateRange: customDateRange })}
+      />
+
+      <DeleteTransactionGroupDialog
+        receiptGroupId={deletingGroupId}
+        open={isDeleteGroupDialogOpen}
+        onOpenChange={handleDeleteGroupDialogOpenChange}
+        onSuccess={() => void loadDashboard({ silent: true, dateRange: customDateRange })}
+      />
+
+      <EditTransactionGroupDialog
+        receiptGroupId={editingGroup?.receiptGroupId ?? null}
+        initialDescription={editingGroup?.description ?? ''}
+        initialDate={editingGroup?.date ?? new Date().toISOString()}
+        open={isEditGroupDialogOpen}
+        onOpenChange={handleEditGroupDialogOpenChange}
         onSuccess={() => void loadDashboard({ silent: true, dateRange: customDateRange })}
       />
     </div>
