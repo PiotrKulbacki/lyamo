@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   aggregateFinancialContext,
   buildChatSystemPrompt,
+  resolveActiveMonthlyBudget,
 } from '@web/features/ai/services/chat-context';
 
 describe('chat-context', () => {
@@ -83,5 +84,97 @@ describe('chat-context', () => {
     expect(prompt).toContain('"category": "Groceries"');
     expect(prompt).toContain('"total": 30');
     expect(prompt).toContain('Current cycle label: 2026-07');
+  });
+
+  describe('resolveActiveMonthlyBudget', () => {
+    it('prefers currentMonthBudget override over defaultMonthlyBudget', () => {
+      const budget = resolveActiveMonthlyBudget({
+        currentMonthBudget: 2500,
+        defaultMonthlyBudget: 3000,
+        primaryCurrency: 'EUR',
+      });
+
+      expect(budget).toEqual({
+        amount: 2500,
+        currency: 'EUR',
+        source: 'current_override',
+      });
+    });
+
+    it('falls back to defaultMonthlyBudget when currentMonthBudget is unset', () => {
+      const budget = resolveActiveMonthlyBudget({
+        currentMonthBudget: null,
+        defaultMonthlyBudget: 3000,
+        primaryCurrency: 'PLN',
+      });
+
+      expect(budget).toEqual({
+        amount: 3000,
+        currency: 'PLN',
+        source: 'default',
+      });
+    });
+
+    it('returns null when no valid budget is configured', () => {
+      expect(
+        resolveActiveMonthlyBudget({
+          currentMonthBudget: null,
+          defaultMonthlyBudget: null,
+          primaryCurrency: 'EUR',
+        })
+      ).toBeNull();
+    });
+  });
+
+  it('embeds active monthly budget override in the system prompt', () => {
+    const context = aggregateFinancialContext('2026-07', [], []);
+    const prompt = buildChatSystemPrompt(
+      context,
+      'pl',
+      {
+        todayIso: '2026-07-13',
+        financialMonthStartDay: 12,
+        cycleStartIso: '2026-07-12',
+        cycleEndIso: '2026-08-12',
+      },
+      {
+        amount: 2500,
+        currency: 'EUR',
+        source: 'current_override',
+      }
+    );
+
+    expect(prompt).toContain(
+      "User's active monthly budget for the current billing cycle: 2500 EUR."
+    );
+    expect(prompt).toContain('takes priority over general default settings');
+  });
+
+  it('reflects updated dashboard override instead of stale default in prompt', () => {
+    const context = aggregateFinancialContext(
+      '2026-07',
+      [{ amount: 500, currency: 'EUR', category: 'Groceries' }],
+      []
+    );
+
+    const afterDashboardEdit = buildChatSystemPrompt(
+      context,
+      'pl',
+      {
+        todayIso: '2026-07-14',
+        financialMonthStartDay: 1,
+        cycleStartIso: '2026-07-01',
+        cycleEndIso: '2026-07-31',
+      },
+      resolveActiveMonthlyBudget({
+        currentMonthBudget: 1800,
+        defaultMonthlyBudget: 3000,
+        primaryCurrency: 'EUR',
+      })
+    );
+
+    expect(afterDashboardEdit).toContain('1800 EUR');
+    expect(afterDashboardEdit).not.toContain('3000 EUR');
+    expect(afterDashboardEdit).toContain('takes priority over general default settings');
   });
 });

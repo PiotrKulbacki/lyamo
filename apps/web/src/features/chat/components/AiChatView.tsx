@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Bot, Send, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
 import type { ChatMessage } from '@shared/features/ai/schemas';
@@ -61,15 +62,32 @@ function getDayHeaderLabel(options: {
   }).format(date);
 }
 
+function compareMessagesChronologically(a: HistoryMessage, b: HistoryMessage): number {
+  const timeDiff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  if (timeDiff !== 0) {
+    return timeDiff;
+  }
+
+  if (a.role !== b.role) {
+    return a.role === 'user' ? -1 : 1;
+  }
+
+  return a.id.localeCompare(b.id);
+}
+
+function sortMessagesChronologically(messages: HistoryMessage[]): HistoryMessage[] {
+  return [...messages].sort(compareMessagesChronologically);
+}
+
 function mergeOlderMessages(current: HistoryMessage[], older: HistoryMessage[]): HistoryMessage[] {
   if (older.length === 0) {
-    return current;
+    return sortMessagesChronologically(current);
   }
 
   const existingIds = new Set(current.map((message) => message.id));
   const uniqueOlder = older.filter((message) => !existingIds.has(message.id));
 
-  return [...uniqueOlder, ...current];
+  return sortMessagesChronologically([...uniqueOlder, ...current]);
 }
 
 export function AiChatView() {
@@ -126,7 +144,7 @@ export function AiChatView() {
           return;
         }
 
-        setMessages(data.messages ?? []);
+        setMessages(sortMessagesChronologically(data.messages ?? []));
         setHasMoreHistory(data.hasMore ?? false);
         shouldScrollToBottomRef.current = true;
       } catch {
@@ -238,7 +256,7 @@ export function AiChatView() {
     };
 
     const history = messages.map(({ role, content }) => ({ role, content }));
-    setMessages((current) => [...current, userMessage]);
+    setMessages((current) => sortMessagesChronologically([...current, userMessage]));
     setInput('');
     setIsSending(true);
     shouldScrollToBottomRef.current = true;
@@ -258,19 +276,19 @@ export function AiChatView() {
 
       if (!response.ok) {
         toast.error(translateError(data.error ?? 'chat.errors.aiFailed', locale));
+        setMessages((current) => current.filter((message) => message.id !== userMessage.id));
         return;
       }
 
       if (data.reply) {
-        setMessages((current) => [
-          ...current,
-          {
-            id: crypto.randomUUID(),
-            role: 'assistant',
-            content: data.reply!,
-            createdAt: new Date().toISOString(),
-          },
-        ]);
+        const assistantMessage: HistoryMessage = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: data.reply,
+          createdAt: new Date().toISOString(),
+        };
+
+        setMessages((current) => sortMessagesChronologically([...current, assistantMessage]));
         shouldScrollToBottomRef.current = true;
       }
 
@@ -279,10 +297,13 @@ export function AiChatView() {
       setQuota(quotaData.quota ?? null);
     } catch {
       toast.error(t('auth.errors.networkError'));
+      setMessages((current) => current.filter((message) => message.id !== userMessage.id));
     } finally {
       setIsSending(false);
     }
   }
+
+  const sortedMessages = useMemo(() => sortMessagesChronologically(messages), [messages]);
 
   const isBlocked = quota?.isBlocked ?? false;
 
@@ -327,14 +348,16 @@ export function AiChatView() {
             <p className="text-muted text-sm">{t('chat.page.empty')}</p>
           )}
 
-          {messages.map((message, index) => {
+          {sortedMessages.map((message, index) => {
             const currentDayKey = toDayKey(message.createdAt);
-            const previousDayKey = index > 0 ? toDayKey(messages[index - 1]!.createdAt) : null;
+            const previousDayKey =
+              index > 0 ? toDayKey(sortedMessages[index - 1]!.createdAt) : null;
             const shouldRenderHeader =
               !previousDayKey || !isSameDayKey(previousDayKey, currentDayKey);
             const headerLabel = shouldRenderHeader
               ? getDayHeaderLabel({ dayKey: currentDayKey, locale, t })
               : null;
+            const isUser = message.role === 'user';
 
             return (
               <div key={message.id} className="space-y-2">
@@ -347,20 +370,41 @@ export function AiChatView() {
                 )}
 
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 ${
-                    message.role === 'user'
-                      ? 'btn-primary ml-auto'
-                      : 'bg-elevated text-[var(--text)]'
-                  }`}
+                  className={`flex items-end gap-2.5 ${isUser ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}
                 >
-                  {message.content}
+                  <div
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border ${
+                      isUser
+                        ? 'border-warm/30 bg-warm/10 text-warm'
+                        : 'border-cool/30 bg-cool/10 text-cool'
+                    }`}
+                    aria-hidden
+                  >
+                    {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                  </div>
+
+                  <div
+                    className={`max-w-[calc(85%-2.5rem)] rounded-2xl px-4 py-3 text-sm leading-6 ${
+                      isUser ? 'btn-primary' : 'bg-elevated text-[var(--text)]'
+                    }`}
+                  >
+                    {message.content}
+                  </div>
                 </div>
               </div>
             );
           })}
           {isSending && (
-            <div className="bg-elevated text-muted max-w-[85%] rounded-2xl px-4 py-3 text-sm">
-              {t('chat.status.thinking')}
+            <div className="mr-auto flex items-end gap-2.5">
+              <div
+                className="border-cool/30 bg-cool/10 text-cool flex h-8 w-8 shrink-0 items-center justify-center rounded-full border"
+                aria-hidden
+              >
+                <Bot className="h-4 w-4" />
+              </div>
+              <div className="bg-elevated text-muted max-w-[calc(85%-2.5rem)] rounded-2xl px-4 py-3 text-sm">
+                {t('chat.status.thinking')}
+              </div>
             </div>
           )}
           <div ref={bottomRef} />
@@ -384,6 +428,7 @@ export function AiChatView() {
               disabled={isSending || isBlocked || !input.trim()}
               className="btn-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
             >
+              <Send className="h-4 w-4" aria-hidden />
               {t('chat.labels.sendMessage')}
             </button>
           </div>
