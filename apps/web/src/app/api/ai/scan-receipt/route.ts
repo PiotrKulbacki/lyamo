@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import { jsonError } from '@web/features/auth/services/auth.service';
-import { scanReceiptFromFile } from '@web/features/ai/services/receipt-scanner.service';
+import {
+  checkAiScanQuota,
+  scanReceiptFromFile,
+} from '@web/features/ai/services/receipt-scanner.service';
 import { checkAiRateLimit } from '@web/lib/rate-limit';
 import { requireAiEnabled } from '@web/lib/require-ai-enabled';
 
@@ -19,9 +22,18 @@ export async function POST(request: Request) {
       return jsonError('auth.errors.unauthorized', 401);
     }
 
-    const rateLimit = await checkAiRateLimit(request, 'scan', user.id);
-    if (!rateLimit.allowed) {
-      return jsonError(RATE_LIMIT_ERROR, 429);
+    const quotaCheck = await checkAiScanQuota(user.id);
+    if (!quotaCheck.ok) {
+      return jsonError(quotaCheck.error, 429);
+    }
+
+    // FREE: monthly DB quota is the business limit — skip Redis per-minute cap.
+    // PRO: apply Redis abuse protection (15 req/min) against endpoint spam.
+    if (quotaCheck.plan === 'PRO') {
+      const rateLimit = await checkAiRateLimit(request, 'scan', user.id);
+      if (!rateLimit.allowed) {
+        return jsonError(RATE_LIMIT_ERROR, 429);
+      }
     }
 
     const formData = await request.formData();

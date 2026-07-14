@@ -10,7 +10,7 @@ import {
 
 describe('plan-limits', () => {
   it('defines FREE and PRO scan limits', () => {
-    expect(PLAN_LIMITS.FREE.aiScansPerMonth).toBe(3);
+    expect(PLAN_LIMITS.FREE.aiScansPerMonth).toBe(5);
     expect(PLAN_LIMITS.PRO.aiScansPerMonth).toBe(150);
   });
 
@@ -21,16 +21,16 @@ describe('plan-limits', () => {
 
   it('reports remaining scans for FREE user', () => {
     const status = getAiScanQuotaStatus('FREE', 2);
-    expect(status.remaining).toBe(1);
+    expect(status.remaining).toBe(3);
     expect(status.canScan).toBe(true);
     expect(status.isBlocked).toBe(false);
   });
 
-  it('blocks FREE user after 3 scans', () => {
-    const status = getAiScanQuotaStatus('FREE', 3);
+  it('blocks FREE user after 5 scans', () => {
+    const status = getAiScanQuotaStatus('FREE', 5);
     expect(status.canScan).toBe(false);
     expect(status.isBlocked).toBe(true);
-    expect(getAiScanLimit('FREE')).toBe(3);
+    expect(getAiScanLimit('FREE')).toBe(5);
   });
 
   it('blocks PRO user at 150 scans', () => {

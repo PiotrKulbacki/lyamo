@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { Bot, Send, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
@@ -96,6 +97,7 @@ export function AiChatView() {
   const [messages, setMessages] = useState<HistoryMessage[]>([]);
   const [input, setInput] = useState('');
   const [quota, setQuota] = useState<ChatQuota | null>(null);
+  const [userPlan, setUserPlan] = useState<'FREE' | 'PRO' | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -112,7 +114,11 @@ export function AiChatView() {
     async function loadQuota() {
       try {
         const response = await fetch('/api/ai/chat-quota');
-        const data = (await response.json()) as { quota?: ChatQuota; error?: string };
+        const data = (await response.json()) as {
+          quota?: ChatQuota;
+          plan?: 'FREE' | 'PRO';
+          error?: string;
+        };
 
         if (!response.ok) {
           toast.error(translateError(data.error ?? 'auth.errors.generic', locale));
@@ -120,6 +126,7 @@ export function AiChatView() {
         }
 
         setQuota(data.quota ?? null);
+        setUserPlan(data.plan ?? null);
       } catch {
         toast.error(t('auth.errors.networkError'));
       }
@@ -295,8 +302,12 @@ export function AiChatView() {
       }
 
       const quotaResponse = await fetch('/api/ai/chat-quota');
-      const quotaData = (await quotaResponse.json()) as { quota?: ChatQuota };
+      const quotaData = (await quotaResponse.json()) as {
+        quota?: ChatQuota;
+        plan?: 'FREE' | 'PRO';
+      };
       setQuota(quotaData.quota ?? null);
+      setUserPlan(quotaData.plan ?? null);
     } catch {
       toast.error(t('auth.errors.networkError'));
       setMessages((current) => current.filter((message) => message.id !== userMessage.id));
@@ -308,6 +319,7 @@ export function AiChatView() {
   const sortedMessages = useMemo(() => sortMessagesChronologically(messages), [messages]);
 
   const isBlocked = quota?.isBlocked ?? false;
+  const hasFiniteQuota = quota != null && quota.limit < Number.MAX_SAFE_INTEGER;
 
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col gap-4">
@@ -316,8 +328,10 @@ export function AiChatView() {
           {t('chat.page.title')}
         </h1>
         <p className="text-muted mt-1 text-sm">{t('chat.page.subtitle')}</p>
-        {quota && !isBlocked && quota.remaining < Number.MAX_SAFE_INTEGER && (
+        {hasFiniteQuota && !isBlocked && (
           <p className="text-muted mt-2 text-xs">
+            {t('chat.status.messagesQuota', { used: quota.used, limit: quota.limit })}
+            {' · '}
             {t('chat.status.messagesRemaining', { count: quota.remaining })}
           </p>
         )}
@@ -413,6 +427,26 @@ export function AiChatView() {
           onSubmit={(event) => void handleSend(event)}
           className="relative z-10 border-t border-[var(--border)] p-4"
         >
+          {isBlocked && (
+            <div
+              className="border-glow/30 bg-glow/10 mb-3 rounded-lg border px-3 py-2.5"
+              role="status"
+            >
+              <p className="text-glow text-sm font-medium">
+                {userPlan === 'PRO'
+                  ? t('chat.errors.monthlyLimitReached')
+                  : t('chat.errors.quotaExceeded')}
+              </p>
+              {userPlan !== 'PRO' && (
+                <Link
+                  href="/settings"
+                  className="text-glow hover:text-glow/80 mt-2 inline-block text-sm font-semibold underline underline-offset-2"
+                >
+                  {t('chat.labels.upgradeToPro')}
+                </Link>
+              )}
+            </div>
+          )}
           <div className="flex gap-3">
             <input
               type="text"

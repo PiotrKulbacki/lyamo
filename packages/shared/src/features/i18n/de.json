@@ -118,7 +118,7 @@
       "invalidFile": "Bitte laden Sie eine gültige Bilddatei hoch (JPEG, PNG oder WebP)",
       "fileTooLarge": "Das Bild ist zu groß. Maximale Größe: 10 MB",
       "unreadable": "Der Betrag auf diesem Beleg konnte nicht gelesen werden",
-      "quotaExceeded": "Sie haben alle 3 kostenlosen Scans verbraucht. Upgraden Sie auf Pro, um weiter zu scannen",
+      "quotaExceeded": "Sie haben alle 5 kostenlosen Scans verbraucht. Upgraden Sie auf Pro, um weiter zu scannen",
       "monthlyLimitReached": "Monatliches Scan-Limit erreicht. Versuchen Sie es nächsten Monat erneut",
       "aiFailed": "Beleganalyse fehlgeschlagen. Bitte versuchen Sie es erneut",
       "parseFailed": "Belegdaten konnten nicht verarbeitet werden. Bitte manuell eingeben"
@@ -148,6 +148,7 @@
     },
     "status": {
       "thinking": "Denke nach...",
+      "messagesQuota": "{{used}} / {{limit}} Nachrichten diesen Monat",
       "messagesRemaining": "{{count}} Nachrichten verbleiben diesen Monat"
     },
     "success": {
@@ -228,7 +229,7 @@
         "pricePln": "0 PLN / Monat",
         "priceEur": "0 € / Monat",
         "priceGbp": "0 £ / Monat",
-        "feature1": "3 Belegscans pro Monat",
+        "feature1": "5 Belegscans pro Monat",
         "feature2": "10 KI-Chat-Nachrichten pro Monat",
         "feature3": "Vollständiges Ausgaben-Dashboard",
         "cta": "Kostenlos starten"

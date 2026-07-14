@@ -118,7 +118,7 @@
       "invalidFile": "Please upload a valid image file (JPEG, PNG, or WebP)",
       "fileTooLarge": "Image is too large. Maximum size is 10 MB",
       "unreadable": "Could not read the amount from this receipt",
-      "quotaExceeded": "You've used all 3 free scans. Upgrade to Pro to keep scanning receipts",
+      "quotaExceeded": "You've used all 5 free scans. Upgrade to Pro to keep scanning receipts",
       "monthlyLimitReached": "Monthly scan limit reached. Try again next month",
       "aiFailed": "Receipt analysis failed. Please try again",
       "parseFailed": "Could not parse receipt data. Please enter details manually"
@@ -148,6 +148,7 @@
     },
     "status": {
       "thinking": "Thinking...",
+      "messagesQuota": "{{used}} / {{limit}} messages this month",
       "messagesRemaining": "{{count}} messages remaining this month"
     },
     "success": {
@@ -228,7 +229,7 @@
         "pricePln": "0 PLN / month",
         "priceEur": "€0 / month",
         "priceGbp": "£0 / month",
-        "feature1": "3 receipt scans per month",
+        "feature1": "5 receipt scans per month",
         "feature2": "10 AI chat messages per month",
         "feature3": "Full expense dashboard",
         "cta": "Get started free"

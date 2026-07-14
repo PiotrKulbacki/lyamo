@@ -118,7 +118,7 @@
       "invalidFile": "Prześlij prawidłowy plik graficzny (JPEG, PNG lub WebP)",
       "fileTooLarge": "Obraz jest zbyt duży. Maksymalny rozmiar to 10 MB",
       "unreadable": "Nie udało się odczytać kwoty z tego paragonu",
-      "quotaExceeded": "Wykorzystałeś 3 darmowe skany. Przejdź na Pro, aby dalej skanować paragony",
+      "quotaExceeded": "Wykorzystałeś 5 darmowych skanów. Przejdź na Pro, aby dalej skanować paragony",
       "monthlyLimitReached": "Osiągnięto miesięczny limit skanów. Spróbuj ponownie w przyszłym miesiącu",
       "aiFailed": "Analiza paragonu nie powiodła się. Spróbuj ponownie",
       "parseFailed": "Nie udało się przetworzyć danych z paragonu. Wprowadź je ręcznie"
@@ -148,6 +148,7 @@
     },
     "status": {
       "thinking": "Myślę...",
+      "messagesQuota": "{{used}} / {{limit}} wiadomości w tym miesiącu",
       "messagesRemaining": "Pozostało {{count}} wiadomości w tym miesiącu"
     },
     "success": {
@@ -228,7 +229,7 @@
         "pricePln": "0 zł / miesiąc",
         "priceEur": "0 € / miesiąc",
         "priceGbp": "0 £ / miesiąc",
-        "feature1": "3 skany paragonów miesięcznie",
+        "feature1": "5 skanów paragonów miesięcznie",
         "feature2": "10 wiadomości czatu AI miesięcznie",
         "feature3": "Pełny dashboard wydatków",
         "cta": "Zacznij za darmo"
