@@ -472,6 +472,15 @@
     "success": {
       "upgraded": "Willkommen bei Pro! Ihr Abonnement ist aktiv."
     },
+    "cycleDayModal": {
+      "title": "Starttag des Abrechnungszyklus geändert",
+      "description": "Ihr Pro-Upgrade hat den Starttag des Abrechnungszyklus von {{previousDay}} auf {{currentDay}} gesetzt. Ausgaben vor dem neuen Starttag erscheinen in der Historie und nicht mehr im Standard-Dashboard.",
+      "keepPrevious": "Vorherigen Starttag behalten ({{day}})",
+      "setCustom": "Neuen Monatstag festlegen",
+      "hint": "Wenn Sie den vorherigen Tag behalten, bleiben Ausgaben des aktuellen Zyklus im Dashboard. Sie können dies später in den Einstellungen ändern.",
+      "confirm": "Starttag speichern",
+      "success": "Starttag des Abrechnungszyklus aktualisiert."
+    },
     "errors": {
       "checkoutUnavailable": "Checkout ist vorübergehend nicht verfügbar. Bitte später erneut versuchen",
       "checkoutCancelled": "Checkout wurde abgebrochen",
@@ -479,7 +488,8 @@
       "noSubscription": "Kein aktives Abonnement gefunden",
       "alreadyPro": "Sie haben bereits ein aktives Pro-Abonnement",
       "invalidCurrency": "Bitte wählen Sie eine gültige Zahlungswährung",
-      "priceUnavailable": "Pro-Preis ist für die gewählte Währung nicht verfügbar"
+      "priceUnavailable": "Pro-Preis ist für die gewählte Währung nicht verfügbar",
+      "cycleDayChoiceNotPending": "Die Auswahl des Starttags ist nicht mehr erforderlich"
     }
   },
   "legal": {

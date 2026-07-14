@@ -472,6 +472,15 @@
     "success": {
       "upgraded": "¡Bienvenido a Pro! Tu suscripción está activa."
     },
+    "cycleDayModal": {
+      "title": "Cambió el día de inicio del ciclo de facturación",
+      "description": "Tu upgrade a Pro cambió el día de inicio del ciclo de {{previousDay}} a {{currentDay}}. Los gastos anteriores al nuevo día de inicio pasan al Historial y dejan de aparecer en el dashboard predeterminado.",
+      "keepPrevious": "Mantener mi día de inicio anterior ({{day}})",
+      "setCustom": "Establecer un nuevo día del mes",
+      "hint": "Si mantienes el día anterior, los gastos del ciclo actual seguirán en el dashboard. Puedes cambiarlo después en Ajustes.",
+      "confirm": "Guardar día del ciclo",
+      "success": "Día de inicio del ciclo actualizado."
+    },
     "errors": {
       "checkoutUnavailable": "El checkout no está disponible temporalmente. Inténtalo más tarde",
       "checkoutCancelled": "El checkout fue cancelado",
@@ -479,7 +488,8 @@
       "noSubscription": "No se encontró suscripción activa",
       "alreadyPro": "Ya tienes una suscripción Pro activa",
       "invalidCurrency": "Selecciona una moneda de pago válida",
-      "priceUnavailable": "El precio Pro no está disponible para la moneda seleccionada"
+      "priceUnavailable": "El precio Pro no está disponible para la moneda seleccionada",
+      "cycleDayChoiceNotPending": "La elección del día del ciclo ya no es necesaria"
     }
   },
   "legal": {

@@ -185,7 +185,7 @@ export async function getDashboardData(
     prisma.transaction.findMany({
       where: {
         userId,
-        date: { gte: defaultPeriodStart, lte: periodEnd },
+        date: { gte: chartDataStart, lte: periodEnd },
       },
       orderBy: { date: 'desc' },
       select: {

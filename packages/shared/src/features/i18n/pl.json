@@ -474,6 +474,15 @@
     "success": {
       "upgraded": "Witaj w Pro! Twoja subskrypcja jest aktywna."
     },
+    "cycleDayModal": {
+      "title": "Zmieniono dzień rozpoczęcia cyklu rozliczeniowego",
+      "description": "Upgrade do Pro ustawił nowy dzień rozpoczęcia cyklu z {{previousDay}} na {{currentDay}}. Wydatki sprzed nowego dnia startu trafiają do Historii i nie widać ich na domyślnym dashboardzie.",
+      "keepPrevious": "Zachowaj poprzedni dzień startu ({{day}})",
+      "setCustom": "Ustaw nowy dzień miesiąca",
+      "hint": "Jeśli zachowasz poprzedni dzień, wydatki z bieżącego cyklu pozostaną na dashboardzie. Możesz to zmienić później w Ustawieniach.",
+      "confirm": "Zapisz dzień cyklu",
+      "success": "Dzień rozpoczęcia cyklu został zaktualizowany."
+    },
     "errors": {
       "checkoutUnavailable": "Checkout jest chwilowo niedostępny. Spróbuj ponownie później",
       "checkoutCancelled": "Checkout został anulowany",
@@ -481,7 +490,8 @@
       "noSubscription": "Nie znaleziono aktywnej subskrypcji",
       "alreadyPro": "Masz już aktywną subskrypcję Pro",
       "invalidCurrency": "Wybierz prawidłową walutę płatności",
-      "priceUnavailable": "Cennik Pro jest niedostępny dla wybranej waluty"
+      "priceUnavailable": "Cennik Pro jest niedostępny dla wybranej waluty",
+      "cycleDayChoiceNotPending": "Wybór dnia cyklu nie jest już wymagany"
     }
   },
   "legal": {

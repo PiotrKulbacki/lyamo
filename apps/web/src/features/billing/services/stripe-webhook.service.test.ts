@@ -33,10 +33,9 @@ describe('stripe-webhook.service', () => {
   });
 
   it('upgrades user to PRO on checkout.session.completed via metadata.userId', async () => {
-    mockFindUnique.mockResolvedValue({
-      id: 'user-1',
-      currentPlan: 'FREE',
-    });
+    mockFindUnique
+      .mockResolvedValueOnce({ financialMonthStartDay: 12 })
+      .mockResolvedValueOnce({ id: 'user-1', currentPlan: 'FREE' });
 
     await handleCheckoutSessionCompleted({
       customer: 'cus_123',
@@ -51,6 +50,7 @@ describe('stripe-webhook.service', () => {
         monthlyAiScansCount: 0,
         monthlyAiChatCount: 0,
         pastDueSince: null,
+        financialMonthStartDay: expect.any(Number),
       }),
     });
     expect(captureServerEvent).toHaveBeenCalled();
