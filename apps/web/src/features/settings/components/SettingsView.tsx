@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
+import { SUPPORTED_CURRENCIES } from '@shared/features/currency';
+import type { CurrencyCode } from '@shared/features/transactions/schemas';
 import {
   FINANCIAL_MONTH_DAY_MAX,
   FINANCIAL_MONTH_DAY_MIN,
@@ -15,6 +17,7 @@ import {
   readStoredBillingCurrency,
 } from '@web/features/billing/components/BillingCurrencySwitcher';
 import { ProPriceDisplay } from '@web/features/billing/components/ProPriceDisplay';
+import { ProUpgradeCycleDayDialog } from '@web/features/billing/components/ProUpgradeCycleDayDialog';
 import { LoadingSpinner } from '@web/components/ui/loading-spinner';
 import { RecurringExpensesSection } from '@web/features/settings/components/RecurringExpensesSection';
 import { CategoriesSection } from '@web/features/settings/components/CategoriesSection';
@@ -27,7 +30,7 @@ export function SettingsView() {
   const { locale } = useLocale();
   const [user, setUser] = useState<SafeUser | null>(null);
   const [name, setName] = useState('');
-  const [primaryCurrency, setPrimaryCurrency] = useState<'PLN' | 'EUR' | 'GBP'>('PLN');
+  const [primaryCurrency, setPrimaryCurrency] = useState<CurrencyCode>('PLN');
   const [financialMonthStartDay, setFinancialMonthStartDay] = useState(1);
   const [defaultMonthlyBudget, setDefaultMonthlyBudget] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +39,43 @@ export function SettingsView() {
   const [isBillingLoading, setIsBillingLoading] = useState(false);
   const [checkoutCurrency, setCheckoutCurrency] = useState<BillingCurrency>('PLN');
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false);
+  const [cycleDayModal, setCycleDayModal] = useState<{
+    previousDay: number;
+    currentDay: number;
+  } | null>(null);
+  const [isCycleDayModalOpen, setIsCycleDayModalOpen] = useState(false);
   const checkoutToastShown = useRef(false);
+
+  const loadCycleDayChoiceStatus = useCallback(async (): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/billing/pro-upgrade-cycle-day');
+      if (!response.ok) {
+        return false;
+      }
+
+      const data = (await response.json()) as {
+        pending?: boolean;
+        previousDay?: number | null;
+        currentDay?: number | null;
+      };
+
+      if (
+        data.pending &&
+        data.previousDay != null &&
+        data.currentDay != null &&
+        data.previousDay !== data.currentDay
+      ) {
+        setCycleDayModal({ previousDay: data.previousDay, currentDay: data.currentDay });
+        setIsCycleDayModalOpen(true);
+        return true;
+      }
+    } catch {
+      return false;
+    }
+
+    return false;
+  }, []);
 
   useEffect(() => {
     const checkout = searchParams.get('checkout');
@@ -47,6 +86,7 @@ export function SettingsView() {
     checkoutToastShown.current = true;
 
     if (checkout === 'success') {
+      setIsCheckoutSuccess(true);
       toast.success(t('billing.success.upgraded'));
     } else if (checkout === 'cancel') {
       toast.error(t('billing.errors.checkoutCancelled'));
@@ -83,6 +123,48 @@ export function SettingsView() {
 
     void loadUser();
   }, [locale, t]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    void loadCycleDayChoiceStatus();
+  }, [user, loadCycleDayChoiceStatus]);
+
+  useEffect(() => {
+    if (!isCheckoutSuccess) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function pollForCycleDayChoice() {
+      for (let attempt = 0; attempt < 30 && !cancelled; attempt += 1) {
+        const found = await loadCycleDayChoiceStatus();
+        if (found) {
+          return;
+        }
+
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        });
+      }
+    }
+
+    void pollForCycleDayChoice();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isCheckoutSuccess, loadCycleDayChoiceStatus]);
+
+  function handleCycleDayConfirmed(day: number) {
+    setFinancialMonthStartDay(day);
+    setUser((current) => (current ? { ...current, financialMonthStartDay: day } : current));
+    setCycleDayModal(null);
+    router.refresh();
+  }
 
   async function handleSave(event: React.FormEvent) {
     event.preventDefault();
@@ -244,7 +326,7 @@ export function SettingsView() {
                 }
                 className="auth-input"
               >
-                {(['PLN', 'EUR', 'GBP'] as const).map((currency) => (
+                {SUPPORTED_CURRENCIES.map((currency) => (
                   <option key={currency} value={currency}>
                     {currency}
                   </option>
@@ -367,6 +449,16 @@ export function SettingsView() {
           {t('settings.danger.deleteAccount')}
         </button>
       </section>
+
+      {cycleDayModal && (
+        <ProUpgradeCycleDayDialog
+          open={isCycleDayModalOpen}
+          previousDay={cycleDayModal.previousDay}
+          currentDay={cycleDayModal.currentDay}
+          onOpenChange={setIsCycleDayModalOpen}
+          onConfirmed={handleCycleDayConfirmed}
+        />
+      )}
     </div>
   );
 }

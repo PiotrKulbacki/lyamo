@@ -17,6 +17,7 @@ enum Currency {
   PLN
   EUR
   GBP
+  USD
 }
 
 enum Frequency {
@@ -37,6 +38,8 @@ model User {
   monthlyAiChatCount     Int       @default(0)
   primaryCurrency        Currency  @default(PLN)
   financialMonthStartDay Int       @default(1)
+  financialMonthStartDayBeforePro Int?
+  pendingFinancialCycleDayChoice Boolean @default(false)
   defaultMonthlyBudget   Float?
   currentMonthBudget     Float?
   lastQuotaResetAt       DateTime?

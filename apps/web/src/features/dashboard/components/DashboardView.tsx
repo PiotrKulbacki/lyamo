@@ -25,6 +25,7 @@ import type { TransactionFormInitialValues } from '@web/features/transactions/co
 import {
   aggregateCategoryTotals,
   getChartFilterDayMetrics,
+  getChartRangeStart,
   type ChartDateRange,
   type ChartTransaction,
 } from '@web/features/transactions/lib/chart-date-filter';
@@ -115,6 +116,41 @@ export function DashboardView() {
 
     return aggregateCategoryTotals(chartTransactions, appliedFilter, summary.periodStart);
   }, [chartTransactions, appliedFilter, summary]);
+
+  const filteredRecentTransactions = useMemo(() => {
+    if (!summary) {
+      return transactions;
+    }
+
+    const rangeStart = getChartRangeStart(appliedFilter, summary.periodStart);
+    const rangeEnd =
+      appliedFilter === 'custom' && summary.periodEnd ? new Date(summary.periodEnd) : null;
+
+    return transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      if (transactionDate < rangeStart) {
+        return false;
+      }
+
+      if (rangeEnd && transactionDate > rangeEnd) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [transactions, appliedFilter, summary]);
+
+  const displayedTransactionCount = useMemo(() => {
+    if (!summary) {
+      return 0;
+    }
+
+    if (appliedFilter === 'period' && !customDateRange) {
+      return summary.transactionCount;
+    }
+
+    return filteredRecentTransactions.length;
+  }, [summary, appliedFilter, customDateRange, filteredRecentTransactions.length]);
 
   const visibleTotalSpent = useMemo(
     () =>
@@ -357,7 +393,7 @@ export function DashboardView() {
             {t('dashboard.summary.transactions')}
           </p>
           <p className="font-display relative z-10 mt-2 text-3xl font-bold text-[var(--text)]">
-            {summary.transactionCount}
+            {displayedTransactionCount}
           </p>
         </article>
       </section>
@@ -378,7 +414,7 @@ export function DashboardView() {
       />
 
       <RecentTransactionsList
-        transactions={transactions}
+        transactions={filteredRecentTransactions}
         primaryCurrency={summary.primaryCurrency}
         locale={locale}
         categoryDisplayContext={categoryDisplayContext}

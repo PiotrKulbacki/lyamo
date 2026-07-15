@@ -1,12 +1,10 @@
 import { prisma } from '@smart-expense-control/database';
 import type { Plan } from '@smart-expense-control/database';
-import {
-  getFinancialMonthStartDayFromDate,
-  isPastDueGraceExpired,
-} from '@shared/features/billing/financial-month';
+import { isPastDueGraceExpired } from '@shared/features/billing/financial-month';
 import Stripe from 'stripe';
 import { ANALYTICS_EVENTS } from '@web/features/analytics/events';
 import { captureServerEvent } from '@web/features/analytics/posthog-server';
+import { buildProUpgradeBillingData } from '@web/features/billing/services/pro-upgrade-cycle-day.service';
 
 type PlanUpdateResult = {
   userId: string;
@@ -20,6 +18,16 @@ type UserBillingState = {
   currentPlan: Plan;
   stripeCustomerId: string | null;
   pastDueSince: Date | null;
+};
+
+type PlanUpdateExtraData = {
+  pastDueSince?: Date | null;
+  financialMonthStartDay?: number;
+  financialMonthStartDayBeforePro?: number | null;
+  pendingFinancialCycleDayChoice?: boolean;
+  monthlyAiScansCount?: number;
+  monthlyAiChatCount?: number;
+  lastQuotaResetAt?: Date;
 };
 
 function isProSubscriptionStatus(status: Stripe.Subscription.Status): boolean {
@@ -56,26 +64,10 @@ function getPastDueSinceUpdate(
   return null;
 }
 
-function getProUpgradeBillingData(reference: Date = new Date()) {
-  return {
-    financialMonthStartDay: getFinancialMonthStartDayFromDate(reference),
-    monthlyAiScansCount: 0,
-    monthlyAiChatCount: 0,
-    lastQuotaResetAt: reference,
-    pastDueSince: null,
-  };
-}
-
 async function updateUserPlanByCustomerId(
   stripeCustomerId: string,
   newPlan: Plan,
-  extraData?: {
-    pastDueSince?: Date | null;
-    financialMonthStartDay?: number;
-    monthlyAiScansCount?: number;
-    monthlyAiChatCount?: number;
-    lastQuotaResetAt?: Date;
-  }
+  extraData?: PlanUpdateExtraData
 ): Promise<PlanUpdateResult> {
   const user = await prisma.user.findUnique({
     where: { stripeCustomerId },
@@ -94,12 +86,7 @@ async function updateUserPlanByCustomerId(
   const previousPlan = user.currentPlan;
   const data: {
     currentPlan: Plan;
-    pastDueSince?: Date | null;
-    financialMonthStartDay?: number;
-    monthlyAiScansCount?: number;
-    monthlyAiChatCount?: number;
-    lastQuotaResetAt?: Date;
-  } = {
+  } & PlanUpdateExtraData = {
     currentPlan: newPlan,
     ...extraData,
   };
@@ -136,13 +123,7 @@ async function updateUserPlanByUserId(
   userId: string,
   stripeCustomerId: string,
   newPlan: Plan,
-  extraData?: {
-    pastDueSince?: Date | null;
-    financialMonthStartDay?: number;
-    monthlyAiScansCount?: number;
-    monthlyAiChatCount?: number;
-    lastQuotaResetAt?: Date;
-  }
+  extraData?: PlanUpdateExtraData
 ): Promise<PlanUpdateResult> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -199,12 +180,38 @@ export async function handleCheckoutSessionCompleted(
   }
 
   const userId = session.metadata?.userId;
-  const upgradeBillingData = getProUpgradeBillingData();
+  const reference = new Date();
   let result: PlanUpdateResult = null;
 
   if (userId) {
+    const existingUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { financialMonthStartDay: true },
+    });
+
+    if (!existingUser) {
+      return;
+    }
+
+    const upgradeBillingData = buildProUpgradeBillingData(
+      existingUser.financialMonthStartDay,
+      reference
+    );
     result = await updateUserPlanByUserId(userId, customerId, 'PRO', upgradeBillingData);
   } else {
+    const existingUser = await prisma.user.findUnique({
+      where: { stripeCustomerId: customerId },
+      select: { financialMonthStartDay: true },
+    });
+
+    if (!existingUser) {
+      return;
+    }
+
+    const upgradeBillingData = buildProUpgradeBillingData(
+      existingUser.financialMonthStartDay,
+      reference
+    );
     result = await updateUserPlanByCustomerId(customerId, 'PRO', upgradeBillingData);
   }
 

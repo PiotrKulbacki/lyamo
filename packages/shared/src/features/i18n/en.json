@@ -147,6 +147,7 @@
       "previewActionShort": "Preview",
       "closePreview": "Close preview",
       "viewTransactions": "View transactions",
+      "backToFolders": "Back to folders",
       "errors": {
         "loadFailed": "Could not load your document archive"
       }
@@ -262,7 +263,7 @@
       },
       "currency": {
         "title": "Multi-currency support",
-        "description": "Track PLN, EUR, and GBP — all converted to your primary currency."
+        "description": "Track PLN, EUR, GBP, and USD — all converted to your primary currency."
       }
     },
     "pricing": {
@@ -472,6 +473,15 @@
     "success": {
       "upgraded": "Welcome to Pro! Your subscription is active."
     },
+    "cycleDayModal": {
+      "title": "Billing cycle start day changed",
+      "description": "Your Pro upgrade reset the billing cycle start day from {{previousDay}} to {{currentDay}}. Expenses before the new start day move to History and no longer appear on the default dashboard view.",
+      "keepPrevious": "Keep my previous start day ({{day}})",
+      "setCustom": "Set a new start day of the month",
+      "hint": "If you keep the previous day, expenses from the current cycle stay on your dashboard. You can change this later in Settings.",
+      "confirm": "Save billing cycle day",
+      "success": "Billing cycle start day updated."
+    },
     "errors": {
       "checkoutUnavailable": "Checkout is temporarily unavailable. Please try again later",
       "checkoutCancelled": "Checkout was cancelled",
@@ -479,7 +489,8 @@
       "noSubscription": "No active subscription found",
       "alreadyPro": "You already have an active Pro subscription",
       "invalidCurrency": "Please select a valid payment currency",
-      "priceUnavailable": "Pro pricing is not available for the selected currency"
+      "priceUnavailable": "Pro pricing is not available for the selected currency",
+      "cycleDayChoiceNotPending": "Billing cycle day choice is no longer pending"
     }
   },
   "legal": {
