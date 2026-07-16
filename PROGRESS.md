@@ -83,28 +83,44 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 
 ## Latest Handoff Log
 
-**2026-07-16 — Faza 10 zamknięta: Premium, TTL kont, dunning Resend, retencja zdjęć.**
+**2026-07-16 — Faza 10 zamknięta i zweryfikowana (Premium, TTL, dunning Resend, photo retention).**
 
 ### Faza 10 — Cennik 3-poziomowy + polityki retencji i dunningu
 
-- **Plany:** `FREE` | `PRO` | `PREMIUM` (enum Prisma + `PlanType`).
-- **Limity:** FREE 5 skanów / 10 czat; PRO 50 / 50; PREMIUM 120 / 250; retencja zdjęć 0 / 60 dni / 365 dni (`plan-limits.ts`).
-- **Ceny Premium UI:** 46 PLN / 11 EUR / 8.50 GBP / 12 USD; PRO bez zmian; `PROMO50` (−50%) dla PRO i Premium.
-- **Stripe:** `STRIPE_PREMIUM_PRICE_{PLN,EUR,GBP,USD}`; checkout z `{ currency, plan }`; webhook rozróżnia PRO/PREMIUM po metadata/price ID; `invoice.payment_failed` → karencja + 1. mail.
-- **Resend:** `RESEND_API_KEY`, `RESEND_FROM_EMAIL`; serwis `resend.service.ts` + `dunning-email.service.ts` (link do Stripe Billing Portal).
-- **Cron `downgrade-past-due` (cron-job.org, co godzinę):** po ~12h 2. mail reminder; po 24h downgrade do FREE (PRO i PREMIUM).
-- **TTL kont:** `User.lastActiveAt` (throttled touch przy auth); cron dzienny `DELETE /api/cron/delete-inactive-accounts` (2 lata) — storage receipts + cascade Prisma.
-- **Photo retention:** `Transaction.imageExpiresAt`; FREE bez trwałego storage; cron `cleanup-expired-receipts` czyści tylko pliki/URL (transakcje zostają).
+- **Plany:** `FREE` | `PRO` | `PREMIUM` (enum Prisma + `PlanType` / `isPaidPlan`).
+- **Limity (`plan-limits.ts`):**
+
+  | Funkcja                | FREE | PRO    | PREMIUM |
+  | ---------------------- | ---- | ------ | ------- |
+  | Skan paragonów / mies. | 5    | 50     | 120     |
+  | Czat AI / mies.        | 10   | 50     | 250     |
+  | Retencja zdjęć         | 0    | 60 dni | 365 dni |
+
+- **Ceny UI:** PRO bez zmian (34 PLN / 8 EUR / 6.5 GBP / 9 USD); Premium **46 PLN / 11 EUR / 8.50 GBP / 12 USD**; `PROMO50` (−50%) dla PRO i Premium (`allow_promotion_codes`).
+- **Stripe:** env `STRIPE_PREMIUM_PRICE_{PLN,EUR,GBP,USD}`; checkout `POST /api/billing/checkout` body `{ currency, plan }`; webhook mapuje plan po `metadata.checkoutPlan` / Price ID; karencja 24h zachowuje PRO lub PREMIUM.
+- **Webhook events (Stripe Dashboard ✅):** `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`.
+- **Resend (zamiast SendGrid):** pakiet `resend`; `RESEND_API_KEY` + `RESEND_FROM_EMAIL` (format: `Smart Expense Control <onboarding@resend.dev>` lub zweryfikowana domena); `resend.service.ts` + `dunning-email.service.ts` (link Billing Portal).
+- **Dunning:** `invoice.payment_failed` → `pastDueSince` + 1. mail; cron godzinowy → 2. mail po ~12h (`pastDueReminderSentAt`); po 24h downgrade → FREE (czyści flagi maili).
+- **TTL kont (RODO):** `User.lastActiveAt` (touch throttled 1h przy sesji/Bearer); Settings notice i18n; cron usuwa konta > 2 lata (Storage `receipts` + cascade Prisma). Brak Supabase Auth — własny JWT.
+- **Photo retention:** `Transaction.imageExpiresAt`; FREE: upload tymczasowy → delete po AI, brak URL w DB; PRO/Premium: expiresAt przy zapisie; cron czyści tylko plik + nulluje URL (dane transakcji zostają).
 - **UI/i18n:** landing 3 kolumny; Settings upgrade PRO/Premium + notice TTL; en/pl/de/es.
-- **Migracja:** `20260716200000_phase10_premium_retention_dunning` (do `migrate:deploy`).
+- **Migracja:** `20260716200000_phase10_premium_retention_dunning` — ✅ zastosowana na Supabase (`PREMIUM`, `lastActiveAt`, `pastDueFirstEmailSentAt`, `pastDueReminderSentAt`, `imageExpiresAt` + indeksy).
+- **Testy:** `plan-limits.test.ts`, `pricing.test.ts`, `stripe-webhook.service.test.ts`.
 
-**Deploy / ops:**
+**Crony / ops (Hobby Vercel = 1 slot):**
 
-1. `migrate:deploy` — `20260716200000_phase10_premium_retention_dunning` ✅ zastosowana.
-2. Env Vercel: `STRIPE_PREMIUM_PRICE_*`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`.
-3. **Vercel Cron (Hobby — 1 slot):** tylko `/api/cron/reset-quotas` (`5 0 * * *`).
-4. **cron-job.org:** `downgrade-past-due` (co godzinę), `refresh-aggregations`, `cleanup-expired-receipts`, `delete-inactive-accounts` — header `Authorization: Bearer CRON_SECRET`.
-5. Stripe webhook: `checkout.session.completed`, `customer.subscription.updated|deleted`, `invoice.payment_failed`.
+| Gdzie        | Endpoint                             | Harmonogram  | Auth                                |
+| ------------ | ------------------------------------ | ------------ | ----------------------------------- |
+| Vercel       | `/api/cron/reset-quotas`             | `5 0 * * *`  | Vercel Cron                         |
+| cron-job.org | `/api/cron/downgrade-past-due`       | co godzinę   | `Authorization: Bearer CRON_SECRET` |
+| cron-job.org | `/api/cron/refresh-aggregations`     | `15 2 * * *` | j.w.                                |
+| cron-job.org | `/api/cron/cleanup-expired-receipts` | `30 2 * * *` | j.w.                                |
+| cron-job.org | `/api/cron/delete-inactive-accounts` | `45 3 * * *` | j.w.                                |
+
+Base URL produkcji: `https://smart-expense-control-web.vercel.app`.  
+`vercel.json` zawiera **tylko** `reset-quotas`. Reszta na cron-job.org (✅ skonfigurowane / zweryfikowane przez użytkownika).
+
+**Env do ustawienia na Vercel:** `STRIPE_PREMIUM_PRICE_*`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (+ istniejące Stripe/Pro).
 
 ---
 
@@ -451,12 +467,12 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 
 ### Następny agent — start tutaj
 
-0. **Przed zakończeniem sesji:** obowiązkowo `npx prettier --write .` → `npm run format` (szczegóły w sekcji **Żelazne zasady agentów** powyżej). Przy akcjach async — loadery/szkielety zgodnie z zasadą **Loadery i stany ładowania**.
-1. Produkcja live — zmiany przez `dev` → PR → merge `main`.
-2. **Migracja DB (Faza 10):** `20260716200000_phase10_premium_retention_dunning` — `PREMIUM`, `lastActiveAt`, dunning email flags, `imageExpiresAt`.
-3. **Vercel env:** `STRIPE_PRO_PRICE_*`, `STRIPE_PREMIUM_PRICE_*`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `NEXT_PUBLIC_SENTRY_DSN` (opcjonalnie).
-4. **cron-job.org:** godzinowy `GET /api/cron/downgrade-past-due` + `Authorization: Bearer CRON_SECRET` (reminder + downgrade).
-5. **PostHog:** flaga `pro-promo-pricing` — nadal steruje badge promo na cenniku.
+0. **Przed zakończeniem sesji:** obowiązkowo `npx prettier --write .` → `npm run format`. Przy akcjach async — loadery/szkielety.
+1. Produkcja: `dev` → PR → merge `main`.
+2. **Faza 10 zamknięta** — migracja zastosowana; crony i Stripe/Resend skonfigurowane. Nowe funkcje tylko po zgodzie użytkownika.
+3. **Vercel env (jeśli brak):** `STRIPE_PREMIUM_PRICE_*`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL=Smart Expense Control <…>`.
+4. **Crony:** Vercel tylko `reset-quotas`; reszta na cron-job.org (patrz tabela w handoff Fazy 10).
+5. **PostHog:** flaga `pro-promo-pricing` — badge promo na cenniku PRO/Premium.
 
 ---
 
@@ -492,9 +508,14 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 
 ### Vercel Cron vs cron-job.org (plan Hobby)
 
-- **Limit Hobby:** max 1 uruchomienie cron/dzień w `vercel.json` — wyrażenie `0 * * * *` **blokuje deploy**.
+- **Limit Hobby:** max **1** cron w `vercel.json` (wyrażenia częstsze niż 1×/dzień blokują deploy).
 - **W `vercel.json` zostaje tylko:** `GET /api/cron/reset-quotas` (`5 0 * * *`, codziennie 00:05 UTC).
-- **`downgrade-past-due` (co godzinę):** zewnętrzny scheduler **cron-job.org** → `GET https://smart-expense-control-web.vercel.app/api/cron/downgrade-past-due` z nagłówkiem `Authorization: Bearer CRON_SECRET`. Skonfigurowane i zweryfikowane (HTTP 200).
+- **Na cron-job.org (GET + `Authorization: Bearer CRON_SECRET`):**
+  - `downgrade-past-due` — co godzinę (grace + 2. mail Resend + downgrade),
+  - `refresh-aggregations` — `15 2 * * *`,
+  - `cleanup-expired-receipts` — `30 2 * * *`,
+  - `delete-inactive-accounts` — `45 3 * * *`.
+- Base: `https://smart-expense-control-web.vercel.app`.
 
 ### Google OAuth — produkcja
 
@@ -610,13 +631,14 @@ _(Brak zaplanowanych faz — każda nowa funkcja wymaga zatwierdzenia przez uży
 
 ## Ostatnie zmiany
 
-**2026-07-16 — Faza 10: Premium, retencja kont, dunning Resend, rolling photo retention**
+**2026-07-16 — Faza 10: Premium, retencja kont, dunning Resend, rolling photo retention (zweryfikowane)**
 
-- Trójpoziomowy cennik FREE/PRO/PREMIUM + Stripe Price IDs + checkout `plan`.
-- Limity PRO 50/50, Premium 120/250; retencja zdjęć 60 dni / 12 mies.; FREE bez storage.
-- `lastActiveAt` + cron usuwania kont po 2 latach; notice w Settings (i18n).
-- Karencja 24h: `invoice.payment_failed` + 2 maile Resend; cron godzinowy reminder/downgrade.
-- Migracja `20260716200000_phase10_premium_retention_dunning`.
+- Trójpoziomowy cennik FREE/PRO/PREMIUM; limity 5·10 / 50·50 / 120·250; retencja zdjęć 0 / 60d / 365d.
+- Stripe Premium Price IDs + checkout `plan`; webhook + `invoice.payment_failed`; PROMO50 na PRO i Premium.
+- Resend: 2 maile dunning (natychmiast + ~12h); downgrade po 24h; `RESEND_FROM_EMAIL` format Display Name `<adres>`.
+- TTL 2 lata (`lastActiveAt`); Settings notice; cleanup Storage + cascade.
+- Crony: Vercel tylko `reset-quotas`; cron-job.org: downgrade / refresh-aggregations / cleanup-receipts / delete-inactive.
+- Migracja `20260716200000_phase10_premium_retention_dunning` ✅ na Supabase; Stripe events ✅; ops ✅.
 
 **2026-07-16 — Faza 9.7: limity wydatków na kategorie + UX ładowania**
 
