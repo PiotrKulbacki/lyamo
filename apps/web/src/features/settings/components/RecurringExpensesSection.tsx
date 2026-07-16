@@ -207,7 +207,7 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
 
       <form
         onSubmit={(event) => void handleAdd(event)}
-        className="relative z-10 mt-4 grid gap-3 sm:grid-cols-4"
+        className="relative z-10 mt-4 flex flex-col gap-3 sm:flex-row sm:items-center"
       >
         <Input
           type="text"
@@ -215,7 +215,7 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
           disabled={isSaving}
           onChange={(event) => setName(event.target.value)}
           placeholder={t('settings.recurring.namePlaceholder')}
-          className="sm:col-span-2"
+          className="sm:min-w-0 sm:flex-1"
         />
         <Input
           type="number"
@@ -225,12 +225,13 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
           disabled={isSaving}
           onChange={(event) => setAmount(event.target.value)}
           placeholder={t('settings.recurring.amountPlaceholder')}
+          className="sm:w-28"
         />
         <select
           value={currency}
           disabled={isSaving}
           onChange={(event) => setCurrency(event.target.value as CurrencyCode)}
-          className="auth-input"
+          className="auth-input sm:mt-0 sm:w-24"
         >
           {SUPPORTED_CURRENCIES.map((option) => (
             <option key={option} value={option}>
@@ -238,12 +239,7 @@ export function RecurringExpensesSection({ primaryCurrency }: RecurringExpensesS
             </option>
           ))}
         </select>
-        <Button
-          type="submit"
-          loading={isSaving}
-          disabled={isSaving}
-          className="sm:col-span-4 sm:w-auto"
-        >
+        <Button type="submit" loading={isSaving} disabled={isSaving} className="shrink-0">
           <Plus className="h-4 w-4" />
           {t('settings.recurring.add')}
         </Button>
