@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { translateError } from '@shared/features/i18n';
 import { LoadingSpinner } from '@web/components/ui/loading-spinner';
@@ -31,6 +31,11 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
   const { locale } = useLocale();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isPortalLoading, setIsPortalLoading] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   async function handleLogout() {
     setIsLoggingOut(true);
@@ -101,16 +106,20 @@ export function AppSidebar({ userName, userEmail, userPlan }: AppSidebarProps) {
       <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
         {visibleNavItems.map((item) => {
           const isActive = pathname === item.href;
+          const isPending = pendingHref === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-lg px-3 py-2 font-mono text-sm transition ${
+              onClick={() => setPendingHref(item.href)}
+              className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 font-mono text-sm transition ${
                 isActive
                   ? 'bg-warm/10 text-warm'
                   : 'text-muted hover:bg-elevated/50 hover:text-[var(--text)]'
-              }`}
+              } ${isPending ? 'pointer-events-none opacity-70' : ''}`}
+              aria-busy={isPending || undefined}
             >
+              {isPending && <LoadingSpinner className="h-3.5 w-3.5" />}
               {t(item.key)}
             </Link>
           );

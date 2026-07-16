@@ -298,6 +298,7 @@
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Ihre Ausgabenübersicht für den aktuellen Abrechnungszeitraum",
+    "refreshing": "Dashboard wird aktualisiert…",
     "summary": {
       "totalSpent": "Ausgabensumme",
       "transactions": "Alle Transaktionen",

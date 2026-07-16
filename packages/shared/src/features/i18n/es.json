@@ -298,6 +298,7 @@
   "dashboard": {
     "title": "Panel",
     "subtitle": "Resumen de gastos del periodo de facturación actual",
+    "refreshing": "Actualizando panel…",
     "summary": {
       "totalSpent": "Suma de gastos",
       "transactions": "Todas las transacciones",

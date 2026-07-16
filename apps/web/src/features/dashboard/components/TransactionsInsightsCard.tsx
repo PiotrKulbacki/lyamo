@@ -50,11 +50,13 @@ const INSIGHT_TYPE_STYLES: Record<
 type TransactionsInsightsCardProps = {
   transactionStats: TransactionCountStats;
   noSpendDays: NoSpendDaysSummary | null;
+  isDataRefreshing?: boolean;
 };
 
 export function TransactionsInsightsCard({
   transactionStats,
   noSpendDays,
+  isDataRefreshing = false,
 }: TransactionsInsightsCardProps) {
   const t = useT();
   const { locale } = useLocale();
@@ -115,19 +117,30 @@ export function TransactionsInsightsCard({
               <p className="text-muted break-words text-[13px] font-medium leading-snug">
                 {t('dashboard.summary.transactions')}
               </p>
-              <p className="font-display mt-1 text-lg font-semibold text-[var(--text)] sm:text-xl">
-                {transactionStats.total}
-              </p>
-              <div className="text-muted mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] leading-snug sm:text-xs">
-                <span className="inline-flex items-center gap-1">
-                  <PencilLine className="h-3 w-3 shrink-0 opacity-80" aria-hidden />
-                  {t('dashboard.summary.manualCount', { count: transactionStats.manual })}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Camera className="h-3 w-3 shrink-0 opacity-80" aria-hidden />
-                  {t('dashboard.summary.scannedCount', { count: transactionStats.scanned })}
-                </span>
-              </div>
+              {isDataRefreshing ? (
+                <div className="bg-elevated mt-1 h-7 w-12 animate-pulse rounded-md" aria-hidden />
+              ) : (
+                <p className="font-display mt-1 text-lg font-semibold text-[var(--text)] sm:text-xl">
+                  {transactionStats.total}
+                </p>
+              )}
+              {isDataRefreshing ? (
+                <div className="mt-1.5 space-y-1" aria-hidden>
+                  <div className="bg-elevated h-3 w-28 animate-pulse rounded" />
+                  <div className="bg-elevated h-3 w-24 animate-pulse rounded" />
+                </div>
+              ) : (
+                <div className="text-muted mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] leading-snug sm:text-xs">
+                  <span className="inline-flex items-center gap-1">
+                    <PencilLine className="h-3 w-3 shrink-0 opacity-80" aria-hidden />
+                    {t('dashboard.summary.manualCount', { count: transactionStats.manual })}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Camera className="h-3 w-3 shrink-0 opacity-80" aria-hidden />
+                    {t('dashboard.summary.scannedCount', { count: transactionStats.scanned })}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -141,7 +154,9 @@ export function TransactionsInsightsCard({
               <p className="text-muted break-words text-[13px] font-medium leading-snug">
                 {t('dashboard.noSpendDays.title')}
               </p>
-              {noSpendDays ? (
+              {isDataRefreshing ? (
+                <div className="bg-elevated mt-1 h-7 w-24 animate-pulse rounded-md" aria-hidden />
+              ) : noSpendDays ? (
                 <p className="font-display mt-1 truncate whitespace-nowrap text-lg font-semibold text-[var(--text)] sm:text-xl">
                   {t('dashboard.noSpendDays.value', {
                     noSpend: noSpendDays.noSpendDays,

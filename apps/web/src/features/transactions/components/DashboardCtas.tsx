@@ -1,7 +1,8 @@
 'use client';
 
 import { Plus, Camera } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from '@web/components/ui/button';
 import { useT } from '@web/features/i18n/LocaleProvider';
 
@@ -15,28 +16,48 @@ type DashboardCtasProps = {
   onAddManual: () => void;
   scanQuota: ScanQuota | null;
   plan: 'FREE' | 'PRO';
+  isRefreshing?: boolean;
 };
 
-export function DashboardCtas({ onAddManual, scanQuota, plan }: DashboardCtasProps) {
+export function DashboardCtas({
+  onAddManual,
+  scanQuota,
+  plan,
+  isRefreshing = false,
+}: DashboardCtasProps) {
   const t = useT();
+  const router = useRouter();
+  const [isNavigatingToScanner, setIsNavigatingToScanner] = useState(false);
+
+  function handleScanClick() {
+    setIsNavigatingToScanner(true);
+    router.push('/scanner');
+  }
+
+  const isBusy = isRefreshing || isNavigatingToScanner;
 
   return (
     <section className="flex flex-wrap items-center gap-2">
-      <Button type="button" size="default" onClick={onAddManual}>
+      <Button type="button" size="default" disabled={isBusy} onClick={onAddManual}>
         <Plus className="h-4 w-4" />
         {t('dashboard.cta.addManual')}
       </Button>
 
-      <Button asChild variant="outline" size="default" className="relative">
-        <Link href="/scanner">
-          <Camera className="h-4 w-4" />
-          {plan === 'FREE' && scanQuota
-            ? t('dashboard.cta.scanWithQuota', {
-                used: scanQuota.used,
-                limit: scanQuota.limit,
-              })
-            : t('dashboard.cta.scan')}
-        </Link>
+      <Button
+        type="button"
+        variant="outline"
+        size="default"
+        loading={isNavigatingToScanner}
+        disabled={isBusy}
+        onClick={handleScanClick}
+      >
+        <Camera className="h-4 w-4" />
+        {plan === 'FREE' && scanQuota
+          ? t('dashboard.cta.scanWithQuota', {
+              used: scanQuota.used,
+              limit: scanQuota.limit,
+            })
+          : t('dashboard.cta.scan')}
       </Button>
     </section>
   );

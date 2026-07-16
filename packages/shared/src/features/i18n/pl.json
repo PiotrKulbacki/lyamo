@@ -300,6 +300,7 @@
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Przegląd wydatków w bieżącym okresie rozliczeniowym",
+    "refreshing": "Aktualizowanie pulpitu…",
     "summary": {
       "totalSpent": "Suma wydatków",
       "transactions": "Wszystkie transakcje",

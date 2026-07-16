@@ -19,6 +19,7 @@ type BudgetProgressProps = {
   primaryCurrency: string;
   locale: string;
   onBudgetUpdated?: (budget: number | null) => void;
+  isRefreshing?: boolean;
 };
 
 function formatMoney(amount: number, currency: string, locale: string): string {
@@ -36,6 +37,7 @@ export function BudgetProgress({
   primaryCurrency,
   locale,
   onBudgetUpdated,
+  isRefreshing = false,
 }: BudgetProgressProps) {
   const t = useT();
   const { locale: appLocale } = useLocale();
@@ -105,60 +107,76 @@ export function BudgetProgress({
 
   return (
     <div className="mt-4 space-y-2">
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-muted font-medium">{t('dashboard.budget.label')}</span>
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              onClick={openEditor}
-              className="text-muted hover:text-warm flex items-center gap-1 transition"
-              aria-label={t('dashboard.budget.editCurrent')}
-            >
-              <span>{formatMoney(budget, primaryCurrency, locale)}</span>
-              <Pencil className="h-3 w-3" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-56">
-            <p className="text-sm font-medium text-[var(--text)]">
-              {t('dashboard.budget.editCurrent')}
-            </p>
-            <p className="text-muted mt-1 text-xs">{t('dashboard.budget.editCurrentHint')}</p>
-            <Input
-              type="number"
-              min={1}
-              step="0.01"
-              value={editValue}
-              disabled={isSaving}
-              onChange={(event) => setEditValue(event.target.value)}
-              className="mt-3"
-            />
-            <Button
-              type="button"
-              size="default"
-              className="mt-3 w-full"
-              loading={isSaving}
-              disabled={isSaving}
-              onClick={() => void handleSave()}
-            >
-              {t('settings.labels.saveChanges')}
-            </Button>
-          </PopoverContent>
-        </Popover>
-      </div>
-      <Progress value={percentage} className="h-1.5" />
-      <div className="text-muted flex items-center justify-between text-xs">
-        <span>
-          {t('dashboard.budget.spent', {
-            amount: formatMoney(totalSpent, primaryCurrency, locale),
-          })}
-        </span>
-        <span>
-          {t('dashboard.budget.remaining', {
-            amount: formatMoney(remaining, primaryCurrency, locale),
-          })}
-        </span>
-      </div>
+      {isRefreshing ? (
+        <div className="space-y-2" aria-hidden>
+          <div className="flex justify-between">
+            <div className="bg-elevated h-3 w-24 animate-pulse rounded" />
+            <div className="bg-elevated h-3 w-16 animate-pulse rounded" />
+          </div>
+          <div className="bg-elevated h-1.5 animate-pulse rounded-full" />
+          <div className="flex justify-between">
+            <div className="bg-elevated h-3 w-20 animate-pulse rounded" />
+            <div className="bg-elevated h-3 w-20 animate-pulse rounded" />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted font-medium">{t('dashboard.budget.label')}</span>
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  onClick={openEditor}
+                  className="text-muted hover:text-warm flex items-center gap-1 transition"
+                  aria-label={t('dashboard.budget.editCurrent')}
+                >
+                  <span>{formatMoney(budget, primaryCurrency, locale)}</span>
+                  <Pencil className="h-3 w-3" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-56">
+                <p className="text-sm font-medium text-[var(--text)]">
+                  {t('dashboard.budget.editCurrent')}
+                </p>
+                <p className="text-muted mt-1 text-xs">{t('dashboard.budget.editCurrentHint')}</p>
+                <Input
+                  type="number"
+                  min={1}
+                  step="0.01"
+                  value={editValue}
+                  disabled={isSaving}
+                  onChange={(event) => setEditValue(event.target.value)}
+                  className="mt-3"
+                />
+                <Button
+                  type="button"
+                  size="default"
+                  className="mt-3 w-full"
+                  loading={isSaving}
+                  disabled={isSaving}
+                  onClick={() => void handleSave()}
+                >
+                  {t('settings.labels.saveChanges')}
+                </Button>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <Progress value={percentage} className="h-1.5" />
+          <div className="text-muted flex items-center justify-between text-xs">
+            <span>
+              {t('dashboard.budget.spent', {
+                amount: formatMoney(totalSpent, primaryCurrency, locale),
+              })}
+            </span>
+            <span>
+              {t('dashboard.budget.remaining', {
+                amount: formatMoney(remaining, primaryCurrency, locale),
+              })}
+            </span>
+          </div>
+        </>
+      )}
       <DashboardDailyStats
         avgSpentPerDay={dailyStats.avgSpentPerDay}
         avgRemainingPerDay={dailyStats.avgRemainingPerDay}

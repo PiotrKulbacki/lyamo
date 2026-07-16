@@ -14,6 +14,7 @@ import {
   useSortedCategoriesForSelect,
 } from '@web/features/categories/hooks/useCategories';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
+import { LoadingSpinner } from '@web/components/ui/loading-spinner';
 import {
   getCategoryColor,
   resolveCategoryLabel,
@@ -235,10 +236,14 @@ export function CategoryLimitsSection({ primaryCurrency }: CategoryLimitsSection
                     type="button"
                     disabled={deletingKey === limit.categoryKey}
                     onClick={() => void handleDeleteLimit(limit.categoryKey)}
-                    className="text-muted hover:text-glow rounded p-1 transition disabled:opacity-50"
+                    className="text-muted hover:text-glow inline-flex items-center justify-center rounded p-1 transition disabled:opacity-50"
                     aria-label={t('settings.categoryLimits.delete')}
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    {deletingKey === limit.categoryKey ? (
+                      <LoadingSpinner className="h-3.5 w-3.5" />
+                    ) : (
+                      <Trash2 className="h-3.5 w-3.5" />
+                    )}
                   </button>
                 </div>
               </li>
