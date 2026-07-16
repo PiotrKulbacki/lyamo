@@ -298,6 +298,7 @@
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Your spending overview for the current billing period",
+    "refreshing": "Updating dashboard…",
     "summary": {
       "totalSpent": "Total spending",
       "transactions": "All transactions",

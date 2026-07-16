@@ -34,6 +34,7 @@ import { countLogicalTransactions } from '@web/features/dashboard/lib/transactio
 import { CategoryLimitsProgressCard } from '@web/features/dashboard/components/CategoryLimitsProgressCard';
 import { TransactionsInsightsCard } from '@web/features/dashboard/components/TransactionsInsightsCard';
 import type { CategoryLimitProgress } from '@shared/features/transactions/category-limit-schemas';
+import { LoadingSpinner } from '@web/components/ui/loading-spinner';
 
 type DashboardSummary = {
   primaryCurrency: CurrencyCode;
@@ -392,17 +393,40 @@ export function DashboardView() {
           </h1>
           <p className="text-muted mt-1 text-sm">{t('dashboard.subtitle')}</p>
         </div>
-        <DashboardCtas onAddManual={openCreateForm} scanQuota={scanQuota} plan={userPlan} />
+        <DashboardCtas
+          onAddManual={openCreateForm}
+          scanQuota={scanQuota}
+          plan={userPlan}
+          isRefreshing={isRefreshing}
+        />
       </div>
+
+      {isRefreshing && (
+        <div
+          className="text-muted flex items-center gap-2 text-xs"
+          role="status"
+          aria-live="polite"
+        >
+          <LoadingSpinner className="h-3.5 w-3.5" />
+          <span>{t('dashboard.refreshing')}</span>
+        </div>
+      )}
 
       <section className="grid items-stretch gap-4 sm:grid-cols-2">
         <article className="panel relative z-10 h-full p-6">
           <p className="text-muted relative z-10 text-sm font-medium">
             {t('dashboard.summary.totalSpent')}
           </p>
-          <p className="font-display relative z-10 mt-2 text-3xl font-bold text-[var(--text)]">
-            {formatMoney(visibleTotalSpent, summary.primaryCurrency, locale)}
-          </p>
+          {isRefreshing ? (
+            <div
+              className="bg-elevated relative z-10 mt-2 h-9 w-40 max-w-full animate-pulse rounded-lg"
+              aria-hidden
+            />
+          ) : (
+            <p className="font-display relative z-10 mt-2 text-3xl font-bold text-[var(--text)]">
+              {formatMoney(visibleTotalSpent, summary.primaryCurrency, locale)}
+            </p>
+          )}
           {dailyStats && (
             <BudgetProgress
               totalSpent={summary.billingPeriodTotalSpent}
@@ -411,12 +435,14 @@ export function DashboardView() {
               primaryCurrency={summary.primaryCurrency}
               locale={locale}
               onBudgetUpdated={handleBudgetUpdated}
+              isRefreshing={isRefreshing}
             />
           )}
         </article>
         <TransactionsInsightsCard
           transactionStats={displayedTransactionStats}
           noSpendDays={summary.noSpendDays ?? null}
+          isDataRefreshing={isRefreshing}
         />
       </section>
 
@@ -425,6 +451,7 @@ export function DashboardView() {
         primaryCurrency={summary.primaryCurrency}
         locale={locale}
         categoryDisplayContext={categoryDisplayContext}
+        isRefreshing={isRefreshing}
       />
 
       <CategoryDonutChart
@@ -440,6 +467,7 @@ export function DashboardView() {
         categoryDisplayContext={categoryDisplayContext}
         customDateRange={customDateRange}
         onCustomRangeChange={handleCustomRangeApply}
+        isRefreshing={isRefreshing}
       />
 
       <RecentTransactionsList

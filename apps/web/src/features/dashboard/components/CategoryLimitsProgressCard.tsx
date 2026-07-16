@@ -14,6 +14,7 @@ type CategoryLimitsProgressCardProps = {
   primaryCurrency: string;
   locale: string;
   categoryDisplayContext?: CategoryDisplayContext;
+  isRefreshing?: boolean;
 };
 
 function formatMoney(amount: number, currency: string, locale: string): string {
@@ -24,11 +25,28 @@ function formatMoney(amount: number, currency: string, locale: string): string {
   }).format(amount);
 }
 
+function CategoryLimitRowSkeleton() {
+  return (
+    <li className="space-y-2" aria-hidden>
+      <div className="flex items-center justify-between gap-3">
+        <div className="bg-elevated h-3 w-24 animate-pulse rounded" />
+        <div className="bg-elevated h-3 w-20 animate-pulse rounded" />
+      </div>
+      <div className="bg-elevated h-1.5 animate-pulse rounded-full" />
+      <div className="flex justify-between gap-3">
+        <div className="bg-elevated h-3 w-20 animate-pulse rounded" />
+        <div className="bg-elevated h-3 w-8 animate-pulse rounded" />
+      </div>
+    </li>
+  );
+}
+
 export function CategoryLimitsProgressCard({
   limits,
   primaryCurrency,
   locale,
   categoryDisplayContext,
+  isRefreshing = false,
 }: CategoryLimitsProgressCardProps) {
   const t = useT();
 
@@ -46,50 +64,54 @@ export function CategoryLimitsProgressCard({
       </p>
 
       <ul className="relative z-10 mt-5 space-y-4">
-        {limits.map((limit) => {
-          const barValue = Math.min(limit.percentage, 100);
-          const hue = getCategoryLimitProgressHue(limit.percentage);
+        {isRefreshing
+          ? Array.from({ length: Math.max(limits.length, 2) }).map((_, index) => (
+              <CategoryLimitRowSkeleton key={index} />
+            ))
+          : limits.map((limit) => {
+              const barValue = Math.min(limit.percentage, 100);
+              const hue = getCategoryLimitProgressHue(limit.percentage);
 
-          return (
-            <li key={limit.categoryKey} className="space-y-2">
-              <div className="flex items-center justify-between gap-3 text-xs">
-                <span className="truncate font-medium text-[var(--text)]">
-                  {resolveCategoryLabel(limit.categoryKey, t, categoryDisplayContext)}
-                </span>
-                <span className="text-muted shrink-0 tabular-nums">
-                  {t('dashboard.categoryLimits.progress', {
-                    spent: formatMoney(limit.spentAmount, primaryCurrency, locale),
-                    limit: formatMoney(limit.limitAmount, primaryCurrency, locale),
-                  })}
-                </span>
-              </div>
-              <Progress
-                value={barValue}
-                className="h-1.5"
-                indicatorClassName=""
-                indicatorStyle={{
-                  backgroundColor: `hsl(${hue} 72% 48%)`,
-                }}
-              />
-              <div className="text-muted flex items-center justify-between text-xs">
-                <span>
-                  {limit.isOverLimit
-                    ? t('dashboard.categoryLimits.overLimit', {
-                        amount: formatMoney(
-                          Math.round((limit.spentAmount - limit.limitAmount) * 100) / 100,
-                          primaryCurrency,
-                          locale
-                        ),
-                      })
-                    : t('dashboard.categoryLimits.remaining', {
-                        amount: formatMoney(limit.remainingAmount, primaryCurrency, locale),
+              return (
+                <li key={limit.categoryKey} className="space-y-2">
+                  <div className="flex items-center justify-between gap-3 text-xs">
+                    <span className="truncate font-medium text-[var(--text)]">
+                      {resolveCategoryLabel(limit.categoryKey, t, categoryDisplayContext)}
+                    </span>
+                    <span className="text-muted shrink-0 tabular-nums">
+                      {t('dashboard.categoryLimits.progress', {
+                        spent: formatMoney(limit.spentAmount, primaryCurrency, locale),
+                        limit: formatMoney(limit.limitAmount, primaryCurrency, locale),
                       })}
-                </span>
-                <span className="tabular-nums">{limit.percentage}%</span>
-              </div>
-            </li>
-          );
-        })}
+                    </span>
+                  </div>
+                  <Progress
+                    value={barValue}
+                    className="h-1.5"
+                    indicatorClassName=""
+                    indicatorStyle={{
+                      backgroundColor: `hsl(${hue} 72% 48%)`,
+                    }}
+                  />
+                  <div className="text-muted flex items-center justify-between text-xs">
+                    <span>
+                      {limit.isOverLimit
+                        ? t('dashboard.categoryLimits.overLimit', {
+                            amount: formatMoney(
+                              Math.round((limit.spentAmount - limit.limitAmount) * 100) / 100,
+                              primaryCurrency,
+                              locale
+                            ),
+                          })
+                        : t('dashboard.categoryLimits.remaining', {
+                            amount: formatMoney(limit.remainingAmount, primaryCurrency, locale),
+                          })}
+                    </span>
+                    <span className="tabular-nums">{limit.percentage}%</span>
+                  </div>
+                </li>
+              );
+            })}
       </ul>
     </section>
   );

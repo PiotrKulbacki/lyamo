@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@web/components/ui/select';
 import { useT } from '@web/features/i18n/LocaleProvider';
+import { LoadingSpinner } from '@web/components/ui/loading-spinner';
 import {
   getCategoryColor,
   resolveCategoryLabel,
@@ -33,6 +34,7 @@ type CategoryDonutChartProps = {
   onCustomRangeChange?: (range: DateRange | undefined) => void;
   customDateRange?: DateRange;
   categoryDisplayContext?: CategoryDisplayContext;
+  isRefreshing?: boolean;
 };
 
 function formatMoney(amount: number, currency: string, locale: string): string {
@@ -69,11 +71,13 @@ export function CategoryDonutChart({
   onCustomRangeChange,
   customDateRange,
   categoryDisplayContext,
+  isRefreshing = false,
 }: CategoryDonutChartProps) {
   const t = useT();
   const [isCustomPickerOpen, setIsCustomPickerOpen] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
   const filterContainerRef = useRef<HTMLDivElement>(null);
+  const showChartLoading = isFiltering || isRefreshing;
 
   useEffect(() => {
     if (filterSelection !== 'custom') {
@@ -92,7 +96,7 @@ export function CategoryDonutChart({
     setIsFiltering(true);
     const timer = window.setTimeout(() => setIsFiltering(false), 200);
     return () => window.clearTimeout(timer);
-  }, [appliedFilter]);
+  }, [appliedFilter, categoryTotals]);
 
   const visibleCategoryTotals = useMemo(
     () => categoryTotals.filter((item) => !hiddenCategories.has(item.category)),
@@ -142,10 +146,14 @@ export function CategoryDonutChart({
         <div ref={filterContainerRef} className="relative w-full sm:w-auto sm:min-w-[12rem]">
           <Select
             value={filterSelection}
+            disabled={isRefreshing}
             onValueChange={(value) => handleRangeChange(value as ChartDateRange)}
           >
             <SelectTrigger className="h-8 w-full text-xs sm:w-auto sm:min-w-[9rem]">
-              <SelectValue />
+              <span className="flex items-center gap-2">
+                {isRefreshing && <LoadingSpinner className="h-3 w-3" />}
+                <SelectValue />
+              </span>
             </SelectTrigger>
             <SelectContent align="end">
               <SelectItem value="period">{t('dashboard.chartFilter.period')}</SelectItem>
@@ -167,7 +175,7 @@ export function CategoryDonutChart({
         </div>
       </div>
 
-      {isFiltering ? (
+      {showChartLoading ? (
         <ChartSkeleton />
       ) : categoryTotals.length === 0 ? (
         <p className="text-muted relative z-10 mt-6 text-sm">{t('dashboard.chartFilter.empty')}</p>
@@ -224,6 +232,7 @@ export function CategoryDonutChart({
                   type="button"
                   onClick={() => onToggleCategory(item.category)}
                   aria-pressed={!isHidden}
+                  disabled={isRefreshing}
                   className={cn(
                     'hover:bg-elevated/50 flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 text-left text-sm transition',
                     isHidden && 'opacity-40'
