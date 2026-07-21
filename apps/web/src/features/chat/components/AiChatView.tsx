@@ -389,22 +389,23 @@ export function AiChatView({ initialHistoryPage }: AiChatViewProps) {
               )}
             </div>
           )}
-          <div className="flex gap-3">
+          <div className="flex items-stretch gap-2">
             <input
               type="text"
               value={input}
               disabled={isSending || isBlocked}
               onChange={(event) => setInput(event.target.value)}
               placeholder={t('chat.page.placeholder')}
-              className="auth-input flex-1"
+              className="auth-input mt-0 min-w-0 flex-1"
             />
             <button
               type="submit"
               disabled={isSending || isBlocked || !input.trim()}
-              className="btn-primary inline-flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+              aria-label={t('chat.labels.sendMessage')}
+              className="btn-primary inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 p-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 md:h-auto md:w-auto md:px-5 md:py-2.5"
             >
               {isSending ? <LoadingSpinner /> : <Send className="h-4 w-4" aria-hidden />}
-              {t('chat.labels.sendMessage')}
+              <span className="hidden md:inline">{t('chat.labels.sendMessage')}</span>
             </button>
           </div>
         </form>

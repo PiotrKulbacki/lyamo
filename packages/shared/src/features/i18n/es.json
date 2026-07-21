@@ -355,7 +355,9 @@
     },
     "aria": {
       "billingCurrency": "Moneda de pago",
-      "language": "Idioma"
+      "language": "Idioma",
+      "openMenu": "Abrir menú",
+      "closeMenu": "Cerrar menú"
     }
   },
   "landing": {

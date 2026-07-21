@@ -1,6 +1,5 @@
 import { DEFAULT_LOCALE, isLocale, t, type Locale } from '@shared/features/i18n';
 import {
-  escapeHtml,
   getAppUrl,
   greetingHtml,
   paragraphHtml,

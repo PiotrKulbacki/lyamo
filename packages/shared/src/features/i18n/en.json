@@ -355,7 +355,9 @@
     },
     "aria": {
       "billingCurrency": "Billing currency",
-      "language": "Language"
+      "language": "Language",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
     }
   },
   "landing": {

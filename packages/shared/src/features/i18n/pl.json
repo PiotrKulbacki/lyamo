@@ -357,7 +357,9 @@
     },
     "aria": {
       "billingCurrency": "Waluta płatności",
-      "language": "Język"
+      "language": "Język",
+      "openMenu": "Otwórz menu",
+      "closeMenu": "Zamknij menu"
     }
   },
   "landing": {

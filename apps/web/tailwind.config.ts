@@ -35,12 +35,22 @@ const config: Config = {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(100%)' },
         },
+        'slide-in-from-left': {
+          from: { transform: 'translateX(-100%)' },
+          to: { transform: 'translateX(0)' },
+        },
+        'slide-out-to-left': {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-100%)' },
+        },
       },
       animation: {
         pulseSlow: 'pulseSlow 8s ease-in-out infinite',
         drift: 'drift 20s linear infinite',
         'slide-in-from-right': 'slide-in-from-right 0.3s ease-out',
         'slide-out-to-right': 'slide-out-to-right 0.3s ease-in',
+        'slide-in-from-left': 'slide-in-from-left 0.3s ease-out',
+        'slide-out-to-left': 'slide-out-to-left 0.3s ease-in',
       },
     },
   },
