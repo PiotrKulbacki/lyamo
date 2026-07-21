@@ -38,6 +38,8 @@
 34. **Faza 12.1: Zmiana hasła w Settings (konto e-mail; Google-only = info)** — [✅ Zrobione]
 35. **Faza 12.2: Odzyskiwanie hasła (forgot/reset + Brevo)** — [✅ Zrobione]
 36. **Faza 12.3: Twarda weryfikacja e-mail przy rejestracji (D1 + Brevo)** — [✅ Zrobione]
+37. **Faza 12.4: UX Settings + blokada rejestracji bez zgody legal** — [✅ Zrobione]
+38. **Faza 12.5: Branded email templates (i18n) + reset link w Settings** — [✅ Zrobione]
 
 ## Żelazne zasady agentów (obowiązkowe)
 
@@ -90,6 +92,28 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 **Reguła praktyczna:** jeśli dodajesz `onClick` → `fetch` lub `router.push`, dodaj też loader lub szkielet i `disabled` na czas operacji.
 
 ## Latest Handoff Log
+
+**2026-07-21 — Faza 12.5: Branded email templates + reset z Settings.**
+
+### Faza 12.5 — Spójne szablony e-mail (Brevo HTML) i reset hasła z Settings
+
+- **Wspólny layout:** `email/templates/layout.ts` — nagłówek z logo (`/lyamo-logo.svg`), zielony CTA (`#3dd6c3`), stopka `kontakt@lyamo.eu`.
+- **Szablony:** Reset Password, Verify Email, Contact Form Notification — naturalny copy + i18n (`en`/`de`/`pl`/`es`) w `email.reset|verify|contact|layout`.
+- **Locale w API:** opcjonalne `locale` w forgot-password, resend-verification, register, contact; frontend (web) przekazuje język z `useLocale()` / cookie `sec_locale`.
+- **Settings (web + mobile):** w sekcji Bezpieczeństwa hint + przycisk „Wyślij link resetujący” (istniejący `POST /api/auth/forgot-password`).
+
+---
+
+**2026-07-21 — Faza 12.4: UX Settings + rejestracja (zgoda legal).**
+
+### Faza 12.4 — Kolejność Settings i blokada przycisku rejestracji
+
+- **Settings (web):** sekcja „Bezpieczeństwo” (`ChangePasswordSection`) przeniesiona na koniec, tuż przed „Strefą niebezpieczną”; kolejność: Profil → Kategorie → Limity → Koszty stałe → Subskrypcja → Bezpieczeństwo → Danger.
+- **Rejestracja (web):** przycisk „Zarejestruj” (oraz Google OAuth) `disabled`, dopóki checkbox Regulamin/Polityka prywatności nie jest zaznaczony — bez toastu `legalAcceptanceRequired` przy submit.
+- **Rejestracja (mobile):** checkbox zgody legal + linki do `/terms` i `/privacy`; przycisk rejestracji zablokowany bez zaznaczenia; `acceptedLegal` w payloadzie API.
+- **API:** `POST /api/auth/register` wymaga `acceptedLegal` także dla klientów mobile (usunięty wyjątek `isMobileClient`).
+
+---
 
 **2026-07-21 — Faza 12.3: Twarda weryfikacja e-mail (D1 + Brevo).**
 

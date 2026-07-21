@@ -93,12 +93,13 @@ export async function registerUser(payload: {
   password: string;
   confirmPassword: string;
   name?: string;
+  acceptedLegal: boolean;
 }): Promise<RegisterResult | null> {
   const result = await apiRequest<
     AuthResponse & { requiresEmailVerification?: boolean; email?: string }
   >('/api/auth/register', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, locale: DEFAULT_LOCALE }),
   });
 
   if (result.error) {
@@ -144,7 +145,7 @@ export async function changePassword(payload: {
 export async function requestPasswordReset(email: string): Promise<boolean> {
   const result = await apiRequest<{ ok?: boolean }>('/api/auth/forgot-password', {
     method: 'POST',
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, locale: DEFAULT_LOCALE }),
   });
 
   if (result.error) {
@@ -229,7 +230,7 @@ export async function verifyEmailToken(token: string): Promise<boolean> {
 export async function resendVerificationEmail(email: string): Promise<boolean> {
   const result = await apiRequest<{ ok?: boolean }>('/api/auth/resend-verification', {
     method: 'POST',
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, locale: DEFAULT_LOCALE }),
   });
 
   if (result.error) {

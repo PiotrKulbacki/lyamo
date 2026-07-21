@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { registerSchema } from '@shared/features/auth/schemas';
 import { getFinancialMonthStartDayFromDate } from '@shared/features/billing/financial-month';
 import { prisma } from '@lyamo/database';
-import { hashPassword, isMobileClient, jsonError } from '@web/features/auth/services/auth.service';
+import { hashPassword, jsonError } from '@web/features/auth/services/auth.service';
 import { createAndSendEmailVerification } from '@web/features/auth/services/password-reset.service';
 import { checkAuthRateLimit } from '@web/lib/rate-limit';
 
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    if (!body.acceptedLegal && !isMobileClient(request)) {
+    if (!body.acceptedLegal) {
       return jsonError('auth.errors.legalAcceptanceRequired', 400);
     }
 
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       return jsonError(firstError, 400);
     }
 
-    const { email, password, name } = parsed.data;
+    const { email, password, name, locale } = parsed.data;
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -49,7 +49,10 @@ export async function POST(request: Request) {
       },
     });
 
-    await createAndSendEmailVerification(user.id, user.email);
+    await createAndSendEmailVerification(user.id, user.email, {
+      locale,
+      name: user.name,
+    });
 
     // Hard gate (D1): no session / tokens until email is verified.
     return NextResponse.json(

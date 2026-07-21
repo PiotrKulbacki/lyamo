@@ -41,11 +41,6 @@ export function AuthForm({ mode }: AuthFormProps) {
     setIsLoading(true);
 
     try {
-      if (mode === 'register' && !acceptedLegal) {
-        toast.error(t('auth.errors.legalAcceptanceRequired'));
-        return;
-      }
-
       const payload =
         mode === 'login'
           ? { email, password }
@@ -55,6 +50,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               confirmPassword,
               name: name || undefined,
               acceptedLegal,
+              locale,
             };
 
       const schema = mode === 'login' ? loginSchema : registerSchema;
@@ -219,7 +215,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || (mode === 'register' && !acceptedLegal)}
           className="btn-primary relative z-10 inline-flex w-full items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
         >
           {isLoading && <LoadingSpinner />}
