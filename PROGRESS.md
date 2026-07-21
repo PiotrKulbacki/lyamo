@@ -40,6 +40,7 @@
 36. **Faza 12.3: Twarda weryfikacja e-mail przy rejestracji (D1 + Brevo)** — [✅ Zrobione]
 37. **Faza 12.4: UX Settings + blokada rejestracji bez zgody legal** — [✅ Zrobione]
 38. **Faza 12.5: Branded email templates (i18n) + reset link w Settings** — [✅ Zrobione]
+39. **Faza 12.6: Mobile nav — menu rozwijane (landing + app sidebar)** — [✅ Zrobione]
 
 ## Żelazne zasady agentów (obowiązkowe)
 
@@ -92,6 +93,27 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 **Reguła praktyczna:** jeśli dodajesz `onClick` → `fetch` lub `router.push`, dodaj też loader lub szkielet i `disabled` na czas operacji.
 
 ## Latest Handoff Log
+
+**2026-07-21 — Faza 12.6.1: Mobile UX polish (menu A, chat composer, CTA).**
+
+### Poprawki mobile
+
+- **App sidebar (wariant A):** hamburger ↔ X w tym samym miejscu; panel pod sticky headerem (bez drugiego logo); overlay + Escape; body scroll lock. Desktop sidebar bez zmian.
+- **Czat AI:** input `flex-1`; send na mobile kwadratowy (ikona + aria-label), pełna etykieta od `md`.
+- **Dashboard CTA:** „Dodaj wydatek" / „Skanuj" mniejszy padding/typografia poniżej `sm`.
+
+---
+
+**2026-07-21 — Faza 12.6: Mobile nav (landing + dashboard).**
+
+### Menu rozwijane na mobile
+
+- **PublicHeader:** hamburger (`md:hidden`) + Sheet z prawej — Funkcje, Cennik, Zaloguj, Utwórz konto; locale zostaje w headerze; desktop bez zmian. Kotwice `/#features`, `/#pricing`.
+- **AppSidebar:** na mobile sticky top bar (logo + menu); pełna nawigacja + user/plan/locale/wyloguj w Sheet z lewej; desktop sticky sidebar `md:flex` bez zmian. `(app)/layout` — `flex-col md:flex-row`.
+- **Sheet:** prop `side` (`left` | `right`) + animacje slide-from-left w Tailwind.
+- **i18n:** `layout.aria.openMenu` / `closeMenu` (en/pl/de/es).
+
+---
 
 **2026-07-21 — SEO: metadata, canonical, noindex (public + auth + app).**
 

@@ -38,7 +38,13 @@ export function DashboardCtas({
 
   return (
     <section className="flex flex-wrap items-center gap-2">
-      <Button type="button" size="default" disabled={isBusy} onClick={onAddManual}>
+      <Button
+        type="button"
+        size="default"
+        disabled={isBusy}
+        onClick={onAddManual}
+        className="!px-3 !py-2 !text-xs sm:!px-5 sm:!py-2.5 sm:!text-sm"
+      >
         <Plus className="h-4 w-4" />
         {t('dashboard.cta.addManual')}
       </Button>
@@ -50,6 +56,7 @@ export function DashboardCtas({
         loading={isNavigatingToScanner}
         disabled={isBusy}
         onClick={handleScanClick}
+        className="!px-3 !py-2 !text-xs sm:!px-4 sm:!py-2 sm:!text-sm"
       >
         <Camera className="h-4 w-4" />
         {plan === 'FREE' && scanQuota

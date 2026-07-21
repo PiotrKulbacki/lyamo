@@ -355,7 +355,9 @@
     },
     "aria": {
       "billingCurrency": "Abrechnungswährung",
-      "language": "Sprache"
+      "language": "Sprache",
+      "openMenu": "Menü öffnen",
+      "closeMenu": "Menü schließen"
     }
   },
   "landing": {
