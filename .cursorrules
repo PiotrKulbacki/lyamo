@@ -8,6 +8,7 @@
 4. **i18n bez hardkodu:** Zakaz hardkodowania tekstów w komponentach. Zawsze używaj funkcji tłumaczeń i plików JSON z pakietu `@shared/features/i18n`.
 5. **Zakaz autonomicznego rozszerzania zakresu:** Agentowi surowo zabrania się autonomicznego dodawania, planowania lub sugerowania nowych funkcji systemu w kolejnych fazach bez wcześniejszego, wyraźnego zapytania użytkownika i uzyskania jego jednoznacznej zgody. Każda nowa funkcja przed wpisaniem do kamieni milowych musi zostać zatwierdzona przez użytkownika.
 6. **Formatowanie Prettier — zawsze na koniec pracy:** Po zmianach w plikach objętych Prettierem uruchom `npx prettier --write .`, następnie zweryfikuj `npm run format`. Powtarzaj aż check przejdzie bez ostrzeżeń.
+7. **Lokalna weryfikacja CI — obowiązkowa przed zakończeniem pracy:** Po każdej zmianie kodu uruchom lokalnie te same checki jakościowe co GitHub Actions (`.github/workflows/ci.yml`), w tej kolejności: `npm run format`, `npm run lint`, `npm run typecheck`, `npm run test`. Wszystkie muszą przejść bez błędów i ostrzeżeń traktowanych jako fail w CI. Nie kończ zadania ani nie proponuj pusha/PR, dopóki lokalne checki nie są zielone — CI nie jest miejscem na pierwsze wykrycie problemów lint/format/typecheck/test.
 
 ## Architektura Monorepo
 

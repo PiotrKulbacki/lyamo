@@ -24,12 +24,12 @@ export function PublicHeader() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <a href="/#features" className="nav-link">
+          <Link href="/#features" className="nav-link">
             {t('layout.nav.features')}
-          </a>
-          <a href="/#pricing" className="nav-link">
+          </Link>
+          <Link href="/#pricing" className="nav-link">
             {t('layout.nav.pricing')}
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -59,20 +59,20 @@ export function PublicHeader() {
           </SheetHeader>
           <SheetBody className="flex flex-col gap-6">
             <nav className="flex flex-col gap-1">
-              <a
+              <Link
                 href="/#features"
                 className="text-muted hover:bg-elevated/50 rounded-lg px-3 py-2.5 font-mono text-sm transition hover:text-[var(--text)]"
                 onClick={closeMobileMenu}
               >
                 {t('layout.nav.features')}
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/#pricing"
                 className="text-muted hover:bg-elevated/50 rounded-lg px-3 py-2.5 font-mono text-sm transition hover:text-[var(--text)]"
                 onClick={closeMobileMenu}
               >
                 {t('layout.nav.pricing')}
-              </a>
+              </Link>
             </nav>
 
             <div className="border-t border-[var(--border)] pt-6">
