@@ -2,6 +2,7 @@ import { JetBrains_Mono, Outfit } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { MeshBackground } from '@web/components/MeshBackground';
 import { PostHogProvider } from '@web/features/analytics/components/PostHogProvider';
+import { VercelAnalytics } from '@web/features/analytics/components/VercelAnalytics';
 import { ToastProvider } from '@web/features/auth/components/ToastProvider';
 import { CookieConsentProvider } from '@web/features/cookie-consent';
 import { LocaleProvider } from '@web/features/i18n/LocaleProvider';
@@ -57,6 +58,7 @@ export default async function RootLayout({
               <PostHogProvider>
                 {children}
                 <ToastProvider />
+                <VercelAnalytics />
               </PostHogProvider>
             </QueryProvider>
           </CookieConsentProvider>
