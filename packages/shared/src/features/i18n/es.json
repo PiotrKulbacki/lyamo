@@ -613,7 +613,7 @@
           "intro": "Usamos las siguientes categorías de cookies:",
           "list": {
             "necessary": "Cookies necesarias — requeridas para el funcionamiento seguro de la app.",
-            "analytics": "Cookies de analítica — nos ayudan a entender cómo se usa el producto (por ejemplo, PostHog)."
+            "analytics": "Cookies de analítica — nos ayudan a entender cómo se usa el producto (por ejemplo, PostHog y Vercel Analytics)."
           },
           "outro": "La analítica se activa solo después de que des tu consentimiento. Puedes gestionar tus preferencias desde el enlace de configuración de cookies. Guardamos tu decisión hasta 365 días."
         }
@@ -663,7 +663,7 @@
       },
       "analytics": {
         "title": "Analíticas",
-        "description": "Nos ayudan a entender cómo se usa el producto (por ejemplo PostHog) para mejorar el rendimiento y las funciones."
+        "description": "Nos ayudan a entender cómo se usa el producto (por ejemplo PostHog y Vercel Analytics) para mejorar el rendimiento y las funciones."
       },
       "marketing": {
         "title": "Marketing",

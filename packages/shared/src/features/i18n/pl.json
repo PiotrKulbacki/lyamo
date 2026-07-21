@@ -615,7 +615,7 @@
           "intro": "Używamy następujących kategorii plików cookie:",
           "list": {
             "necessary": "Niezbędne pliki cookie — wymagane do bezpiecznego działania aplikacji.",
-            "analytics": "Pliki cookie analityczne — pomagają nam zrozumieć, jak korzystasz z produktu (np. PostHog)."
+            "analytics": "Pliki cookie analityczne — pomagają nam zrozumieć, jak korzystasz z produktu (np. PostHog i Vercel Analytics)."
           },
           "outro": "Analityka jest aktywowana dopiero po Twojej zgodzie. Możesz zarządzać preferencjami przez link do Ustawień cookies. Twoją decyzję przechowujemy do 365 dni."
         }
@@ -665,7 +665,7 @@
       },
       "analytics": {
         "title": "Analityczne",
-        "description": "Pomagają nam zrozumieć, jak korzystasz z produktu (np. PostHog), aby ulepszać wydajność i funkcje."
+        "description": "Pomagają nam zrozumieć, jak korzystasz z produktu (np. PostHog i Vercel Analytics), aby ulepszać wydajność i funkcje."
       },
       "marketing": {
         "title": "Marketingowe",

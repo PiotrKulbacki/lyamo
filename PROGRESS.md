@@ -86,6 +86,15 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 
 ## Latest Handoff Log
 
+**2026-07-21 — Vercel Web Analytics (`@vercel/analytics`).**
+
+- Zainstalowano `@vercel/analytics` w `apps/web`.
+- Komponent `VercelAnalytics` w root layout — śledzenie page views tylko po zgodzie `consent.analytics` (jak PostHog); `beforeSend` blokuje eventy bez zgody.
+- i18n cookies/privacy: wzmianka o Vercel Analytics obok PostHog (en/pl/de/es).
+- **Ops:** włącz Web Analytics w Vercel Dashboard projektu (Analytics → Enable), jeśli jeszcze nieaktywne.
+
+---
+
 **2026-07-17 — Faza 11.1.1: poprawki UX i compliance po wdrożeniu Fazy 11.1.**
 
 ### Faza 11.1.1 — UX & compliance fixes
@@ -674,6 +683,10 @@ _(Brak zaplanowanych faz — każda nowa funkcja wymaga zatwierdzenia przez uży
 ---
 
 ## Ostatnie zmiany
+
+**2026-07-21 — Vercel Web Analytics**
+
+- `@vercel/analytics` + `VercelAnalytics` gated cookie consent; i18n cookies/privacy.
 
 **2026-07-16 — Faza 10: Premium, retencja kont, dunning Resend, rolling photo retention (zweryfikowane)**
 

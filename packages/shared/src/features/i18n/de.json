@@ -613,7 +613,7 @@
           "intro": "Wir verwenden folgende Cookie-Kategorien:",
           "list": {
             "necessary": "Notwendige Cookies — erforderlich für den sicheren Betrieb der App.",
-            "analytics": "Analyse-Cookies — helfen uns zu verstehen, wie das Produkt genutzt wird (z. B. über PostHog)."
+            "analytics": "Analyse-Cookies — helfen uns zu verstehen, wie das Produkt genutzt wird (z. B. über PostHog und Vercel Analytics)."
           },
           "outro": "Analyse-Cookies werden erst aktiviert, nachdem Sie zugestimmt haben. Sie können Ihre Einstellungen über den Link zu den Cookie-Einstellungen jederzeit ändern. Wir speichern Ihre Cookie-Einwilligung bis zu 365 Tage."
         }
@@ -663,7 +663,7 @@
       },
       "analytics": {
         "title": "Analyse",
-        "description": "Helfen uns zu verstehen, wie das Produkt genutzt wird (z. B. PostHog), um Leistung und Funktionen zu verbessern."
+        "description": "Helfen uns zu verstehen, wie das Produkt genutzt wird (z. B. PostHog und Vercel Analytics), um Leistung und Funktionen zu verbessern."
       },
       "marketing": {
         "title": "Marketing",
