@@ -42,6 +42,7 @@
 38. **Faza 12.5: Branded email templates (i18n) + reset link w Settings** — [✅ Zrobione]
 39. **Faza 12.6: Mobile nav — menu rozwijane (landing + app sidebar)** — [✅ Zrobione]
 40. **Faza 12.6.2: Settings mobile — limity, sheety, anti-zoom** — [✅ Zrobione]
+41. **Faza 12.6.3: Settings modale anti-scroll/autofocus + AI insights locale** — [✅ Zrobione]
 
 ## Żelazne zasady agentów (obowiązkowe)
 
@@ -94,6 +95,21 @@ Każda akcja użytkownika, która wywołuje **fetch API**, **nawigację** lub **
 **Reguła praktyczna:** jeśli dodajesz `onClick` → `fetch` lub `router.push`, dodaj też loader lub szkielet i `disabled` na czas operacji.
 
 ## Latest Handoff Log
+
+**2026-07-22 — Faza 12.6.3: Settings modale (anti-scroll, autofocus) + AI insights locale.**
+
+### Poprawki mobile / Settings
+
+- **Anti-scroll w modalach kategorii i limitów:** `SheetBody`/`DrawerBody` z `overflow-hidden overscroll-none` — brak „uciekania” treści przy gestach na inputach (iOS).
+- **Kategorie na mobile:** formularz jak limity — Drawer (mobile) / Sheet (desktop); fokus na input nazwy przy otwarciu.
+- **Limity:** po otwarciu formularza fokus na input kwoty (`onOpenAutoFocus` + `autoFocus`).
+
+### Spostrzeżenia AI
+
+- Cache insightów uwzględnia `locale` (stary cache bez locale = regeneracja).
+- Kontekst AI dostaje zlokalizowane nazwy kategorii; prompt wymusza pełny język UI także w polu `metric`.
+
+---
 
 **2026-07-21 — Faza 12.6.2: Settings mobile — limity, sheety, anti-zoom.**
 

@@ -16,6 +16,13 @@ import {
   AlertDialogTitle,
 } from '@web/components/ui/alert-dialog';
 import { Button } from '@web/components/ui/button';
+import {
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@web/components/ui/drawer';
 import { Input } from '@web/components/ui/input';
 import { Label } from '@web/components/ui/label';
 import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle } from '@web/components/ui/sheet';
@@ -30,6 +37,7 @@ import {
   resolveCategoryLabel,
   type CategoryDisplayContext,
 } from '@web/features/transactions/lib/category-config';
+import { useMediaQuery } from '@web/features/transactions/hooks/useMediaQuery';
 import { sortCategoriesForSelect } from '@shared/features/transactions/categories';
 
 const PRESET_COLORS = [
@@ -53,6 +61,7 @@ type CategoriesSectionProps = {
 export function CategoriesSection({ onCategoriesChanged }: CategoriesSectionProps) {
   const t = useT();
   const { locale } = useLocale();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const { categories, colorMap, nameMap, isLoading, reload } = useCategories();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryListItem | null>(null);
@@ -105,6 +114,13 @@ export function CategoriesSection({ onCategoriesChanged }: CategoriesSectionProp
     setName(category.name);
     setColor(category.color);
     setIsFormOpen(true);
+  }
+
+  function handleOpenAutoFocus(event: Event) {
+    event.preventDefault();
+    window.setTimeout(() => {
+      document.getElementById('category-name')?.focus();
+    }, 0);
   }
 
   async function handleSaveCategory() {
@@ -204,6 +220,53 @@ export function CategoriesSection({ onCategoriesChanged }: CategoriesSectionProp
     setDeleteTransactionCount(0);
   }
 
+  const formTitle = t(
+    editingCategory ? 'settings.categories.editTitle' : 'settings.categories.addTitle'
+  );
+
+  const formFields = (
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor="category-name">{t('settings.categories.nameLabel')}</Label>
+        <Input
+          id="category-name"
+          value={name}
+          disabled={isSaving}
+          autoFocus
+          onChange={(event) => setName(event.target.value)}
+          placeholder={t('settings.categories.namePlaceholder')}
+        />
+      </div>
+      <div>
+        <Label>{t('settings.categories.colorLabel')}</Label>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {PRESET_COLORS.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              disabled={isSaving}
+              onClick={() => setColor(preset)}
+              className={`h-8 w-8 rounded-full border-2 transition ${
+                color === preset ? 'border-warm scale-110' : 'border-transparent'
+              }`}
+              style={{ backgroundColor: preset }}
+              aria-label={preset}
+            />
+          ))}
+        </div>
+      </div>
+      <Button
+        type="button"
+        className="w-full"
+        loading={isSaving}
+        disabled={isSaving}
+        onClick={() => void handleSaveCategory()}
+      >
+        {t('settings.labels.saveChanges')}
+      </Button>
+    </div>
+  );
+
   if (isLoading) {
     return <div className="bg-elevated h-48 animate-pulse rounded-2xl" />;
   }
@@ -299,56 +362,28 @@ export function CategoriesSection({ onCategoriesChanged }: CategoriesSectionProp
         </div>
       </section>
 
-      <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <SheetContent className="w-full overflow-x-hidden sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>
-              {t(
-                editingCategory ? 'settings.categories.editTitle' : 'settings.categories.addTitle'
-              )}
-            </SheetTitle>
-          </SheetHeader>
-          <SheetBody className="space-y-4">
-            <div>
-              <Label htmlFor="category-name">{t('settings.categories.nameLabel')}</Label>
-              <Input
-                id="category-name"
-                value={name}
-                disabled={isSaving}
-                onChange={(event) => setName(event.target.value)}
-                placeholder={t('settings.categories.namePlaceholder')}
-              />
-            </div>
-            <div>
-              <Label>{t('settings.categories.colorLabel')}</Label>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {PRESET_COLORS.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    disabled={isSaving}
-                    onClick={() => setColor(preset)}
-                    className={`h-8 w-8 rounded-full border-2 transition ${
-                      color === preset ? 'border-warm scale-110' : 'border-transparent'
-                    }`}
-                    style={{ backgroundColor: preset }}
-                    aria-label={preset}
-                  />
-                ))}
-              </div>
-            </div>
-            <Button
-              type="button"
-              className="w-full"
-              loading={isSaving}
-              disabled={isSaving}
-              onClick={() => void handleSaveCategory()}
-            >
-              {t('settings.labels.saveChanges')}
-            </Button>
-          </SheetBody>
-        </SheetContent>
-      </Sheet>
+      {isDesktop ? (
+        <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
+          <SheetContent
+            className="w-full overflow-x-hidden sm:max-w-md"
+            onOpenAutoFocus={handleOpenAutoFocus}
+          >
+            <SheetHeader>
+              <SheetTitle>{formTitle}</SheetTitle>
+            </SheetHeader>
+            <SheetBody className="overflow-hidden overscroll-none">{formFields}</SheetBody>
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <Drawer open={isFormOpen} onOpenChange={setIsFormOpen}>
+          <DrawerContent className="overflow-x-hidden" onOpenAutoFocus={handleOpenAutoFocus}>
+            <DrawerHeader>
+              <DrawerTitle>{formTitle}</DrawerTitle>
+            </DrawerHeader>
+            <DrawerBody className="overflow-hidden overscroll-none">{formFields}</DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      )}
 
       <AlertDialog
         open={Boolean(deleteTarget)}

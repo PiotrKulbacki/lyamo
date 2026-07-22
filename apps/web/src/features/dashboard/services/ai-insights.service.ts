@@ -5,13 +5,18 @@ import {
   insightSchema,
   type AiInsightContent,
 } from '@shared/features/ai/schemas';
-import type { Locale } from '@shared/features/i18n';
+import { isLocale, t, type Locale } from '@shared/features/i18n';
+import {
+  buildCustomCategoryKey,
+  isBuiltInCategory,
+} from '@shared/features/transactions/categories';
 import type { CurrencyCode } from '@shared/features/transactions/schemas';
 import { env } from '@web/env';
 import { computeNoSpendDays } from '@web/features/dashboard/lib/no-spend-days';
 import { getOrRefreshPeriodAggregation } from '@web/features/analytics/services/period-aggregation-cache.service';
 import { captureServerException } from '@web/lib/sentry-server';
 import { getCategoryLimitProgressForUser } from '@web/features/settings/services/category-limits.service';
+import { CATEGORY_I18N_KEYS } from '@web/features/transactions/lib/category-config';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = 'gpt-4o-mini';
@@ -25,23 +30,75 @@ const LOCALE_LANGUAGE: Record<Locale, string> = {
   es: 'Spanish',
 };
 
+const METRIC_LANGUAGE_EXAMPLES: Record<Locale, string> = {
+  en: '7.42 EUR left for Alcohol!',
+  de: 'Noch 7,42 EUR für Alkohol!',
+  pl: 'Zostało 7,42 EUR na Alkohol!',
+  es: '¡Quedan 7,42 EUR para Alcohol!',
+};
+
 export type DashboardInsightResponse = {
   insight: AiInsightContent;
   cached: boolean;
   updatedAt: string;
 };
 
+type StoredInsightCache = {
+  locale: Locale;
+  insight: AiInsightContent;
+};
+
 function isCacheFresh(updatedAt: Date, now: Date = new Date()): boolean {
   return now.getTime() - updatedAt.getTime() < CACHE_TTL_MS;
 }
 
-function parseCachedContent(content: unknown): AiInsightContent | null {
-  const parsed = insightSchema.safeParse(content);
-  return parsed.success ? parsed.data : null;
+function localizeCategoryLabel(
+  categoryKey: string,
+  locale: Locale,
+  customNameMap: Map<string, string>
+): string {
+  if (customNameMap.has(categoryKey)) {
+    return customNameMap.get(categoryKey)!;
+  }
+
+  if (isBuiltInCategory(categoryKey)) {
+    return t(CATEGORY_I18N_KEYS[categoryKey], locale);
+  }
+
+  return categoryKey;
+}
+
+function parseCachedContent(content: unknown, expectedLocale: Locale): AiInsightContent | null {
+  if (!content || typeof content !== 'object') {
+    return null;
+  }
+
+  const record = content as Record<string, unknown>;
+
+  // New locale-aware cache format
+  if ('insight' in record && 'locale' in record) {
+    if (typeof record.locale !== 'string' || !isLocale(record.locale)) {
+      return null;
+    }
+    if (record.locale !== expectedLocale) {
+      return null;
+    }
+
+    const parsed = insightSchema.safeParse(record.insight);
+    return parsed.success ? parsed.data : null;
+  }
+
+  // Legacy cache without locale — regenerate so language matches the UI
+  return null;
+}
+
+function buildStoredInsightCache(locale: Locale, insight: AiInsightContent): StoredInsightCache {
+  return { locale, insight };
 }
 
 function buildSystemPrompt(locale: Locale, serverNowIso: string): string {
   const language = LOCALE_LANGUAGE[locale];
+  const metricExample = METRIC_LANGUAGE_EXAMPLES[locale];
 
   return `You are a concise personal finance assistant for Lyamo.
 Current server datetime (ISO): ${serverNowIso}
@@ -50,13 +107,15 @@ Use this datetime as your temporal anchor when interpreting "today", "this month
 Respond ONLY with a JSON object matching this schema:
 {
   "type": "success" | "warning" | "anomaly" | "tip",
-  "metric": string,   // short highlight phrase, e.g. "8 no-spend days!"
-  "message": string,  // main insight, max 2 sentences
-  "actionableStep": string // optional short concrete tip
+  "metric": string,   // short highlight phrase in ${language}, e.g. "${metricExample}"
+  "message": string,  // main insight in ${language}, max 2 sentences
+  "actionableStep": string // optional short concrete tip in ${language}
 }
 
 Rules:
-- Write all user-facing strings in ${language}.
+- Write ALL user-facing strings (metric, message, and actionableStep) entirely in ${language}. Never mix languages.
+- metric MUST be fully in ${language} — never leave metric in English when the locale is not English.
+- Use category labels exactly as provided in the context (they are already localized). Do not rename them to English.
 - Be specific and data-driven. Do not invent numbers that are not in the context.
 - Prefer one clear insight over generic advice.
 - Keep metric under 8 words. Keep message under 2 sentences.
@@ -137,6 +196,17 @@ async function callOpenAiInsight(systemPrompt: string, userPrompt: string): Prom
   return content;
 }
 
+async function loadCustomCategoryNameMap(userId: string): Promise<Map<string, string>> {
+  const customCategories = await prisma.userCategory.findMany({
+    where: { userId },
+    select: { id: true, name: true },
+  });
+
+  return new Map(
+    customCategories.map((category) => [buildCustomCategoryKey(category.id), category.name])
+  );
+}
+
 async function generateInsightContent(userId: string, locale: Locale): Promise<AiInsightContent> {
   const now = new Date();
   const serverNowIso = now.toISOString();
@@ -160,31 +230,33 @@ async function generateInsightContent(userId: string, locale: Locale): Promise<A
   const primaryCurrency = user.primaryCurrency as CurrencyCode;
   const budget = user.currentMonthBudget ?? user.defaultMonthlyBudget ?? null;
 
-  const [periodSnapshot, recentTransactions, periodTransactionDates] = await Promise.all([
-    getOrRefreshPeriodAggregation(userId, now),
-    prisma.transaction.findMany({
-      where: {
-        userId,
-        date: { gte: periodStart, lte: periodEnd },
-      },
-      orderBy: { date: 'desc' },
-      take: RECENT_TRANSACTIONS_LIMIT,
-      select: {
-        amount: true,
-        currency: true,
-        category: true,
-        description: true,
-        date: true,
-      },
-    }),
-    prisma.transaction.findMany({
-      where: {
-        userId,
-        date: { gte: periodStart, lte: periodEnd },
-      },
-      select: { date: true },
-    }),
-  ]);
+  const [periodSnapshot, recentTransactions, periodTransactionDates, customNameMap] =
+    await Promise.all([
+      getOrRefreshPeriodAggregation(userId, now),
+      prisma.transaction.findMany({
+        where: {
+          userId,
+          date: { gte: periodStart, lte: periodEnd },
+        },
+        orderBy: { date: 'desc' },
+        take: RECENT_TRANSACTIONS_LIMIT,
+        select: {
+          amount: true,
+          currency: true,
+          category: true,
+          description: true,
+          date: true,
+        },
+      }),
+      prisma.transaction.findMany({
+        where: {
+          userId,
+          date: { gte: periodStart, lte: periodEnd },
+        },
+        select: { date: true },
+      }),
+      loadCustomCategoryNameMap(userId),
+    ]);
 
   if (!periodSnapshot) {
     throw new Error(INSIGHT_ERROR_CODES.AI_FAILED);
@@ -204,6 +276,9 @@ async function generateInsightContent(userId: string, locale: Locale): Promise<A
     now,
   });
 
+  const localize = (categoryKey: string) =>
+    localizeCategoryLabel(categoryKey, locale, customNameMap);
+
   const raw = await callOpenAiInsight(
     buildSystemPrompt(locale, serverNowIso),
     buildUserPrompt({
@@ -211,9 +286,12 @@ async function generateInsightContent(userId: string, locale: Locale): Promise<A
       totalSpent: Math.round(totalSpent * 100) / 100,
       budget,
       remainingBudget,
-      categoryTotals: periodSnapshot.categoryTotalsPrimary,
+      categoryTotals: periodSnapshot.categoryTotalsPrimary.map((row) => ({
+        category: localize(row.category),
+        amount: row.amount,
+      })),
       categoryLimits: categoryLimitProgress.map((limit) => ({
-        category: limit.categoryKey,
+        category: localize(limit.categoryKey),
         limitAmount: limit.limitAmount,
         spentAmount: limit.spentAmount,
         remainingAmount: limit.remainingAmount,
@@ -225,7 +303,7 @@ async function generateInsightContent(userId: string, locale: Locale): Promise<A
       recentTransactions: recentTransactions.map((transaction) => ({
         amount: transaction.amount.toNumber(),
         currency: transaction.currency,
-        category: transaction.category,
+        category: localize(transaction.category),
         description: transaction.description,
         date: transaction.date.toISOString().slice(0, 10),
       })),
@@ -249,16 +327,19 @@ async function generateInsightContent(userId: string, locale: Locale): Promise<A
 
 async function upsertInsightCache(
   userId: string,
+  locale: Locale,
   content: AiInsightContent
 ): Promise<{ content: AiInsightContent; updatedAt: Date }> {
+  const stored = buildStoredInsightCache(locale, content);
+
   const row = await prisma.aiInsight.upsert({
     where: { userId },
     create: {
       userId,
-      content,
+      content: stored,
     },
     update: {
-      content,
+      content: stored,
     },
     select: {
       content: true,
@@ -266,7 +347,7 @@ async function upsertInsightCache(
     },
   });
 
-  const parsed = parseCachedContent(row.content);
+  const parsed = parseCachedContent(row.content, locale);
   if (!parsed) {
     throw new Error(INSIGHT_ERROR_CODES.GENERATION_FAILED);
   }
@@ -293,7 +374,7 @@ export async function getDashboardInsight(
       });
 
       if (cached && isCacheFresh(cached.updatedAt)) {
-        const content = parseCachedContent(cached.content);
+        const content = parseCachedContent(cached.content, options.locale);
         if (content) {
           return {
             insight: content,
@@ -305,7 +386,7 @@ export async function getDashboardInsight(
     }
 
     const generated = await generateInsightContent(userId, options.locale);
-    const saved = await upsertInsightCache(userId, generated);
+    const saved = await upsertInsightCache(userId, options.locale, generated);
 
     return {
       insight: saved.content,
