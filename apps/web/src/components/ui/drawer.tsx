@@ -71,5 +71,10 @@ export function DrawerDescription({ className, ...props }: HTMLAttributes<HTMLPa
 }
 
 export function DrawerBody({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex-1 overflow-y-auto px-6 py-5', className)} {...props} />;
+  return (
+    <div
+      className={cn('flex-1 overflow-y-auto overscroll-contain px-6 py-5', className)}
+      {...props}
+    />
+  );
 }

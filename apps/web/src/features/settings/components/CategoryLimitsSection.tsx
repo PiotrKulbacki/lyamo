@@ -131,6 +131,13 @@ export function CategoryLimitsSection({ primaryCurrency }: CategoryLimitsSection
     }
   }
 
+  function handleOpenAutoFocus(event: Event) {
+    event.preventDefault();
+    window.setTimeout(() => {
+      document.getElementById('category-limit-amount')?.focus();
+    }, 0);
+  }
+
   async function handleSaveLimit() {
     const parsedAmount = Number(limitAmount);
 
@@ -251,6 +258,7 @@ export function CategoryLimitsSection({ primaryCurrency }: CategoryLimitsSection
           inputMode="decimal"
           value={limitAmount}
           disabled={isSaving}
+          autoFocus
           onChange={(event) => setLimitAmount(event.target.value)}
           placeholder={t('settings.categoryLimits.amountPlaceholder')}
           className="mt-2"
@@ -353,20 +361,23 @@ export function CategoryLimitsSection({ primaryCurrency }: CategoryLimitsSection
 
       {isDesktop ? (
         <Sheet open={isFormOpen} onOpenChange={handleFormOpenChange}>
-          <SheetContent className="w-full overflow-x-hidden sm:max-w-md">
+          <SheetContent
+            className="w-full overflow-x-hidden sm:max-w-md"
+            onOpenAutoFocus={handleOpenAutoFocus}
+          >
             <SheetHeader>
               <SheetTitle>{formTitle}</SheetTitle>
             </SheetHeader>
-            <SheetBody>{formFields}</SheetBody>
+            <SheetBody className="overflow-hidden overscroll-none">{formFields}</SheetBody>
           </SheetContent>
         </Sheet>
       ) : (
         <Drawer open={isFormOpen} onOpenChange={handleFormOpenChange}>
-          <DrawerContent className="overflow-x-hidden">
+          <DrawerContent className="overflow-x-hidden" onOpenAutoFocus={handleOpenAutoFocus}>
             <DrawerHeader>
               <DrawerTitle>{formTitle}</DrawerTitle>
             </DrawerHeader>
-            <DrawerBody>{formFields}</DrawerBody>
+            <DrawerBody className="overflow-hidden overscroll-none">{formFields}</DrawerBody>
           </DrawerContent>
         </Drawer>
       )}
