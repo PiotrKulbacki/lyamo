@@ -49,6 +49,9 @@ export type FinancialCycleMeta = {
   financialMonthStartDay: number;
   cycleStartIso: string;
   cycleEndIso: string;
+  /** Days until next payday — authoritative for "do wypłaty" / daily living (matches dashboard). */
+  daysUntilPayday: number;
+  /** Calendar days until cycle end date (day before payday). Do not use for payday/living answers. */
   daysRemainingInCycle: number;
 };
 
@@ -223,11 +226,19 @@ function formatBudgetPromptLine(budget: ActiveMonthlyBudget): string {
   return `User's active monthly budget for the current billing cycle: ${budget.amount} ${budget.currency}. This amount is binding for the current period. ${priorityNote}`;
 }
 
-function formatCycleDaysPromptLine(daysRemainingInCycle: number): string {
+function formatCycleDaysPromptLine(daysUntilPayday: number, daysRemainingInCycle: number): string {
+  const paydayNote =
+    daysUntilPayday === 0
+      ? ' Payday is today (or the cycle has ended) — do not divide remaining budget by zero.'
+      : '';
   const lastDayNote =
-    daysRemainingInCycle === 0 ? ' Today is the last day of the billing cycle.' : '';
+    daysRemainingInCycle === 0 && daysUntilPayday > 0
+      ? ' Today is the last calendar day of the billing cycle; payday is the next day.'
+      : '';
 
-  return `Days remaining until the end of the current billing cycle: ${daysRemainingInCycle}.${lastDayNote} Do NOT use fixed values such as 30 or 31 days when counting cycle length.`;
+  return `Days until payday (AUTHORITATIVE for "until payday", "do wypłaty", daily living, affordability): ${daysUntilPayday}.${paydayNote}
+Days remaining until billing cycle end date (day before payday — informational only, NEVER cite this for payday/living questions): ${daysRemainingInCycle}.${lastDayNote}
+CRITICAL: When answering how many days are left until payday or how much is left per day, ALWAYS use daysUntilPayday from this prompt — never daysRemainingInCycle, never a number from earlier chat messages, and never fixed values such as 28, 30, or 31.`;
 }
 
 function formatDashboardBudgetSummarySection(summary: DashboardBudgetSummary): string {
@@ -246,12 +257,13 @@ CRITICAL DEFAULTS — apply automatically without the user asking:
 Budget calculation rules:
 - totalSpentIncludingFixed = transactionsSpentPrimary + fixedCostsTotal. This is the only correct "spent so far" figure.
 - remainingBudget = budget - totalSpentIncludingFixed. Use this as the starting point for all forecasts.
+- When stating days left until payday / end of money for living, cite daysUntilPayday=${summary.daysUntilPayday} (matches the dashboard). Never substitute daysRemainingInCycle.
 - Daily allowance = remainingBudget / daysUntilPayday (NOT daysRemainingInCycle). Current value: avgRemainingPerDay.
 
 Hypothetical purchase rules (e.g. "if I buy shoes for 160 EUR"):
 - A planned purchase REDUCES remaining budget: newRemaining = remainingBudget - purchaseAmount.
 - NEVER add the purchase amount to remainingBudget or to the daily allowance — buying something means LESS money left, not more.
-- newDailyAllowance = newRemaining / daysUntilPayday.
+- newDailyAllowance = newRemaining / daysUntilPayday (here: ${summary.daysUntilPayday}).
 - Worked example with current data: purchase 160 ${summary.primaryCurrency} → newRemaining = ${summary.remainingBudget ?? 0} - 160 = ${summary.remainingBudget != null ? Math.max(summary.remainingBudget - 160, 0) : 'N/A'}; newDaily = newRemaining / ${summary.daysUntilPayday}.
 - If daysUntilPayday is 0, the cycle has ended — do not divide by zero; treat remaining budget as available today only.`;
 }
@@ -296,7 +308,7 @@ ${context.budgetSummary ? '\nFor budget and daily spending questions, always use
 
 Today is ${cycleMeta.todayIso}. User's financial cycle starts on day ${cycleMeta.financialMonthStartDay}.
 Current cycle: ${cycleMeta.cycleStartIso} to ${cycleMeta.cycleEndIso}. Use this range to calculate averages or statistics.
-${formatCycleDaysPromptLine(cycleMeta.daysRemainingInCycle)}
+${formatCycleDaysPromptLine(cycleMeta.daysUntilPayday, cycleMeta.daysRemainingInCycle)}
 
 ${budgetSection}${dashboardSummarySection}${spentLine}
 

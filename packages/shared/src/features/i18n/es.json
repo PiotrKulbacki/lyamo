@@ -343,7 +343,8 @@
       "history": "Historial",
       "scanner": "Escáner",
       "chat": "Chat IA",
-      "settings": "Ajustes"
+      "settings": "Ajustes",
+      "faq": "FAQ"
     },
     "footer": {
       "copyright": "© {{year}} Lyamo. Todos los derechos reservados.",
@@ -362,66 +363,177 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Deja de gastar en piloto automático",
-      "title": "Recupera el control de tu dinero",
-      "subtitle": "Lyamo te ayuda a rastrear cada compra, escanear recibos con IA y obtener insights honestos — para dejar de perder dinero a diestra y siniestra.",
+      "eyebrow": "Control de gastos con IA",
+      "title": "Sabe cuánto puedes gastar aún — hasta la próxima nómina.",
+      "subtitle": "Lyamo convierte tickets y compras en un presupuesto claro: gastado, restante y cuota diaria. La IA escanea tickets y responde con tus números — sin conectar el banco.",
       "ctaPrimary": "Empieza gratis",
-      "ctaSecondary": "Iniciar sesión"
+      "ctaSecondary": "Ver cómo funciona",
+      "trustLine": "Sin tarjeta · Dashboard completo · Plan Free incluido"
     },
-    "features": {
-      "title": "Todo lo que necesitas para mantener el control",
-      "subtitle": "Desde el escáner de recibos hasta el chat IA predictivo — para quienes quieren claridad, no hojas de cálculo.",
-      "scanner": {
-        "title": "Escáner de recibos IA",
-        "description": "Haz una foto, revisa el borrador y guarda — sin escribir manualmente."
+    "why": {
+      "title": "No otro bloc de gastos. Control hasta la nómina.",
+      "subtitle": "Decisiones para hoy — no solo el historial de la semana pasada.",
+      "cycle": {
+        "title": "Presupuesto de nómina a nómina",
+        "description": "Defines el día de inicio del ciclo. Ves el restante y el límite diario — sin adivinar si llegas al día 1."
       },
-      "chat": {
-        "title": "Chat IA predictivo",
-        "description": "Pregunta a tu asistente sobre patrones de gasto basados en tus datos reales."
+      "scanner": {
+        "title": "Ticket → categorías en segundos",
+        "description": "Foto, borrador con IA, split opcional por categoría. Sin teclear cada línea."
+      },
+      "ai": {
+        "title": "IA que conoce tus números",
+        "description": "Chat e insights usan tu presupuesto, gastos fijos y límites — no consejos genéricos de internet."
+      }
+    },
+    "dashboard": {
+      "title": "Tu ciclo de nómina. De un vistazo.",
+      "subtitle": "Totales, presupuesto restante, medias diarias y categorías — sincronizados.",
+      "eyebrow": "Dashboard"
+    },
+    "scanner": {
+      "title": "Tu ticket hace el trabajo.",
+      "subtitle": "Foto → borrador IA → guardar. Opcionalmente divide partidas para que gráficos y límites sean reales.",
+      "placeholder": "Añade feature-scanner-split.webp para mostrar esta pantalla",
+      "eyebrow": "Escáner de tickets"
+    },
+    "ai": {
+      "title": "Un asistente que calcula con tus datos.",
+      "subtitle": "Pregunta por patrones, límites o «¿y si compro X?». Respuestas con presupuesto, fijos y días hasta la nómina.",
+      "eyebrow": "Asistente IA"
+    },
+    "control": {
+      "title": "Límites donde suele fallar el freno.",
+      "subtitle": "Define topes por categoría. Revisa el historial ciclo a ciclo. Incluye fijos en un solo total.",
+      "limits": {
+        "title": "Límites por categoría",
+        "description": "Barras de progreso en el panel antes de pasarte del plan."
+      },
+      "history": {
+        "title": "Historial y gastos fijos",
+        "description": "Edita entradas, agrupa splits de tickets e incluye suscripciones en el total."
       },
       "currency": {
-        "title": "Soporte multi-moneda",
-        "description": "Rastrea PLN, EUR, GBP y USD — todo convertido a tu moneda principal."
+        "title": "PLN, EUR, GBP, USD",
+        "description": "Registra en monedas admitidas — todo en tu moneda principal."
+      }
+    },
+    "mobile": {
+      "title": "El mismo Lyamo en el navegador del móvil.",
+      "subtitle": "Presupuesto, escáner y asistente — sin instalar una app nativa.",
+      "placeholder": "Añade mobile-dashboard.webp para mostrar esta pantalla",
+      "eyebrow": "En el móvil"
+    },
+    "trust": {
+      "title": "Tus finanzas. Tus datos. Sin login bancario.",
+      "subtitle": "Pensado para la privacidad en la UE — tú decides.",
+      "noBank": {
+        "title": "Sin conexión bancaria",
+        "description": "Añades gastos a mano o escaneas tickets. Nada se enlaza con tu cuenta bancaria."
+      },
+      "privacy": {
+        "title": "Privacidad y consentimientos",
+        "description": "Preferencias de cookies, Privacidad, Términos e Impressum — claros y accesibles."
+      },
+      "payments": {
+        "title": "Pagos con Stripe",
+        "description": "Checkout y gestión de suscripción en el Customer Portal de Stripe."
+      },
+      "account": {
+        "title": "Tu cuenta, tu decisión",
+        "description": "Verificación de email, restablecer contraseña y borrado total en Ajustes."
       }
     },
     "pricing": {
-      "title": "Precios simples y transparentes",
-      "subtitle": "Empieza gratis. Actualiza cuando necesites más potencia IA.",
+      "title": "Precios simples. Dashboard completo ya en Free.",
+      "subtitle": "Paga por más IA y archivo de fotos más largo — no por el control básico de gastos.",
       "perMonth": "/ mes",
+      "featured": "Destacado",
       "free": {
         "pricePln": "0 PLN / mes",
         "priceEur": "0 € / mes",
         "priceGbp": "0 £ / mes",
         "priceUsd": "0 $ / mes",
-        "feature1": "5 escaneos de recibos al mes",
-        "feature2": "10 mensajes de chat IA al mes",
-        "feature3": "Panel de gastos completo",
-        "feature4": "Sin almacenamiento de fotos de recibos",
-        "cta": "Empezar gratis"
+        "feature1": "Dashboard completo, presupuesto y límites",
+        "feature2": "5 escaneos de tickets IA al mes",
+        "feature3": "10 mensajes de chat IA al mes",
+        "feature4": "PLN, EUR, GBP y USD · sin archivo de fotos",
+        "cta": "Empieza gratis"
       },
       "pro": {
         "discount": "{{percent}}% de descuento",
-        "promoCodeBadge": "Usa el código {{code}} en el pago para obtener {{percent}}% de descuento!",
-        "feature1": "50 escaneos de recibos al mes",
-        "feature2": "50 mensajes de chat IA al mes",
-        "feature3": "Fotos de recibos guardadas 60 días",
-        "feature4": "Soporte prioritario",
-        "cta": "Ir a Pro"
+        "promoCodeBadge": "Usa el código {{code}} en el pago para {{percent}}% de descuento!",
+        "feature1": "Todo lo de Free",
+        "feature2": "50 escaneos de tickets al mes",
+        "feature3": "50 mensajes de chat IA al mes",
+        "feature4": "Fotos de tickets durante 60 días",
+        "cta": "Pasar a Pro"
       },
       "premium": {
         "discount": "{{percent}}% de descuento",
-        "promoCodeBadge": "Usa el código {{code}} en el pago para obtener {{percent}}% de descuento!",
-        "feature1": "120 escaneos de recibos al mes",
-        "feature2": "250 mensajes de chat IA al mes",
-        "feature3": "Fotos de recibos guardadas 12 meses",
-        "feature4": "Soporte prioritario",
-        "cta": "Ir a Premium"
+        "promoCodeBadge": "Usa el código {{code}} en el pago para {{percent}}% de descuento!",
+        "feature1": "Todo lo de Pro",
+        "feature2": "120 escaneos de tickets al mes",
+        "feature3": "250 mensajes de chat IA al mes",
+        "feature4": "Fotos de tickets durante 12 meses",
+        "cta": "Pasar a Premium"
+      }
+    },
+    "faq": {
+      "title": "Preguntas antes de registrarte",
+      "bank": {
+        "q": "¿Lyamo se conecta a mi banco?",
+        "a": "No. Añades gastos a mano o escaneas tickets. No hay conexión Open Banking."
+      },
+      "free": {
+        "q": "¿Puedo empezar gratis?",
+        "a": "Sí. El plan Free incluye el dashboard completo, 5 escaneos y 10 mensajes de IA al mes."
+      },
+      "scanner": {
+        "q": "¿Cómo funciona el escáner de tickets?",
+        "a": "Subes una foto. La IA prepara un borrador (importe, fecha, categorías). Tú confirmas — nada se guarda sin tu decisión."
+      },
+      "split": {
+        "q": "¿Qué es un split de ticket?",
+        "a": "Un ticket puede dividirse en varias categorías (p. ej. comida y hogar) para que gráficos y límites sean reales."
+      },
+      "cycle": {
+        "q": "¿En qué se diferencia el ciclo de Lyamo del mes calendario?",
+        "a": "Defines un día de inicio (p. ej. nómina). Presupuesto, medias y límites se calculan en ese ciclo."
+      },
+      "currency": {
+        "q": "¿Qué monedas admite?",
+        "a": "PLN, EUR, GBP y USD — con conversión a tu moneda principal."
+      },
+      "chat": {
+        "q": "¿El asistente de IA ve mis gastos?",
+        "a": "Sí, en lo necesario para responder: totales, presupuesto, fijos, límites y transacciones recientes. No es un chatbot genérico."
+      },
+      "photos": {
+        "q": "¿Dónde se guardan las fotos de tickets?",
+        "a": "En Free no se conservan a largo plazo. En Pro hasta 60 días, en Premium hasta 12 meses — en el archivo del escáner."
+      },
+      "delete": {
+        "q": "¿Puedo borrar mi cuenta y datos?",
+        "a": "Sí — en Ajustes (zona de peligro). También hay política de borrado de cuentas inactivas."
+      },
+      "mobile": {
+        "q": "¿Hay app móvil?",
+        "a": "Lyamo funciona en el navegador del móvil (responsive). Aún no hay app nativa completa de gastos."
+      },
+      "cancel": {
+        "q": "¿Cómo cancelo la suscripción?",
+        "a": "Desde el Customer Portal de Stripe en Ajustes. Conservas el acceso hasta el final del periodo pagado."
       }
     },
     "cta": {
-      "title": "¿Listo para dejar de gastar sin pensar?",
-      "subtitle": "Únete a Lyamo y construye un presupuesto en el que realmente confíes.",
-      "button": "Crea tu cuenta gratis"
+      "title": "Deja de adivinar. Empieza a saber.",
+      "subtitle": "Crea una cuenta gratis, define tu día de nómina y ve tu primer ciclo claro.",
+      "button": "Crear cuenta gratuita",
+      "trustLine": "Sin tarjeta · Cancela planes de pago cuando quieras en Stripe"
+    },
+    "shot": {
+      "missing": "Captura próximamente"
     }
   },
   "dashboard": {
@@ -766,8 +878,8 @@
   },
   "seo": {
     "home": {
-      "title": "Lyamo — control de gastos con IA",
-      "description": "Controla tus gastos, escanea recibos con IA y obtén insights financieros honestos. Soporte multidivisa para PLN, EUR, GBP y USD."
+      "title": "Lyamo — sabe cuánto puedes gastar hasta la nómina",
+      "description": "Controla gastos por ciclo de nómina, escanea tickets con IA y pregunta al asistente por tu presupuesto. PLN, EUR, GBP, USD. Empieza gratis — sin conexión bancaria."
     },
     "contact": {
       "title": "Contacto",

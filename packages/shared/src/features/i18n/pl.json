@@ -345,7 +345,8 @@
       "history": "Historia",
       "scanner": "Skaner",
       "chat": "Czat AI",
-      "settings": "Ustawienia"
+      "settings": "Ustawienia",
+      "faq": "FAQ"
     },
     "footer": {
       "copyright": "© {{year}} Lyamo. Wszelkie prawa zastrzeżone.",
@@ -364,66 +365,177 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Przestań wydawać na autopilocie",
-      "title": "Odzyskaj kontrolę nad swoimi pieniędzmi",
-      "subtitle": "Lyamo pomaga śledzić każdy zakup, skanować paragony AI i dostawać uczciwe wskazówki — żebyś przestał przepuszczać kasę na prawo i lewo.",
+      "eyebrow": "Kontrola wydatków z AI",
+      "title": "Wiedz, ile możesz jeszcze wydać — do następnej wypłaty.",
+      "subtitle": "Lyamo zamienia paragony i zakupy w czytelny budżet: ile poszło, ile zostało i ile dziennie możesz wydać. AI skanuje paragony i odpowiada na podstawie Twoich liczb — bez podpinania konta bankowego.",
       "ctaPrimary": "Zacznij za darmo",
-      "ctaSecondary": "Zaloguj się"
+      "ctaSecondary": "Zobacz, jak działa",
+      "trustLine": "Bez karty · Pełny dashboard · Plan Free od razu"
     },
-    "features": {
-      "title": "Wszystko, czego potrzebujesz, by trzymać budżet w ryzach",
-      "subtitle": "Od skanera paragonów po predykcyjny czat AI — dla tych, którzy chcą jasności, nie arkuszy kalkulacyjnych.",
-      "scanner": {
-        "title": "Skaner paragonów AI",
-        "description": "Zrób zdjęcie, sprawdź draft i zapisz — bez ręcznego przepisywania."
+    "why": {
+      "title": "Nie kolejny notatnik. System kontroli do wypłaty.",
+      "subtitle": "Widzisz decyzje na dziś — nie tylko historię z zeszłego tygodnia.",
+      "cycle": {
+        "title": "Budżet od wypłaty do wypłaty",
+        "description": "Ustawiasz dzień startu cyklu. Widzisz pozostałą kwotę i dzienny limit — nie zgadujesz, czy „do 1. starczy”."
       },
-      "chat": {
-        "title": "Predykcyjny czat AI",
-        "description": "Pytaj asystenta o wzorce wydatków na podstawie Twoich danych."
+      "scanner": {
+        "title": "Paragon → kategorie w sekundach",
+        "description": "Zdjęcie, draft AI, opcjonalny split na kategorie. Bez przepisywania pozycji."
+      },
+      "ai": {
+        "title": "AI, które zna Twoje liczby",
+        "description": "Czat i spostrzeżenia opierają się na budżecie, kosztach stałych i limitach — nie na ogólnych poradach z internetu."
+      }
+    },
+    "dashboard": {
+      "title": "Twój cykl wypłaty. Jednym spojrzeniem.",
+      "subtitle": "Suma, pozostały budżet, średnia dzienna i kategorie — zsynchronizowane.",
+      "eyebrow": "Dashboard"
+    },
+    "scanner": {
+      "title": "Paragon robi robotę za Ciebie.",
+      "subtitle": "Zdjęcie → draft AI → zapis. Opcjonalnie rozbij pozycje na kategorie, żeby wykres i limity były prawdziwe.",
+      "placeholder": "Dodaj feature-scanner-split.webp, aby pokazać ten ekran",
+      "eyebrow": "Skaner paragonów"
+    },
+    "ai": {
+      "title": "Asystent, który liczy na Twoich liczbach.",
+      "subtitle": "Pytaj o wzorce, limity i „co jeśli kupię X?”. Odpowiedzi z kontekstem budżetu, kosztów stałych i dni do wypłaty.",
+      "eyebrow": "Asystent AI"
+    },
+    "control": {
+      "title": "Limity tam, gdzie zwykle puszczają hamulce.",
+      "subtitle": "Ustaw progi na kategorie. Przeglądaj historię cykl po cyklu. Trzymaj koszty stałe w jednej sumie.",
+      "limits": {
+        "title": "Limity kategorii",
+        "description": "Paski postępu na pulpicie, zanim przekroczysz plan."
+      },
+      "history": {
+        "title": "Historia i koszty stałe",
+        "description": "Edytuj wpisy, grupuj splity paragonów i wliczaj abonamenty w sumę."
       },
       "currency": {
-        "title": "Wielowalutowość",
-        "description": "Śledź PLN, EUR, GBP i USD — wszystko przeliczone na Twoją główną walutę."
+        "title": "PLN, EUR, GBP, USD",
+        "description": "Wpisy w różnych walutach — podgląd w Twojej walucie głównej."
+      }
+    },
+    "mobile": {
+      "title": "Ten sam Lyamo w przeglądarce na telefonie.",
+      "subtitle": "Budżet, skaner i asystent — bez osobnej instalacji natywnej aplikacji.",
+      "placeholder": "Dodaj mobile-dashboard.webp, aby pokazać ten ekran",
+      "eyebrow": "Na telefonie"
+    },
+    "trust": {
+      "title": "Twoje finanse. Twoje dane. Bez konta bankowego.",
+      "subtitle": "Zaprojektowane z myślą o prywatności w UE — Ty decydujesz.",
+      "noBank": {
+        "title": "Bez podłączania banku",
+        "description": "Dodajesz wydatki ręcznie lub skanujesz paragony. Nic nie łączy się z kontem bankowym."
+      },
+      "privacy": {
+        "title": "Prywatność i zgody",
+        "description": "Preferencje cookie, Polityka prywatności, Regulamin i Impressum — jasno dostępne."
+      },
+      "payments": {
+        "title": "Płatności przez Stripe",
+        "description": "Checkout i zarządzanie subskrypcją w Stripe Customer Portal."
+      },
+      "account": {
+        "title": "Twoje konto, Twój wybór",
+        "description": "Weryfikacja e-mail, reset hasła i pełne usunięcie konta w Ustawieniach."
       }
     },
     "pricing": {
-      "title": "Prosty, przejrzysty cennik",
-      "subtitle": "Zacznij za darmo. Przejdź na Pro, gdy potrzebujesz więcej mocy AI.",
+      "title": "Prosty cennik. Pełny pulpit już w Free.",
+      "subtitle": "Płać za więcej AI i dłuższe archiwum zdjęć — nie za podstawową kontrolę wydatków.",
       "perMonth": "/ miesiąc",
+      "featured": "Wyróżniony",
       "free": {
         "pricePln": "0 zł / miesiąc",
         "priceEur": "0 € / miesiąc",
         "priceGbp": "0 £ / miesiąc",
         "priceUsd": "0 $ / miesiąc",
-        "feature1": "5 skanów paragonów miesięcznie",
-        "feature2": "10 wiadomości czatu AI miesięcznie",
-        "feature3": "Pełny dashboard wydatków",
-        "feature4": "Bez przechowywania zdjęć paragonów",
+        "feature1": "Pełny dashboard, budżet i limity kategorii",
+        "feature2": "5 skanów paragonów AI miesięcznie",
+        "feature3": "10 wiadomości czatu AI miesięcznie",
+        "feature4": "PLN, EUR, GBP i USD · bez archiwum zdjęć",
         "cta": "Zacznij za darmo"
       },
       "pro": {
         "discount": "{{percent}}% taniej",
         "promoCodeBadge": "Użyj kodu {{code}} przy kasie, aby zyskać {{percent}}% zniżki!",
-        "feature1": "50 skanów paragonów miesięcznie",
-        "feature2": "50 wiadomości czatu AI miesięcznie",
-        "feature3": "Zdjęcia paragonów przez 60 dni",
-        "feature4": "Priorytetowe wsparcie",
+        "feature1": "Wszystko z planu Free",
+        "feature2": "50 skanów paragonów miesięcznie",
+        "feature3": "50 wiadomości czatu AI miesięcznie",
+        "feature4": "Zdjęcia paragonów przez 60 dni",
         "cta": "Przejdź na Pro"
       },
       "premium": {
         "discount": "{{percent}}% taniej",
         "promoCodeBadge": "Użyj kodu {{code}} przy kasie, aby zyskać {{percent}}% zniżki!",
-        "feature1": "120 skanów paragonów miesięcznie",
-        "feature2": "250 wiadomości czatu AI miesięcznie",
-        "feature3": "Zdjęcia paragonów przez 12 miesięcy",
-        "feature4": "Priorytetowe wsparcie",
+        "feature1": "Wszystko z planu Pro",
+        "feature2": "120 skanów paragonów miesięcznie",
+        "feature3": "250 wiadomości czatu AI miesięcznie",
+        "feature4": "Zdjęcia paragonów przez 12 miesięcy",
         "cta": "Przejdź na Premium"
       }
     },
+    "faq": {
+      "title": "Pytania, zanim założysz konto",
+      "bank": {
+        "q": "Czy Lyamo łączy się z moim bankiem?",
+        "a": "Nie. Dodajesz wydatki ręcznie lub skanujesz paragony. Nie ma połączenia Open Banking."
+      },
+      "free": {
+        "q": "Czy mogę zacząć za darmo?",
+        "a": "Tak. Plan Free obejmuje pełny dashboard, 5 skanów paragonów i 10 wiadomości AI miesięcznie."
+      },
+      "scanner": {
+        "q": "Jak działa skaner paragonów?",
+        "a": "Wgrywasz zdjęcie. AI przygotowuje draft (kwota, data, kategorie). Ty zatwierdzasz — nic nie zapisuje się automatycznie bez Twojej decyzji."
+      },
+      "split": {
+        "q": "Co to jest split paragonu?",
+        "a": "Jeden paragon możesz rozbić na kilka kategorii (np. spożywcze i chemia), żeby wykres i limity były prawdziwe."
+      },
+      "cycle": {
+        "q": "Czym cykl w Lyamo różni się od zwykłego miesiąca?",
+        "a": "Ustawiasz dzień startu (np. dzień wypłaty). Budżet, średnie i limity liczą się w tym cyklu rozliczeniowym."
+      },
+      "currency": {
+        "q": "Jakie waluty są obsługiwane?",
+        "a": "PLN, EUR, GBP i USD — z przeliczeniem na walutę główną."
+      },
+      "chat": {
+        "q": "Czy asystent AI widzi moje wydatki?",
+        "a": "Tak — w zakresie potrzebnym do odpowiedzi: sumy, budżet, koszty stałe, limity i ostatnie transakcje. To nie jest ogólny chatbot."
+      },
+      "photos": {
+        "q": "Gdzie są przechowywane zdjęcia paragonów?",
+        "a": "W Free zdjęcia nie są trwale przechowywane. W Pro do 60 dni, w Premium do 12 miesięcy — w archiwum skanera."
+      },
+      "delete": {
+        "q": "Czy mogę usunąć konto i dane?",
+        "a": "Tak — w Ustawieniach (strefa niebezpieczna). Działa też polityka usuwania kont nieaktywnych."
+      },
+      "mobile": {
+        "q": "Czy jest aplikacja mobilna?",
+        "a": "Lyamo działa w przeglądarce na telefonie (responsive). Pełna natywna aplikacja wydatków nie jest jeszcze dostępna."
+      },
+      "cancel": {
+        "q": "Jak anulować subskrypcję?",
+        "a": "Przez Stripe Customer Portal w Ustawieniach. Dostęp zostaje do końca opłaconego okresu."
+      }
+    },
     "cta": {
-      "title": "Gotowy, by przestać wydawać bezmyślnie?",
-      "subtitle": "Dołącz do Lyamo i zbuduj budżet, któremu naprawdę ufasz.",
-      "button": "Utwórz darmowe konto"
+      "title": "Przestań zgadywać. Zacznij wiedzieć.",
+      "subtitle": "Załóż darmowe konto, ustaw dzień wypłaty i zobacz pierwszy czytelny cykl.",
+      "button": "Utwórz darmowe konto",
+      "trustLine": "Bez karty · Płatne plany anulujesz w Stripe kiedy chcesz"
+    },
+    "shot": {
+      "missing": "Screenshot wkrótce"
     }
   },
   "dashboard": {
@@ -768,8 +880,8 @@
   },
   "seo": {
     "home": {
-      "title": "Lyamo — śledzenie wydatków z AI",
-      "description": "Śledź wydatki, skanuj paragony AI i otrzymuj uczciwe wskazówki finansowe. Wsparcie wielowalutowe: PLN, EUR, GBP i USD."
+      "title": "Lyamo — wiedz, ile możesz wydać do wypłaty",
+      "description": "Śledź wydatki w cyklu wypłaty, skanuj paragony AI i pytaj asystenta o budżet. PLN, EUR, GBP, USD. Zacznij za darmo — bez konta bankowego."
     },
     "contact": {
       "title": "Kontakt",

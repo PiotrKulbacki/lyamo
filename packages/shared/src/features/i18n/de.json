@@ -343,7 +343,8 @@
       "history": "Verlauf",
       "scanner": "Scanner",
       "chat": "KI-Chat",
-      "settings": "Einstellungen"
+      "settings": "Einstellungen",
+      "faq": "FAQ"
     },
     "footer": {
       "copyright": "© {{year}} Lyamo. Alle Rechte vorbehalten.",
@@ -362,66 +363,177 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Schluss mit Ausgeben auf Autopilot",
-      "title": "Übernehmen Sie die Kontrolle über Ihr Geld",
-      "subtitle": "Lyamo hilft Ihnen, jeden Einkauf zu verfolgen, Belege mit KI zu scannen und ehrliche Einblicke zu erhalten — damit Sie aufhören, Geld links und rechts auszugeben.",
+      "eyebrow": "Ausgabenkontrolle mit KI",
+      "title": "Wisse, was du noch ausgeben kannst — bis zum nächsten Gehalt.",
+      "subtitle": "Lyamo macht aus Belegen und Käufen ein klares Budget: ausgegeben, übrig und Tagesbudget. KI scannt Belege und antwortet mit deinen Zahlen — ohne Bankverbindung.",
       "ctaPrimary": "Kostenlos starten",
-      "ctaSecondary": "Anmelden"
+      "ctaSecondary": "So funktioniert’s",
+      "trustLine": "Keine Karte · Volles Dashboard · Free-Plan inklusive"
     },
-    "features": {
-      "title": "Alles, was Sie für die Kontrolle brauchen",
-      "subtitle": "Vom Belegscanner bis zum prädiktiven KI-Chat — für alle, die Klarheit statt Tabellen wollen.",
-      "scanner": {
-        "title": "KI-Belegscanner",
-        "description": "Foto machen, Entwurf prüfen und speichern — ohne manuelles Tippen."
+    "why": {
+      "title": "Kein weiteres Ausgabennotizbuch. Kontrolle bis zum Gehalt.",
+      "subtitle": "Entscheidungen für heute — nicht nur die Historie der letzten Woche.",
+      "cycle": {
+        "title": "Budget von Gehalt zu Gehalt",
+        "description": "Lege den Starttag des Zyklus fest. Sieh Restbudget und Tageslimit — ohne Raten bis zum 1."
       },
-      "chat": {
-        "title": "Prädiktiver KI-Chat",
-        "description": "Fragen Sie Ihren Assistenten zu Ausgabenmustern basierend auf Ihren echten Daten."
+      "scanner": {
+        "title": "Beleg → Kategorien in Sekunden",
+        "description": "Foto, KI-Entwurf, optionaler Split nach Kategorie. Kein Abtippen von Positionen."
+      },
+      "ai": {
+        "title": "KI, die deine Zahlen kennt",
+        "description": "Chat und Insights nutzen Budget, Fixkosten und Limits — keine allgemeinen Internettipps."
+      }
+    },
+    "dashboard": {
+      "title": "Dein Gehaltszyklus. Auf einen Blick.",
+      "subtitle": "Summen, Restbudget, Tagesdurchschnitte und Kategorien — synchron.",
+      "eyebrow": "Dashboard"
+    },
+    "scanner": {
+      "title": "Dein Beleg erledigt die Arbeit.",
+      "subtitle": "Foto → KI-Entwurf → Speichern. Optional Positionen aufteilen, damit Charts und Limits stimmen.",
+      "placeholder": "feature-scanner-split.webp hinzufügen, um diesen Screen zu zeigen",
+      "eyebrow": "Belegscanner"
+    },
+    "ai": {
+      "title": "Ein Assistent, der mit deinen Daten rechnet.",
+      "subtitle": "Frag nach Mustern, Limits oder „was wäre, wenn ich X kaufe?“. Antworten mit Budget, Fixkosten und Tagen bis zum Gehalt.",
+      "eyebrow": "KI-Assistent"
+    },
+    "control": {
+      "title": "Limits dort, wo Ausgaben oft ausreißen.",
+      "subtitle": "Kategorielimits setzen. Historie Zyklus für Zyklus. Fixkosten in einer Summe.",
+      "limits": {
+        "title": "Kategorielimits",
+        "description": "Fortschrittsbalken im Dashboard, bevor du den Plan überschreitest."
+      },
+      "history": {
+        "title": "Historie & Fixkosten",
+        "description": "Einträge bearbeiten, Beleg-Splits gruppieren, Abos in die Summe einrechnen."
       },
       "currency": {
-        "title": "Multi-Währungsunterstützung",
-        "description": "Verfolgen Sie PLN, EUR, GBP und USD — alles in Ihre Hauptwährung umgerechnet."
+        "title": "PLN, EUR, GBP, USD",
+        "description": "Buchungen in unterstützten Währungen — Ansicht in deiner Hauptwährung."
+      }
+    },
+    "mobile": {
+      "title": "Dasselbe Lyamo im Handy-Browser.",
+      "subtitle": "Budget, Scanner und Assistent — ohne native App-Installation.",
+      "placeholder": "mobile-dashboard.webp hinzufügen, um diesen Screen zu zeigen",
+      "eyebrow": "Am Handy"
+    },
+    "trust": {
+      "title": "Deine Finanzen. Deine Daten. Kein Bank-Login.",
+      "subtitle": "Für EU-Privatsphäre gebaut — du behältst die Kontrolle.",
+      "noBank": {
+        "title": "Keine Bankverbindung",
+        "description": "Ausgaben manuell oder per Belegscan. Keine Verbindung zum Bankkonto."
+      },
+      "privacy": {
+        "title": "Privatsphäre & Einwilligung",
+        "description": "Cookie-Einstellungen, Datenschutz, AGB und Impressum — klar erreichbar."
+      },
+      "payments": {
+        "title": "Zahlungen über Stripe",
+        "description": "Checkout und Abo-Verwaltung im Stripe Customer Portal."
+      },
+      "account": {
+        "title": "Dein Konto, deine Wahl",
+        "description": "E-Mail-Verifizierung, Passwort-Reset und vollständige Kontolöschung in den Einstellungen."
       }
     },
     "pricing": {
-      "title": "Einfache, transparente Preise",
-      "subtitle": "Kostenlos starten. Upgraden, wenn Sie mehr KI-Leistung brauchen.",
+      "title": "Einfache Preise. Volles Dashboard schon im Free-Plan.",
+      "subtitle": "Zahle für mehr KI und längeres Foto-Archiv — nicht für grundlegende Ausgabenkontrolle.",
       "perMonth": "/ Monat",
+      "featured": "Empfohlen",
       "free": {
         "pricePln": "0 PLN / Monat",
         "priceEur": "0 € / Monat",
         "priceGbp": "0 £ / Monat",
         "priceUsd": "0 $ / Monat",
-        "feature1": "5 Belegscans pro Monat",
-        "feature2": "10 KI-Chat-Nachrichten pro Monat",
-        "feature3": "Vollständiges Ausgaben-Dashboard",
-        "feature4": "Keine Speicherung von Belegfotos",
+        "feature1": "Volles Dashboard, Budget & Kategorielimits",
+        "feature2": "5 KI-Belegscans pro Monat",
+        "feature3": "10 KI-Chat-Nachrichten pro Monat",
+        "feature4": "PLN, EUR, GBP & USD · kein Foto-Archiv",
         "cta": "Kostenlos starten"
       },
       "pro": {
         "discount": "{{percent}}% Rabatt",
-        "promoCodeBadge": "Code {{code}} an der Kasse eingeben für {{percent}}% Rabatt!",
-        "feature1": "50 Belegscans pro Monat",
-        "feature2": "50 KI-Chat-Nachrichten pro Monat",
-        "feature3": "Belegfotos 60 Tage gespeichert",
-        "feature4": "Prioritäts-Support",
-        "cta": "Pro wählen"
+        "promoCodeBadge": "Code {{code}} an der Kasse für {{percent}}% Rabatt!",
+        "feature1": "Alles aus Free",
+        "feature2": "50 Belegscans pro Monat",
+        "feature3": "50 KI-Chat-Nachrichten pro Monat",
+        "feature4": "Belegfotos 60 Tage gespeichert",
+        "cta": "Auf Pro wechseln"
       },
       "premium": {
         "discount": "{{percent}}% Rabatt",
-        "promoCodeBadge": "Code {{code}} an der Kasse eingeben für {{percent}}% Rabatt!",
-        "feature1": "120 Belegscans pro Monat",
-        "feature2": "250 KI-Chat-Nachrichten pro Monat",
-        "feature3": "Belegfotos 12 Monate gespeichert",
-        "feature4": "Prioritäts-Support",
-        "cta": "Premium wählen"
+        "promoCodeBadge": "Code {{code}} an der Kasse für {{percent}}% Rabatt!",
+        "feature1": "Alles aus Pro",
+        "feature2": "120 Belegscans pro Monat",
+        "feature3": "250 KI-Chat-Nachrichten pro Monat",
+        "feature4": "Belegfotos 12 Monate gespeichert",
+        "cta": "Auf Premium wechseln"
+      }
+    },
+    "faq": {
+      "title": "Fragen vor der Registrierung",
+      "bank": {
+        "q": "Verbindet sich Lyamo mit meiner Bank?",
+        "a": "Nein. Du erfasst Ausgaben manuell oder scannt Belege. Es gibt keine Open-Banking-Verbindung."
+      },
+      "free": {
+        "q": "Kann ich kostenlos starten?",
+        "a": "Ja. Der Free-Plan enthält das volle Dashboard, 5 Belegscans und 10 KI-Nachrichten pro Monat."
+      },
+      "scanner": {
+        "q": "Wie funktioniert der Belegscanner?",
+        "a": "Du lädst ein Foto hoch. Die KI erstellt einen Entwurf (Betrag, Datum, Kategorien). Du prüfst und bestätigst — nichts wird ohne deine Entscheidung gespeichert."
+      },
+      "split": {
+        "q": "Was ist ein Beleg-Split?",
+        "a": "Ein Beleg kann auf mehrere Kategorien aufgeteilt werden (z. B. Lebensmittel und Haushalt), damit Charts und Limits stimmen."
+      },
+      "cycle": {
+        "q": "Worin unterscheidet sich der Lyamo-Zyklus vom Kalendermonat?",
+        "a": "Du legst einen Starttag fest (z. B. Gehaltstag). Budget, Durchschnitte und Limits gelten für diesen Abrechnungszyklus."
+      },
+      "currency": {
+        "q": "Welche Währungen werden unterstützt?",
+        "a": "PLN, EUR, GBP und USD — mit Umrechnung in deine Hauptwährung."
+      },
+      "chat": {
+        "q": "Sieht der KI-Assistent meine Ausgaben?",
+        "a": "Ja, im nötigen Umfang: Summen, Budget, Fixkosten, Limits und letzte Transaktionen. Kein generischer Chatbot."
+      },
+      "photos": {
+        "q": "Wo werden Belegfotos gespeichert?",
+        "a": "Im Free-Plan nicht dauerhaft. Bei Pro bis 60 Tage, bei Premium bis 12 Monate — im Scanner-Archiv."
+      },
+      "delete": {
+        "q": "Kann ich Konto und Daten löschen?",
+        "a": "Ja — in den Einstellungen (Gefahrenzone). Inaktive Konten werden gemäß Aufbewahrungspolitik entfernt."
+      },
+      "mobile": {
+        "q": "Gibt es eine mobile App?",
+        "a": "Lyamo funktioniert im Handy-Browser (responsiv). Eine vollständige native Ausgaben-App gibt es noch nicht."
+      },
+      "cancel": {
+        "q": "Wie kündige ich ein Abo?",
+        "a": "Über das Stripe Customer Portal in den Einstellungen. Zugang bleibt bis zum Ende des bezahlten Zeitraums."
       }
     },
     "cta": {
-      "title": "Bereit, gedankenlos auszugeben aufzuhören?",
-      "subtitle": "Treten Sie Lyamo bei und bauen Sie ein Budget, dem Sie wirklich vertrauen.",
-      "button": "Kostenloses Konto erstellen"
+      "title": "Hör auf zu raten. Fang an zu wissen.",
+      "subtitle": "Kostenloses Konto anlegen, Gehaltstag setzen und den ersten klaren Zyklus sehen.",
+      "button": "Kostenloses Konto erstellen",
+      "trustLine": "Keine Karte · Bezahlte Pläne jederzeit in Stripe kündbar"
+    },
+    "shot": {
+      "missing": "Screenshot folgt"
     }
   },
   "dashboard": {
@@ -766,8 +878,8 @@
   },
   "seo": {
     "home": {
-      "title": "Lyamo — KI-Ausgabenkontrolle",
-      "description": "Verfolgen Sie Ausgaben, scannen Sie Belege mit KI und erhalten Sie ehrliche Finanzeinblicke. Mehrwährungsunterstützung für PLN, EUR, GBP und USD."
+      "title": "Lyamo — wisse, was du bis zum Gehalt ausgeben kannst",
+      "description": "Ausgaben im Gehaltszyklus tracken, Belege mit KI scannen und den Assistenten zu deinem Budget fragen. PLN, EUR, GBP, USD. Kostenlos starten — ohne Bankverbindung."
     },
     "contact": {
       "title": "Kontakt",
