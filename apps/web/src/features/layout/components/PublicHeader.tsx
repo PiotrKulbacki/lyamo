@@ -30,6 +30,9 @@ export function PublicHeader() {
           <Link href="/#pricing" className="nav-link">
             {t('layout.nav.pricing')}
           </Link>
+          <Link href="/#faq" className="nav-link">
+            {t('layout.nav.faq')}
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -72,6 +75,13 @@ export function PublicHeader() {
                 onClick={closeMobileMenu}
               >
                 {t('layout.nav.pricing')}
+              </Link>
+              <Link
+                href="/#faq"
+                className="text-muted hover:bg-elevated/50 rounded-lg px-3 py-2.5 font-mono text-sm transition hover:text-[var(--text)]"
+                onClick={closeMobileMenu}
+              >
+                {t('layout.nav.faq')}
               </Link>
             </nav>
 

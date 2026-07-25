@@ -107,6 +107,7 @@ describe('chat-context', () => {
       financialMonthStartDay: 21,
       cycleStartIso: '2026-07-21',
       cycleEndIso: '2026-08-20',
+      daysUntilPayday: 31,
       daysRemainingInCycle: 30,
     });
 
@@ -122,6 +123,7 @@ describe('chat-context', () => {
       financialMonthStartDay: 12,
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
+      daysUntilPayday: 30,
       daysRemainingInCycle: 29,
     });
 
@@ -143,6 +145,7 @@ describe('chat-context', () => {
       financialMonthStartDay: 12,
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
+      daysUntilPayday: 30,
       daysRemainingInCycle: 29,
     });
 
@@ -170,6 +173,7 @@ describe('chat-context', () => {
       financialMonthStartDay: 12,
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
+      daysUntilPayday: 30,
       daysRemainingInCycle: 29,
     });
 
@@ -228,6 +232,7 @@ describe('chat-context', () => {
         financialMonthStartDay: 12,
         cycleStartIso: '2026-07-12',
         cycleEndIso: '2026-08-11',
+        daysUntilPayday: 30,
         daysRemainingInCycle: 29,
       },
       {
@@ -258,6 +263,7 @@ describe('chat-context', () => {
         financialMonthStartDay: 1,
         cycleStartIso: '2026-07-01',
         cycleEndIso: '2026-07-31',
+        daysUntilPayday: 18,
         daysRemainingInCycle: 17,
       },
       resolveActiveMonthlyBudget({
@@ -272,18 +278,25 @@ describe('chat-context', () => {
     expect(afterDashboardEdit).toContain('takes priority over general default settings');
   });
 
-  it('embeds daysRemainingInCycle and forbids fixed 30/31-day assumptions', () => {
+  it('embeds daysUntilPayday as authoritative and forbids stale/fixed day counts', () => {
     const context = aggregateFinancialContext('2026-07-12 to 2026-08-11', [], []);
     const prompt = buildChatSystemPrompt(context, 'pl', {
       todayIso: '2026-07-14',
       financialMonthStartDay: 12,
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
+      daysUntilPayday: 29,
       daysRemainingInCycle: 28,
     });
 
-    expect(prompt).toContain('Days remaining until the end of the current billing cycle: 28.');
-    expect(prompt).toContain('Do NOT use fixed values such as 30 or 31 days');
+    expect(prompt).toContain(
+      'Days until payday (AUTHORITATIVE for "until payday", "do wypłaty", daily living, affordability): 29.'
+    );
+    expect(prompt).toContain(
+      'Days remaining until billing cycle end date (day before payday — informational only, NEVER cite this for payday/living questions): 28.'
+    );
+    expect(prompt).toContain('never a number from earlier chat messages');
+    expect(prompt).toContain('never fixed values such as 28, 30, or 31');
   });
 
   describe('dashboard budget summary', () => {
@@ -319,6 +332,7 @@ describe('chat-context', () => {
         financialMonthStartDay: 12,
         cycleStartIso: '2026-07-12',
         cycleEndIso: '2026-08-11',
+        daysUntilPayday: 29,
         daysRemainingInCycle: 28,
       });
 
@@ -327,6 +341,7 @@ describe('chat-context', () => {
       expect(prompt).toContain('"fixedCostsTotal": 985');
       expect(prompt).toContain('"remainingBudget": 871.55');
       expect(prompt).toContain('"daysUntilPayday": 29');
+      expect(prompt).toContain('cite daysUntilPayday=29');
       expect(prompt).toContain('CRITICAL DEFAULTS');
       expect(prompt).toContain('never answer using transactionsSpentPrimary alone');
       expect(prompt).toContain('avgRemainingPerDay');
@@ -349,6 +364,7 @@ describe('chat-context', () => {
         financialMonthStartDay: 12,
         cycleStartIso: '2026-07-12',
         cycleEndIso: '2026-08-11',
+        daysUntilPayday: 29,
         daysRemainingInCycle: 28,
       });
 
@@ -377,10 +393,13 @@ describe('chat-context', () => {
       financialMonthStartDay: 12,
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
+      daysUntilPayday: 0,
       daysRemainingInCycle: 0,
     });
 
-    expect(prompt).toContain('Days remaining until the end of the current billing cycle: 0.');
+    expect(prompt).toContain(
+      'Days until payday (AUTHORITATIVE for "until payday", "do wypłaty", daily living, affordability): 0.'
+    );
     expect(prompt).toContain('do not divide by zero');
   });
 });

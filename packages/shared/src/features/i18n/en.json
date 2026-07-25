@@ -343,7 +343,8 @@
       "history": "History",
       "scanner": "Scanner",
       "chat": "AI Chat",
-      "settings": "Settings"
+      "settings": "Settings",
+      "faq": "FAQ"
     },
     "footer": {
       "copyright": "© {{year}} Lyamo. All rights reserved.",
@@ -362,66 +363,177 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Stop spending on autopilot",
-      "title": "Take back control of your money",
-      "subtitle": "Lyamo helps you track every purchase, scan receipts with AI, and get honest insights — so you stop bleeding cash left and right.",
+      "eyebrow": "Expense control with AI",
+      "title": "Know what you can still spend — until payday.",
+      "subtitle": "Lyamo turns receipts and purchases into a clear budget: what’s spent, what’s left, and how much you can spend per day. AI scans receipts and answers from your numbers — no bank connection.",
       "ctaPrimary": "Start for free",
-      "ctaSecondary": "Log in"
+      "ctaSecondary": "See how it works",
+      "trustLine": "No card required · Full dashboard · Free plan included"
     },
-    "features": {
-      "title": "Everything you need to stay in control",
-      "subtitle": "From receipt scanning to predictive AI chat — built for people who want clarity, not spreadsheets.",
-      "scanner": {
-        "title": "AI Receipt Scanner",
-        "description": "Snap a photo, review the draft, and save — no manual typing."
+    "why": {
+      "title": "Not another expense notepad. Control until payday.",
+      "subtitle": "See decisions for today — not only last week’s history.",
+      "cycle": {
+        "title": "Budget from payday to payday",
+        "description": "Set your cycle start day. See remaining budget and your daily allowance — no guessing if you’ll make it to the 1st."
       },
-      "chat": {
-        "title": "Predictive AI Chat",
-        "description": "Ask your assistant about spending patterns based on your real data."
+      "scanner": {
+        "title": "Receipt → categories in seconds",
+        "description": "Snap a photo, review the AI draft, optionally split by category. No retyping line items."
+      },
+      "ai": {
+        "title": "AI that knows your numbers",
+        "description": "Chat and insights use your budget, fixed costs, and category limits — not generic internet advice."
+      }
+    },
+    "dashboard": {
+      "title": "Your payday cycle. One glance.",
+      "subtitle": "Totals, remaining budget, daily averages, and categories — kept in sync.",
+      "eyebrow": "Dashboard"
+    },
+    "scanner": {
+      "title": "Your receipt does the work.",
+      "subtitle": "Photo → AI draft → save. Optionally split items across categories so charts and limits stay accurate.",
+      "placeholder": "Add feature-scanner-split.webp to show this screen",
+      "eyebrow": "Receipt scanner"
+    },
+    "ai": {
+      "title": "An assistant that calculates on your data.",
+      "subtitle": "Ask about patterns, limits, or “what if I buy X?”. Answers use your budget, fixed costs, and days until payday.",
+      "eyebrow": "AI assistant"
+    },
+    "control": {
+      "title": "Limits where spending usually slips.",
+      "subtitle": "Set category caps. Browse history cycle by cycle. Keep recurring bills in one total.",
+      "limits": {
+        "title": "Category limits",
+        "description": "Progress bars on the dashboard before you overshoot the plan."
+      },
+      "history": {
+        "title": "Full history & fixed costs",
+        "description": "Edit entries, group receipt splits, and include subscriptions in your total."
       },
       "currency": {
-        "title": "Multi-currency support",
-        "description": "Track PLN, EUR, GBP, and USD — all converted to your primary currency."
+        "title": "PLN, EUR, GBP, USD",
+        "description": "Log in any supported currency — view everything in your primary currency."
+      }
+    },
+    "mobile": {
+      "title": "The same Lyamo in your phone browser.",
+      "subtitle": "Budget, scanner, and assistant — no native app install required.",
+      "placeholder": "Add mobile-dashboard.webp to show this screen",
+      "eyebrow": "On your phone"
+    },
+    "trust": {
+      "title": "Your finances. Your data. No bank login.",
+      "subtitle": "Built for EU privacy expectations — you stay in control.",
+      "noBank": {
+        "title": "No bank connection",
+        "description": "Add expenses manually or scan receipts. Nothing links to your bank account."
+      },
+      "privacy": {
+        "title": "Privacy & consent",
+        "description": "Cookie preferences, Privacy Policy, Terms, and Impressum — clear and accessible."
+      },
+      "payments": {
+        "title": "Payments via Stripe",
+        "description": "Checkout and subscription management through Stripe Customer Portal."
+      },
+      "account": {
+        "title": "Your account, your choice",
+        "description": "Email verification, password reset, and full account deletion in Settings."
       }
     },
     "pricing": {
-      "title": "Simple, transparent pricing",
-      "subtitle": "Start free. Upgrade when you need more AI power.",
+      "title": "Simple pricing. Full dashboard on Free.",
+      "subtitle": "Pay for more AI and longer photo archive — not for basic expense control.",
       "perMonth": "/ month",
+      "featured": "Featured",
       "free": {
         "pricePln": "0 PLN / month",
         "priceEur": "€0 / month",
         "priceGbp": "£0 / month",
         "priceUsd": "$0 / month",
-        "feature1": "5 receipt scans per month",
-        "feature2": "10 AI chat messages per month",
-        "feature3": "Full expense dashboard",
-        "feature4": "No receipt photo storage",
-        "cta": "Get started free"
+        "feature1": "Full dashboard, budget & category limits",
+        "feature2": "5 AI receipt scans per month",
+        "feature3": "10 AI chat messages per month",
+        "feature4": "PLN, EUR, GBP & USD · no photo archive",
+        "cta": "Start for free"
       },
       "pro": {
         "discount": "{{percent}}% off",
         "promoCodeBadge": "Use code {{code}} at checkout for {{percent}}% off!",
-        "feature1": "50 receipt scans per month",
-        "feature2": "50 AI chat messages per month",
-        "feature3": "Receipt photos kept for 60 days",
-        "feature4": "Priority support",
+        "feature1": "Everything in Free",
+        "feature2": "50 receipt scans per month",
+        "feature3": "50 AI chat messages per month",
+        "feature4": "Receipt photos kept for 60 days",
         "cta": "Go Pro"
       },
       "premium": {
         "discount": "{{percent}}% off",
         "promoCodeBadge": "Use code {{code}} at checkout for {{percent}}% off!",
-        "feature1": "120 receipt scans per month",
-        "feature2": "250 AI chat messages per month",
-        "feature3": "Receipt photos kept for 12 months",
-        "feature4": "Priority support",
+        "feature1": "Everything in Pro",
+        "feature2": "120 receipt scans per month",
+        "feature3": "250 AI chat messages per month",
+        "feature4": "Receipt photos kept for 12 months",
         "cta": "Go Premium"
       }
     },
+    "faq": {
+      "title": "Questions before you sign up",
+      "bank": {
+        "q": "Does Lyamo connect to my bank?",
+        "a": "No. You add expenses manually or scan receipts. There is no Open Banking connection."
+      },
+      "free": {
+        "q": "Can I start for free?",
+        "a": "Yes. The Free plan includes the full dashboard, 5 receipt scans, and 10 AI chat messages per month."
+      },
+      "scanner": {
+        "q": "How does the receipt scanner work?",
+        "a": "You upload a photo. AI prepares a draft (amount, date, categories). You review and confirm — nothing is saved automatically without your decision."
+      },
+      "split": {
+        "q": "What is a receipt split?",
+        "a": "One receipt can be split across categories (e.g. groceries and household) so charts and limits stay accurate."
+      },
+      "cycle": {
+        "q": "How is the Lyamo cycle different from a calendar month?",
+        "a": "You set a start day (e.g. payday). Budget, averages, and limits are calculated for that billing cycle."
+      },
+      "currency": {
+        "q": "Which currencies are supported?",
+        "a": "PLN, EUR, GBP, and USD — with conversion to your primary currency."
+      },
+      "chat": {
+        "q": "Does the AI assistant see my expenses?",
+        "a": "Yes, within what it needs to answer: totals, budget, fixed costs, limits, and recent transactions. It is not a generic chatbot."
+      },
+      "photos": {
+        "q": "Where are receipt photos stored?",
+        "a": "On Free, photos are not kept long-term. On Pro up to 60 days, on Premium up to 12 months — in the scanner archive."
+      },
+      "delete": {
+        "q": "Can I delete my account and data?",
+        "a": "Yes — in Settings (danger zone). Inactive accounts are also removed under our retention policy."
+      },
+      "mobile": {
+        "q": "Is there a mobile app?",
+        "a": "Lyamo works in your phone browser (responsive). A full native expense app is not available yet."
+      },
+      "cancel": {
+        "q": "How do I cancel a subscription?",
+        "a": "Through the Stripe Customer Portal in Settings. You keep access until the end of the paid period."
+      }
+    },
     "cta": {
-      "title": "Ready to stop mindless spending?",
-      "subtitle": "Join Lyamo and build a budget you actually trust.",
-      "button": "Create your free account"
+      "title": "Stop guessing. Start knowing.",
+      "subtitle": "Create a free account, set your payday, and see your first clear cycle.",
+      "button": "Create your free account",
+      "trustLine": "No card required · Cancel paid plans anytime in Stripe"
+    },
+    "shot": {
+      "missing": "Screenshot coming soon"
     }
   },
   "dashboard": {
@@ -766,8 +878,8 @@
   },
   "seo": {
     "home": {
-      "title": "Lyamo — AI expense tracking",
-      "description": "Track spending, scan receipts with AI, and get honest financial insights. Multi-currency support for PLN, EUR, GBP, and USD."
+      "title": "Lyamo — know what you can spend until payday",
+      "description": "Track spending by payday cycle, scan receipts with AI, and ask your assistant about your budget. PLN, EUR, GBP, USD. Start free — no bank connection."
     },
     "contact": {
       "title": "Contact",

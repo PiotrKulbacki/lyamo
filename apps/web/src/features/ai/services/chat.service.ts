@@ -81,6 +81,7 @@ async function fetchFinancialContext(userId: string): Promise<{
     financialMonthStartDay: user.financialMonthStartDay,
     cycleStartIso: toIsoDate(cycleStart),
     cycleEndIso: toIsoDate(cycleEnd),
+    daysUntilPayday: dayMetrics.daysUntilPayday,
     daysRemainingInCycle: dayMetrics.daysRemainingInCycle,
   };
 
