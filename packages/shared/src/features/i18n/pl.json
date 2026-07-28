@@ -373,7 +373,7 @@
       "trustLine": "Bez karty · Pełny dashboard · Plan Free od razu"
     },
     "why": {
-      "title": "Nie kolejny notatnik. System kontroli do wypłaty.",
+      "title": "Nie kolejny notatnik. System kontroli wydatków.",
       "subtitle": "Widzisz decyzje na dziś — nie tylko historię z zeszłego tygodnia.",
       "cycle": {
         "title": "Budżet od wypłaty do wypłaty",
@@ -396,7 +396,6 @@
     "scanner": {
       "title": "Paragon robi robotę za Ciebie.",
       "subtitle": "Zdjęcie → draft AI → zapis. Opcjonalnie rozbij pozycje na kategorie, żeby wykres i limity były prawdziwe.",
-      "placeholder": "Dodaj feature-scanner-split.webp, aby pokazać ten ekran",
       "eyebrow": "Skaner paragonów"
     },
     "ai": {
@@ -413,7 +412,8 @@
       },
       "history": {
         "title": "Historia i koszty stałe",
-        "description": "Edytuj wpisy, grupuj splity paragonów i wliczaj abonamenty w sumę."
+        "description": "Edytuj wpisy, grupuj splity paragonów i wliczaj abonamenty w sumę.",
+        "shotAlt": "Ostatnie transakcje z rozbitym paragonem"
       },
       "currency": {
         "title": "PLN, EUR, GBP, USD",
@@ -423,8 +423,9 @@
     "mobile": {
       "title": "Ten sam Lyamo w przeglądarce na telefonie.",
       "subtitle": "Budżet, skaner i asystent — bez osobnej instalacji natywnej aplikacji.",
-      "placeholder": "Dodaj mobile-dashboard.webp, aby pokazać ten ekran",
-      "eyebrow": "Na telefonie"
+      "eyebrow": "Na telefonie",
+      "budgetAlt": "Pulpit na telefonie — budżet i dni do wypłaty",
+      "categoriesAlt": "Pulpit na telefonie — wydatki wg kategorii"
     },
     "trust": {
       "title": "Twoje finanse. Twoje dane. Bez konta bankowego.",

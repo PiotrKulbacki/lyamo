@@ -371,7 +371,7 @@
       "trustLine": "Sin tarjeta · Dashboard completo · Plan Free incluido"
     },
     "why": {
-      "title": "No otro bloc de gastos. Control hasta la nómina.",
+      "title": "No otro bloc de gastos. Un sistema de control de gastos.",
       "subtitle": "Decisiones para hoy — no solo el historial de la semana pasada.",
       "cycle": {
         "title": "Presupuesto de nómina a nómina",
@@ -394,7 +394,6 @@
     "scanner": {
       "title": "Tu ticket hace el trabajo.",
       "subtitle": "Foto → borrador IA → guardar. Opcionalmente divide partidas para que gráficos y límites sean reales.",
-      "placeholder": "Añade feature-scanner-split.webp para mostrar esta pantalla",
       "eyebrow": "Escáner de tickets"
     },
     "ai": {
@@ -411,7 +410,8 @@
       },
       "history": {
         "title": "Historial y gastos fijos",
-        "description": "Edita entradas, agrupa splits de tickets e incluye suscripciones en el total."
+        "description": "Edita entradas, agrupa splits de tickets e incluye suscripciones en el total.",
+        "shotAlt": "Transacciones recientes con ticket dividido"
       },
       "currency": {
         "title": "PLN, EUR, GBP, USD",
@@ -421,8 +421,9 @@
     "mobile": {
       "title": "El mismo Lyamo en el navegador del móvil.",
       "subtitle": "Presupuesto, escáner y asistente — sin instalar una app nativa.",
-      "placeholder": "Añade mobile-dashboard.webp para mostrar esta pantalla",
-      "eyebrow": "En el móvil"
+      "eyebrow": "En el móvil",
+      "budgetAlt": "Dashboard móvil — presupuesto y días hasta la nómina",
+      "categoriesAlt": "Dashboard móvil — gastos por categoría"
     },
     "trust": {
       "title": "Tus finanzas. Tus datos. Sin login bancario.",

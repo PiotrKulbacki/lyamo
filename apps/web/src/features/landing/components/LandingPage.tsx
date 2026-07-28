@@ -177,8 +177,7 @@ export function LandingPage() {
 
           <div className="animate-in fade-in slide-in-from-bottom-4 mx-auto mt-14 max-w-5xl duration-1000">
             <ProductShot
-              src={MARKETING_SHOTS.heroDashboard.src}
-              available={MARKETING_SHOTS.heroDashboard.available}
+              src={MARKETING_SHOTS.heroDashboard}
               alt={t('landing.dashboard.title')}
               priority
               aspectClassName="aspect-[16/9.5]"
@@ -228,8 +227,7 @@ export function LandingPage() {
               </p>
             </div>
             <ProductShot
-              src={MARKETING_SHOTS.heroDashboard.src}
-              available={MARKETING_SHOTS.heroDashboard.available}
+              src={MARKETING_SHOTS.heroDashboard}
               alt={t('landing.dashboard.title')}
               aspectClassName="aspect-[16/10]"
             />
@@ -241,12 +239,14 @@ export function LandingPage() {
       <section id="scanner" className="border-y border-[var(--border)] py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-            <div className="order-2 lg:order-1">
+            <div className="order-2 mx-auto w-full max-w-sm lg:order-1 lg:mx-0">
               <ProductShot
-                src={MARKETING_SHOTS.featureScannerSplit.src}
-                available={MARKETING_SHOTS.featureScannerSplit.available}
+                src={MARKETING_SHOTS.featureScannerSplit}
                 alt={t('landing.scanner.title')}
-                aspectClassName="aspect-[16/10]"
+                aspectClassName="aspect-[9/16]"
+                frameClassName="rounded-[1.75rem]"
+                objectFit="contain"
+                showChrome={false}
               />
             </div>
             <div className="order-1 lg:order-2">
@@ -278,8 +278,7 @@ export function LandingPage() {
               <p className="text-muted mt-4 text-base leading-7">{t('landing.ai.subtitle')}</p>
             </div>
             <ProductShot
-              src={MARKETING_SHOTS.featureAiChat.src}
-              available={MARKETING_SHOTS.featureAiChat.available}
+              src={MARKETING_SHOTS.featureAiChat}
               alt={t('landing.ai.title')}
               aspectClassName="aspect-[16/11]"
             />
@@ -309,30 +308,49 @@ export function LandingPage() {
               </article>
             ))}
           </div>
+          <div className="mx-auto mt-12 max-w-xl">
+            <ProductShot
+              src={MARKETING_SHOTS.featureHistorySplit}
+              alt={t('landing.control.history.shotAlt')}
+              aspectClassName="aspect-[5/6]"
+              objectFit="contain"
+            />
+          </div>
         </div>
       </section>
 
       {/* Mobile */}
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-            <div>
-              <p className="text-warm mb-3 font-mono text-xs uppercase tracking-[0.2em]">
-                <Smartphone className="mr-2 inline h-3.5 w-3.5" aria-hidden />
-                {t('landing.mobile.eyebrow')}
-              </p>
-              <h2 className="font-display text-3xl font-bold tracking-tight text-[var(--text)]">
-                {t('landing.mobile.title')}
-              </h2>
-              <p className="text-muted mt-4 text-base leading-7">{t('landing.mobile.subtitle')}</p>
-            </div>
-            <div className="mx-auto w-full max-w-sm">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-warm mb-3 font-mono text-xs uppercase tracking-[0.2em]">
+              <Smartphone className="mr-2 inline h-3.5 w-3.5" aria-hidden />
+              {t('landing.mobile.eyebrow')}
+            </p>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-[var(--text)]">
+              {t('landing.mobile.title')}
+            </h2>
+            <p className="text-muted mt-4 text-base leading-7">{t('landing.mobile.subtitle')}</p>
+          </div>
+          <div className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-start">
+            <div className="w-full max-w-[280px]">
               <ProductShot
-                src={MARKETING_SHOTS.mobileDashboard.src}
-                available={MARKETING_SHOTS.mobileDashboard.available}
-                alt={t('landing.mobile.title')}
+                src={MARKETING_SHOTS.mobileDashboard}
+                alt={t('landing.mobile.budgetAlt')}
                 aspectClassName="aspect-[9/16]"
                 frameClassName="rounded-[1.75rem]"
+                objectFit="contain"
+                showChrome={false}
+              />
+            </div>
+            <div className="w-full max-w-[280px] sm:mt-8">
+              <ProductShot
+                src={MARKETING_SHOTS.mobileDashboardCategories}
+                alt={t('landing.mobile.categoriesAlt')}
+                aspectClassName="aspect-[9/16]"
+                frameClassName="rounded-[1.75rem]"
+                objectFit="contain"
+                showChrome={false}
               />
             </div>
           </div>
