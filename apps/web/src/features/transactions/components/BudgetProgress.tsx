@@ -49,25 +49,33 @@ export function BudgetProgress({
   const [editValue, setEditValue] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
+  const dailyStatsSection = (
+    <DashboardDailyStats
+      avgSpentPerDay={dailyStats.avgSpentPerDay}
+      avgRemainingPerDay={dailyStats.avgRemainingPerDay}
+      cycleEnded={dailyStats.cycleEnded}
+      primaryCurrency={primaryCurrency}
+      locale={locale}
+    />
+  );
+
   const paydaySection = (
-    <div className="space-y-3">
-      <DashboardDailyStats
-        avgSpentPerDay={dailyStats.avgSpentPerDay}
-        avgRemainingPerDay={dailyStats.avgRemainingPerDay}
-        cycleEnded={dailyStats.cycleEnded}
-        primaryCurrency={primaryCurrency}
-        locale={locale}
-      />
-      <PaydayDaysProgress
-        daysUntilPayday={paydayMetrics.daysUntilPayday}
-        totalDays={paydayMetrics.totalDays}
-        daysFilled={paydayMetrics.daysFilled}
-      />
-    </div>
+    <PaydayDaysProgress
+      daysUntilPayday={paydayMetrics.daysUntilPayday}
+      totalDays={paydayMetrics.totalDays}
+      daysFilled={paydayMetrics.daysFilled}
+    />
   );
 
   if (currentMonthBudget == null || currentMonthBudget <= 0) {
-    return <div className="mt-4">{paydaySection}</div>;
+    return (
+      <div className="mt-4 flex min-h-0 flex-1 flex-col lg:block lg:flex-none">
+        <div className="flex flex-1 flex-col justify-center lg:flex-none lg:justify-start">
+          {dailyStatsSection}
+        </div>
+        <div className="mt-3">{paydaySection}</div>
+      </div>
+    );
   }
 
   const budget = currentMonthBudget;
@@ -117,7 +125,7 @@ export function BudgetProgress({
   }
 
   return (
-    <div className="mt-4 space-y-2">
+    <div className="mt-4 flex min-h-0 flex-1 flex-col space-y-2 lg:block lg:flex-none">
       {isRefreshing ? (
         <div className="space-y-2" aria-hidden>
           <div className="flex justify-between">
@@ -188,7 +196,12 @@ export function BudgetProgress({
           </div>
         </>
       )}
-      {paydaySection}
+      <div className="flex min-h-0 flex-1 flex-col lg:mt-0 lg:block lg:flex-none">
+        <div className="flex flex-1 flex-col justify-center py-3 lg:flex-none lg:justify-start lg:py-0">
+          {dailyStatsSection}
+        </div>
+        <div className="mt-auto lg:mt-3">{paydaySection}</div>
+      </div>
     </div>
   );
 }

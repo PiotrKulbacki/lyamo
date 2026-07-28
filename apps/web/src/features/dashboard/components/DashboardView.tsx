@@ -417,7 +417,7 @@ export function DashboardView({ initialDashboardData, initialScanQuota }: Dashbo
       )}
 
       <section className="grid items-stretch gap-4 sm:grid-cols-2">
-        <article className="panel relative z-10 h-full p-6">
+        <article className="panel relative z-10 flex h-full flex-col p-6">
           <p className="text-muted relative z-10 text-sm font-medium">
             {t('dashboard.summary.totalSpent')}
             {customRangeLabel ? (
