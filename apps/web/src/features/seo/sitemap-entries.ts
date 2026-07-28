@@ -35,7 +35,7 @@ export function buildSitemapXml(): string {
   ];
 
   for (const item of PUBLIC_PATHS) {
-    const loc = item.path === '/' ? baseUrl : `${baseUrl}${item.path}`;
+    const loc = item.path === '/' ? `${baseUrl}/` : `${baseUrl}${item.path}`;
     lines.push('<url>');
     lines.push(`<loc>${escapeXml(loc)}</loc>`);
     lines.push(`<lastmod>${lastmod}</lastmod>`);
