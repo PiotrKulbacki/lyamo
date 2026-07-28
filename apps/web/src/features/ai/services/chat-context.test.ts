@@ -3,6 +3,7 @@ import {
   aggregateFinancialContext,
   buildChatSystemPrompt,
   buildDashboardBudgetSummary,
+  buildPaydayAuthorityReminder,
   financialContextFromPeriodSnapshot,
   resolveActiveMonthlyBudget,
 } from '@web/features/ai/services/chat-context';
@@ -108,7 +109,6 @@ describe('chat-context', () => {
       cycleStartIso: '2026-07-21',
       cycleEndIso: '2026-08-20',
       daysUntilPayday: 31,
-      daysRemainingInCycle: 30,
     });
 
     expect(prompt).toContain(receiptGroupId);
@@ -124,7 +124,6 @@ describe('chat-context', () => {
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
       daysUntilPayday: 30,
-      daysRemainingInCycle: 29,
     });
 
     expect(context.totalSpentThisCycle).toBe(0);
@@ -146,7 +145,6 @@ describe('chat-context', () => {
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
       daysUntilPayday: 30,
-      daysRemainingInCycle: 29,
     });
 
     expect(prompt).toContain('"category": "Groceries"');
@@ -174,7 +172,6 @@ describe('chat-context', () => {
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
       daysUntilPayday: 30,
-      daysRemainingInCycle: 29,
     });
 
     expect(prompt).toContain('Category spending limits for this cycle');
@@ -233,7 +230,6 @@ describe('chat-context', () => {
         cycleStartIso: '2026-07-12',
         cycleEndIso: '2026-08-11',
         daysUntilPayday: 30,
-        daysRemainingInCycle: 29,
       },
       {
         amount: 2500,
@@ -264,7 +260,6 @@ describe('chat-context', () => {
         cycleStartIso: '2026-07-01',
         cycleEndIso: '2026-07-31',
         daysUntilPayday: 18,
-        daysRemainingInCycle: 17,
       },
       resolveActiveMonthlyBudget({
         currentMonthBudget: 1800,
@@ -286,17 +281,17 @@ describe('chat-context', () => {
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
       daysUntilPayday: 29,
-      daysRemainingInCycle: 28,
     });
 
     expect(prompt).toContain(
-      'Days until payday (AUTHORITATIVE for "until payday", "do wypłaty", daily living, affordability): 29.'
+      'Days until payday (AUTHORITATIVE — same value as the dashboard "days until payday" bar): 29.'
     );
-    expect(prompt).toContain(
-      'Days remaining until billing cycle end date (day before payday — informational only, NEVER cite this for payday/living questions): 28.'
-    );
-    expect(prompt).toContain('never a number from earlier chat messages');
-    expect(prompt).toContain('never fixed values such as 28, 30, or 31');
+    expect(prompt).not.toContain('daysRemainingInCycle');
+    expect(prompt).not.toContain('billing cycle end date');
+    expect(prompt).toContain('never reuse day counts from earlier chat messages');
+    expect(prompt).toContain('never use fixed values such as 28, 30, or 31');
+    expect(buildPaydayAuthorityReminder(15)).toContain('daysUntilPayday=15');
+    expect(buildPaydayAuthorityReminder(15)).toContain('use 15 only');
   });
 
   describe('dashboard budget summary', () => {
@@ -333,7 +328,6 @@ describe('chat-context', () => {
         cycleStartIso: '2026-07-12',
         cycleEndIso: '2026-08-11',
         daysUntilPayday: 29,
-        daysRemainingInCycle: 28,
       });
 
       expect(prompt).toContain('Dashboard budget summary');
@@ -365,7 +359,6 @@ describe('chat-context', () => {
         cycleStartIso: '2026-07-12',
         cycleEndIso: '2026-08-11',
         daysUntilPayday: 29,
-        daysRemainingInCycle: 28,
       });
 
       const summary = context.budgetSummary!;
@@ -394,11 +387,10 @@ describe('chat-context', () => {
       cycleStartIso: '2026-07-12',
       cycleEndIso: '2026-08-11',
       daysUntilPayday: 0,
-      daysRemainingInCycle: 0,
     });
 
     expect(prompt).toContain(
-      'Days until payday (AUTHORITATIVE for "until payday", "do wypłaty", daily living, affordability): 0.'
+      'Days until payday (AUTHORITATIVE — same value as the dashboard "days until payday" bar): 0.'
     );
     expect(prompt).toContain('do not divide by zero');
   });

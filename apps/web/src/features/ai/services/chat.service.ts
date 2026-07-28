@@ -14,12 +14,14 @@ import {
 import { env } from '@web/env';
 import {
   buildChatSystemPrompt,
+  buildPaydayAuthorityReminder,
   financialContextFromPeriodSnapshot,
   resolveActiveMonthlyBudget,
   type ActiveMonthlyBudget,
   type FinancialCycleMeta,
 } from '@web/features/ai/services/chat-context';
 import { getOrRefreshPeriodAggregation } from '@web/features/analytics/services/period-aggregation-cache.service';
+import { getPaydayCycleMetrics } from '@web/features/dashboard/lib/payday-cycle-metrics';
 import { getCategoryLimitProgressForUser } from '@web/features/settings/services/category-limits.service';
 import { captureServerException } from '@web/lib/sentry-server';
 import {
@@ -75,14 +77,15 @@ async function fetchFinancialContext(userId: string): Promise<{
   const cycleEnd = getQuotaPeriodEnd(cycleStart);
   const label = `${toIsoDate(cycleStart)} to ${toIsoDate(cycleEnd)}`;
   const dayMetrics = getBillingPeriodDayMetrics(user.financialMonthStartDay, now);
+  // Same source as dashboard PaydayDaysProgress — do not use daysRemainingInCycle here.
+  const paydayMetrics = getPaydayCycleMetrics(user.financialMonthStartDay, now);
 
   const cycleMeta: FinancialCycleMeta = {
     todayIso: toIsoDate(now),
     financialMonthStartDay: user.financialMonthStartDay,
     cycleStartIso: toIsoDate(cycleStart),
     cycleEndIso: toIsoDate(cycleEnd),
-    daysUntilPayday: dayMetrics.daysUntilPayday,
-    daysRemainingInCycle: dayMetrics.daysRemainingInCycle,
+    daysUntilPayday: paydayMetrics.daysUntilPayday,
   };
 
   const activeBudget = resolveActiveMonthlyBudget({
@@ -134,7 +137,7 @@ async function fetchFinancialContext(userId: string): Promise<{
     {
       currentMonthBudget: user.currentMonthBudget,
       daysElapsed: dayMetrics.daysElapsed,
-      daysUntilPayday: dayMetrics.daysUntilPayday,
+      daysUntilPayday: paydayMetrics.daysUntilPayday,
     },
     categoryLimitProgress.map((limit) => ({
       category: limit.categoryKey,
@@ -152,7 +155,8 @@ async function fetchFinancialContext(userId: string): Promise<{
 async function callOpenAiChat(
   systemPrompt: string,
   history: ChatMessage[],
-  message: string
+  message: string,
+  daysUntilPayday: number
 ): Promise<string> {
   if (!env.OPENAI_API_KEY) {
     throw new Error(CHAT_ERROR_CODES.AI_FAILED);
@@ -161,6 +165,8 @@ async function callOpenAiChat(
   const messages = [
     { role: 'system', content: systemPrompt },
     ...history.map((entry) => ({ role: entry.role, content: entry.content })),
+    // After history so stale "28 days" replies cannot override the live dashboard metric.
+    { role: 'system', content: buildPaydayAuthorityReminder(daysUntilPayday) },
     { role: 'user', content: message },
   ];
 
@@ -306,7 +312,12 @@ export async function sendChatMessage(
     ]);
 
     const systemPrompt = buildChatSystemPrompt(context, input.locale, cycleMeta, activeBudget);
-    const rawReply = await callOpenAiChat(systemPrompt, modelHistory, input.message);
+    const rawReply = await callOpenAiChat(
+      systemPrompt,
+      modelHistory,
+      input.message,
+      cycleMeta.daysUntilPayday
+    );
 
     const validated = chatResponseSchema.safeParse({ reply: rawReply });
     const reply = validated.success ? validated.data.reply : rawReply;
