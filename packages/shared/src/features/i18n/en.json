@@ -371,7 +371,7 @@
       "trustLine": "No card required · Full dashboard · Free plan included"
     },
     "why": {
-      "title": "Not another expense notepad. Control until payday.",
+      "title": "Not another expense notepad. An expense control system.",
       "subtitle": "See decisions for today — not only last week’s history.",
       "cycle": {
         "title": "Budget from payday to payday",
@@ -394,7 +394,6 @@
     "scanner": {
       "title": "Your receipt does the work.",
       "subtitle": "Photo → AI draft → save. Optionally split items across categories so charts and limits stay accurate.",
-      "placeholder": "Add feature-scanner-split.webp to show this screen",
       "eyebrow": "Receipt scanner"
     },
     "ai": {
@@ -411,7 +410,8 @@
       },
       "history": {
         "title": "Full history & fixed costs",
-        "description": "Edit entries, group receipt splits, and include subscriptions in your total."
+        "description": "Edit entries, group receipt splits, and include subscriptions in your total.",
+        "shotAlt": "Recent transactions with a split receipt"
       },
       "currency": {
         "title": "PLN, EUR, GBP, USD",
@@ -421,8 +421,9 @@
     "mobile": {
       "title": "The same Lyamo in your phone browser.",
       "subtitle": "Budget, scanner, and assistant — no native app install required.",
-      "placeholder": "Add mobile-dashboard.webp to show this screen",
-      "eyebrow": "On your phone"
+      "eyebrow": "On your phone",
+      "budgetAlt": "Mobile dashboard — budget and days until payday",
+      "categoriesAlt": "Mobile dashboard — spending by category"
     },
     "trust": {
       "title": "Your finances. Your data. No bank login.",

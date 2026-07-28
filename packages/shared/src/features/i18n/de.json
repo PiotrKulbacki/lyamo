@@ -371,7 +371,7 @@
       "trustLine": "Keine Karte · Volles Dashboard · Free-Plan inklusive"
     },
     "why": {
-      "title": "Kein weiteres Ausgabennotizbuch. Kontrolle bis zum Gehalt.",
+      "title": "Kein weiteres Ausgabennotizbuch. Ein System zur Ausgabenkontrolle.",
       "subtitle": "Entscheidungen für heute — nicht nur die Historie der letzten Woche.",
       "cycle": {
         "title": "Budget von Gehalt zu Gehalt",
@@ -394,7 +394,6 @@
     "scanner": {
       "title": "Dein Beleg erledigt die Arbeit.",
       "subtitle": "Foto → KI-Entwurf → Speichern. Optional Positionen aufteilen, damit Charts und Limits stimmen.",
-      "placeholder": "feature-scanner-split.webp hinzufügen, um diesen Screen zu zeigen",
       "eyebrow": "Belegscanner"
     },
     "ai": {
@@ -411,7 +410,8 @@
       },
       "history": {
         "title": "Historie & Fixkosten",
-        "description": "Einträge bearbeiten, Beleg-Splits gruppieren, Abos in die Summe einrechnen."
+        "description": "Einträge bearbeiten, Beleg-Splits gruppieren, Abos in die Summe einrechnen.",
+        "shotAlt": "Letzte Transaktionen mit aufgeteiltem Beleg"
       },
       "currency": {
         "title": "PLN, EUR, GBP, USD",
@@ -421,8 +421,9 @@
     "mobile": {
       "title": "Dasselbe Lyamo im Handy-Browser.",
       "subtitle": "Budget, Scanner und Assistent — ohne native App-Installation.",
-      "placeholder": "mobile-dashboard.webp hinzufügen, um diesen Screen zu zeigen",
-      "eyebrow": "Am Handy"
+      "eyebrow": "Am Handy",
+      "budgetAlt": "Mobile Dashboard — Budget und Tage bis zum Gehalt",
+      "categoriesAlt": "Mobile Dashboard — Ausgaben nach Kategorie"
     },
     "trust": {
       "title": "Deine Finanzen. Deine Daten. Kein Bank-Login.",
