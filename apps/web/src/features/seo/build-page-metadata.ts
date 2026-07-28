@@ -9,7 +9,10 @@ function appBaseUrl(): string {
 
 function canonicalUrl(path: string): string {
   const base = appBaseUrl();
-  return path === '/' ? base : `${base}${path}`;
+  if (path === '/') {
+    return `${base}/`;
+  }
+  return `${base}${path}`;
 }
 
 type BuildPageMetadataOptions = {
