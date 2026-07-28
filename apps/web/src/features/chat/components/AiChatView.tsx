@@ -221,7 +221,6 @@ export function AiChatView({ initialHistoryPage }: AiChatViewProps) {
       createdAt: new Date().toISOString(),
     };
 
-    const history = messages.map(({ role, content }) => ({ role, content }));
     setMessages((current) => sortMessagesChronologically([...current, userMessage]));
     setInput('');
     setIsSending(true);
@@ -234,7 +233,6 @@ export function AiChatView({ initialHistoryPage }: AiChatViewProps) {
         body: JSON.stringify({
           message: trimmed,
           locale,
-          history,
         }),
       });
 
