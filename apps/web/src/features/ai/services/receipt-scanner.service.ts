@@ -22,6 +22,7 @@ import {
   uploadReceiptImage,
 } from '@web/features/scanner/services/receipt-storage.service';
 import { isSupabaseStorageConfigured } from '@web/lib/supabase-server';
+import { applyAmountsFromLineText } from '@shared/features/transactions/receipt-line-text';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const DEFAULT_VISION_MODEL = 'gpt-4o';
@@ -61,15 +62,25 @@ Today's reference date is ${currentDate} (ISO 8601). Use it when interpreting ab
 Example: "02.07.26" with reference 2026-07-15 → date 2026-07-02 (not 2022). Prefer the most complete date printed on the receipt (e.g. TSE timestamps, payment footer) over abbreviated header dates when they disagree.
 
 OCR INTEGRITY (CRITICAL — NO FUDGING):
-- Transcribe every printed product line exactly as shown, with exact spelling and exact individual prices.
+- Your job is faithful transcription of what is printed — not arithmetic to force totals to match.
 - NEVER adjust, recalculate, round, or invent line item prices to make them sum to the receipt total.
 - NEVER omit line items to force totals to match.
 - Discount lines (Rabatt, Preisvorteil, Lidl Plus Rabatt, coupon, refund) must be included as separate line items with negative amounts when printed as deductions.
 - Discount lines immediately follow the product they apply to — keep that order in lineItems.
 - Do NOT fold discounts into product prices yourself; return product at printed gross price, then discount as its own negative line.
 - Deposit charges (Pfand, Kaucja, bottle deposit) → positive amount; deposit returns/refunds (Pfand-Rückgabe) → negative amount.
-- Quantity lines (e.g. "2 x 2,79 = 5,58") → use the line total (5.58) as amount; preserve the product name.
-- The amount field must be the printed total paid ("Zu zahlen", "Total", "Sum", etc.) exactly as shown.
+- For every product/discount line, set lineText to the FULL printed line transcription (characters as on the receipt).
+  Examples of lineText:
+  - "Pure Kornkraft                    1,75 A"
+  - "Toastbrötchen Mehrk.              0,99 A"
+  - "Croissant Nuss      0,69 x  2     1,38 A"
+  - "Sandwiches Käse Schi              1,99 A"
+  - "Pringles Sour Cream   2,79 x  2     5,58 A"
+  - "Lidl Plus Rabatt                 -2,80"
+- amount must be the RIGHTMOST money value visible in that same lineText (convert comma decimals to dot numbers).
+  On quantity lines ("unitPrice x qty  lineTotal"), amount is the line total on the right — never the unit price.
+- Identical consecutive prices are allowed when printed that way — transcribe each line independently; do not "fix" or invent differences.
+- The top-level amount field must be the printed total paid ("Zu zahlen", "Total", "Sum", etc.) exactly as shown.
 - If line items do not sum to the printed total, still return all items with exact printed prices and set needsManualReview to true.
 - All monetary values in JSON must be numbers with dot decimal separator (e.g. 2.49), never strings with commas.
 
@@ -82,7 +93,8 @@ Return ONLY valid JSON with these fields:
 - needsManualReview (boolean — true if any field is uncertain, unreadable, or line items do not sum to total)
 - hasMultipleCategories (boolean — true if the receipt clearly contains items from multiple spending categories)
 - lineItems (optional array — REQUIRED when the receipt has multiple categories or many distinct products):
-  - Each element: { "name": string, "amount": number, "category": one of the allowed categories }
+  - Each element: { "name": string, "amount": number, "category": one of the allowed categories, "lineText": string }
+  - lineText is REQUIRED for every line item: exact full line as printed on the receipt
   - Include every meaningful product line with its individual price from the receipt
   - Deposit/refund lines (Pfand, Kaucja, deposit, bottle deposit) → use the same category as the main basket or the product they belong to, never "Other"
   - Non-alcoholic drinks and mixers (Tonic, Cola, Wasser, Water, Juice, Saft, Sirup) → Groceries (or closest food/drink category), never "Other" unless truly uncategorizable
@@ -131,7 +143,7 @@ async function callOpenAiVision(imageUrl: string, categoryKeys: string[]): Promi
     },
     body: JSON.stringify({
       model: visionModel,
-      temperature: 0.1,
+      temperature: 0,
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: buildSystemPrompt(categoryKeys, currentDate) },
@@ -140,7 +152,7 @@ async function callOpenAiVision(imageUrl: string, categoryKeys: string[]): Promi
           content: [
             {
               type: 'text',
-              text: 'Analyze this expense document image and return the JSON object.',
+              text: "Transcribe this expense document. For every lineItem include accurate lineText (full printed line) and set amount from that line's rightmost price.",
             },
             {
               type: 'image_url',
@@ -271,18 +283,28 @@ export async function scanReceiptFromFile(
       return { error: RECEIPT_SCAN_ERROR_CODES.PARSE_FAILED };
     }
 
+    const lineItemsFromText = validated.data.lineItems?.length
+      ? applyAmountsFromLineText(validated.data.lineItems)
+      : undefined;
+
+    const scanData: ReceiptScanResult = {
+      ...validated.data,
+      category: normalizedCategory,
+      lineItems: lineItemsFromText,
+    };
+
     const splitDraft = resolveReceiptSplitDraft(
       {
-        lineItems: validated.data.lineItems,
-        suggestedSplits: validated.data.suggestedSplits,
-        amount: validated.data.amount,
+        lineItems: scanData.lineItems,
+        suggestedSplits: scanData.suggestedSplits,
+        amount: scanData.amount,
       },
       allowedCategories
     );
 
     const result: ReceiptScanResult = {
-      ...validated.data,
-      category: normalizedCategory,
+      ...scanData,
+      category: scanData.category,
       hasMultipleCategories: Boolean(splitDraft.suggestedSplits?.length),
       lineItems: splitDraft.lineItems,
       suggestedSplits: splitDraft.suggestedSplits,

@@ -114,6 +114,8 @@ export const receiptLineItemSchema = z.object({
     .string()
     .min(1, TRANSACTION_ERROR_CODES.INVALID_CATEGORY)
     .max(100, TRANSACTION_ERROR_CODES.INVALID_CATEGORY),
+  /** Exact product-line transcription from the receipt image (used to re-parse amount). */
+  lineText: z.string().max(500).optional(),
 });
 
 export const transactionSplitLineSchema = z.object({
