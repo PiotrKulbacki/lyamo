@@ -267,8 +267,8 @@ function CategoriesScene() {
       startFrom={Math.round(0.4 * FPS)}
       caption={
         <>
-          Lyamo analizuje Twoje finanse —{' '}
-          <span style={{ color: COLORS.warm }}>koszty stałe</span> i reszta
+          Lyamo analizuje Twoje finanse — <span style={{ color: COLORS.warm }}>koszty stałe</span> i
+          reszta
         </>
       }
     />

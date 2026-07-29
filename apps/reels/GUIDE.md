@@ -94,28 +94,28 @@ Nowa rolka: dodaj `src/compositions/NazwaReel.tsx`, zarejestruj w `Root.tsx`, do
 **Gotowy plik:** `out/renders/dashboard-reel.mp4`  
 **Źródła:** `dashboard-scroll-{1,2,3}.*` w `out/sources/videos/`
 
-| Czas        | Scena               | Napisy / sync z lektorem                                      |
-| ----------- | ------------------- | ------------------------------------------------------------- |
-| 0–3,5 s     | Hook                | **45,86 € na dziś** · VO start razem z liczbą                 |
-| 3,5–15,5 s  | Budżet (pełny kadr) | „Tyle średnio wydajesz każdego dnia” / dni do wypłaty         |
-| 15,5–24 s   | Kategorie / donut   | „Lyamo analizuje Twoje finanse…” / koszty stałe               |
-| 24–29,8 s   | Historia            | Paragony rozbite na kategorie                                 |
-| 29,8–36,4 s | End card            | Logo od „Lyamo. Finanse pod kontrolą…” + cisza na końcu       |
+| Czas        | Scena               | Napisy / sync z lektorem                                |
+| ----------- | ------------------- | ------------------------------------------------------- |
+| 0–3,5 s     | Hook                | **45,86 € na dziś** · VO start razem z liczbą           |
+| 3,5–15,5 s  | Budżet (pełny kadr) | „Tyle średnio wydajesz każdego dnia” / dni do wypłaty   |
+| 15,5–24 s   | Kategorie / donut   | „Lyamo analizuje Twoje finanse…” / koszty stałe         |
+| 24–29,8 s   | Historia            | Paragony rozbite na kategorie                           |
+| 29,8–36,4 s | End card            | Logo od „Lyamo. Finanse pod kontrolą…” + cisza na końcu |
 
 **Audio:** `out/sources/audio/dashboard-voiceover.mp3` (symlink `public/audio/`)  
 **Bez zoomów** na nagraniach telefonu. Całość ~**36,4 s** (VO ~35,7 s + cisza na end card).
 
 ### Tekst lektora (PL) — sync z `dashboard-voiceover.mp3`
 
-| Czas      | Scena     | Lektor                                                                 |
-| --------- | --------- | ---------------------------------------------------------------------- |
-| 0:00–0:04 | Hook      | Lyamo to miejsce, w którym kontrolujesz wydatki.                       |
-| 0:04–0:10 | Budżet    | Wprowadzasz budżet miesięczny oraz bieżące zakupy. I od razu wiesz…   |
-| 0:10–0:15 | Budżet    | Na pulpicie widzisz średnio ile możesz wydać dziennie i ile dni…      |
-| 0:15–0:24 | Kategorie | Wykres kategorii pokazuje, gdzie uciekają pieniądze…                   |
-| 0:24–0:30 | Historia  | W historii transakcji masz każdy zakup, także paragony rozbite…        |
-| 0:30–0:35 | End card  | Lyamo. Finanse pod kontrolą. Wejdź na lyamo.eu.                        |
-| 0:35–0:36 | End card  | _(cisza — logo zostaje)_                                               |
+| Czas      | Scena     | Lektor                                                              |
+| --------- | --------- | ------------------------------------------------------------------- |
+| 0:00–0:04 | Hook      | Lyamo to miejsce, w którym kontrolujesz wydatki.                    |
+| 0:04–0:10 | Budżet    | Wprowadzasz budżet miesięczny oraz bieżące zakupy. I od razu wiesz… |
+| 0:10–0:15 | Budżet    | Na pulpicie widzisz średnio ile możesz wydać dziennie i ile dni…    |
+| 0:15–0:24 | Kategorie | Wykres kategorii pokazuje, gdzie uciekają pieniądze…                |
+| 0:24–0:30 | Historia  | W historii transakcji masz każdy zakup, także paragony rozbite…     |
+| 0:30–0:35 | End card  | Lyamo. Finanse pod kontrolą. Wejdź na lyamo.eu.                     |
+| 0:35–0:36 | End card  | _(cisza — logo zostaje)_                                            |
 
 ---
 
