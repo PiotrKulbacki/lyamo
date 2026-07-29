@@ -4,6 +4,11 @@ import type { PaidPlanType } from './plan-limits';
 export const PRO_PROMO_CODE = 'PROMO50';
 export const PRO_PROMO_DISCOUNT_PERCENT = 50;
 
+/** Early-access: first N customers get M months free via Stripe promotion code. */
+export const EARLY_ACCESS_PROMO_CODE = 'LYAMO100';
+export const EARLY_ACCESS_PROMO_SEATS = 20;
+export const EARLY_ACCESS_PROMO_MONTHS = 2;
+
 export const PRO_SUBSCRIPTION_PRICES = {
   regular: {
     PLN: 34,

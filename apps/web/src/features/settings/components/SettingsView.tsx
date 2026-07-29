@@ -17,6 +17,7 @@ import {
   BillingCurrencySwitcher,
   readStoredBillingCurrency,
 } from '@web/features/billing/components/BillingCurrencySwitcher';
+import { EarlyAccessPromoBanner } from '@web/features/billing/components/EarlyAccessPromoBanner';
 import { PlanPriceDisplay } from '@web/features/billing/components/ProPriceDisplay';
 import type { CheckoutPlan } from '@shared/features/billing';
 import { ProUpgradeCycleDayDialog } from '@web/features/billing/components/ProUpgradeCycleDayDialog';
@@ -425,6 +426,8 @@ export function SettingsView({ initialUser }: SettingsViewProps) {
                 </span>
               </label>
             </div>
+
+            <EarlyAccessPromoBanner className="mt-4" />
           </>
         )}
         <div className="relative z-10 mt-4 flex flex-wrap gap-3">

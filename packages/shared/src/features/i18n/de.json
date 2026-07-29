@@ -779,6 +779,11 @@
       "paymentCurrency": "Zahlungswährung",
       "immediateAccessConsent": "Ich verstehe, dass ich PRO/Premium sofort aktiviere. Dies kann dazu führen, dass ich das gesetzliche 14-tägige Widerrufsrecht verliere, sobald die Leistung startet."
     },
+    "earlyAccess": {
+      "ariaLabel": "Frühzugang-Aktion",
+      "description": "Die ersten {{seats}} Personen erhalten {{months}} Monate kostenlos.",
+      "codeHint": "Gib diesen Code bei der Zahlung ein:"
+    },
     "success": {
       "upgraded": "Willkommen! Ihr Abonnement ist aktiv."
     },

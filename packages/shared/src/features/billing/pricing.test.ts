@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { BILLING_CURRENCIES } from './checkout';
 import {
+  EARLY_ACCESS_PROMO_CODE,
+  EARLY_ACCESS_PROMO_MONTHS,
+  EARLY_ACCESS_PROMO_SEATS,
   getPlanPromoPrice,
   getProPromoPrice,
   PREMIUM_SUBSCRIPTION_PRICES,
@@ -29,5 +32,11 @@ describe('subscription pricing', () => {
     expect(getPlanPromoPrice('PREMIUM', 'PLN')).toBe(23);
     expect(getPlanPromoPrice('PREMIUM', 'GBP')).toBe(4.25);
     expect(getPlanPromoPrice('PREMIUM', 'USD')).toBe(6);
+  });
+
+  it('exports early-access promo constants', () => {
+    expect(EARLY_ACCESS_PROMO_CODE).toBe('LYAMO100');
+    expect(EARLY_ACCESS_PROMO_SEATS).toBe(20);
+    expect(EARLY_ACCESS_PROMO_MONTHS).toBe(2);
   });
 });

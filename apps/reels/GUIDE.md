@@ -10,14 +10,16 @@ Jedyny plik do przeczytania przed tworzeniem lub edycją rolek marketingowych.
 ## Szybki start
 
 ```bash
-# Podgląd w Remotion Studio
+# Podgląd w Remotion Studio (osobny port — nie koliduje z web :3000)
 npm run studio -w @lyamo/reels
+# → http://localhost:3333
 
-# Render gotowej rolki (zapis do out/renders/)
+# Render gotowej rolki (zapis do out/renders/) — bez serwera / bez portu
 npm run render:ai-chat -w @lyamo/reels
 npm run render:dashboard -w @lyamo/reels
 ```
 
+`npm run dev` w root **nie** uruchamia rolek (tylko web + mobile).
 Kod Remotion: `apps/reels/src/`  
 Wszystkie pliki binarne (MP4, JPEG, PNG): **`apps/reels/out/`** — katalog lokalny, w `.gitignore`, **nie trafia na produkcję**.
 

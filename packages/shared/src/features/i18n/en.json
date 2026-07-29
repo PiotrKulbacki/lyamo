@@ -779,6 +779,11 @@
       "paymentCurrency": "Payment currency",
       "immediateAccessConsent": "I understand that I will immediately enable PRO/Premium. This may mean I lose the statutory 14-day right of withdrawal once the service starts."
     },
+    "earlyAccess": {
+      "ariaLabel": "Early access promotion",
+      "description": "The first {{seats}} people get {{months}} months free.",
+      "codeHint": "Enter this code at checkout:"
+    },
     "success": {
       "upgraded": "Welcome! Your subscription is active."
     },

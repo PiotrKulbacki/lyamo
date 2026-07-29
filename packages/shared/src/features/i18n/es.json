@@ -779,6 +779,11 @@
       "paymentCurrency": "Moneda de pago",
       "immediateAccessConsent": "Entiendo que habilitaré PRO/Premium de inmediato. Esto puede implicar que pierda el derecho legal de desistimiento de 14 días cuando la prestación empiece."
     },
+    "earlyAccess": {
+      "ariaLabel": "Promoción de acceso anticipado",
+      "description": "Las primeras {{seats}} personas obtienen {{months}} meses gratis.",
+      "codeHint": "Introduce este código al pagar:"
+    },
     "success": {
       "upgraded": "¡Bienvenido! Tu suscripción está activa."
     },
