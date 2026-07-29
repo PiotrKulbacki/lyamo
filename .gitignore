@@ -7,6 +7,9 @@ node_modules/
 .next/
 out/
 dist/
+
+# Reels — lokalne materiały marketingowe (patrz apps/reels/GUIDE.md)
+apps/reels/out/
 build/
 .turbo/
 

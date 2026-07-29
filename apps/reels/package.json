@@ -1,0 +1,24 @@
+{
+  "name": "@lyamo/reels",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "studio": "remotion studio",
+    "render:ai-chat": "remotion render AiChatReel out/renders/ai-chat-reel.mp4",
+    "render:dashboard": "remotion render DashboardReel out/renders/dashboard-reel.mp4",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.500",
+    "@remotion/google-fonts": "4.0.500",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "4.0.500"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.8.3"
+  }
+}
