@@ -20,6 +20,7 @@ import {
   BillingCurrencySwitcher,
   readStoredBillingCurrency,
 } from '@web/features/billing/components/BillingCurrencySwitcher';
+import { EarlyAccessPromoBanner } from '@web/features/billing/components/EarlyAccessPromoBanner';
 import { PlanPriceDisplay } from '@web/features/billing/components/ProPriceDisplay';
 import { useT } from '@web/features/i18n/LocaleProvider';
 import { ProductShot } from '@web/features/landing/components/ProductShot';
@@ -465,6 +466,7 @@ export function LandingPage() {
               </Link>
             </article>
           </div>
+          <EarlyAccessPromoBanner className="mx-auto mt-10 max-w-xl text-center" />
         </div>
       </section>
 

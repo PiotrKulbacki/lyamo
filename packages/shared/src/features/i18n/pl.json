@@ -781,6 +781,11 @@
       "paymentCurrency": "Waluta płatności",
       "immediateAccessConsent": "Rozumiem, że po zakupie od razu aktywuję PRO/Premium. Może to oznaczać utratę ustawowego 14-dniowego prawa odstąpienia po rozpoczęciu świadczenia."
     },
+    "earlyAccess": {
+      "ariaLabel": "Promocja wczesnego dostępu",
+      "description": "Dla pierwszych {{seats}} osób subskrypcja jest za darmo przez {{months}} miesiące.",
+      "codeHint": "Wpisz ten kod przy płatności:"
+    },
     "success": {
       "upgraded": "Witaj! Twoja subskrypcja jest aktywna."
     },
