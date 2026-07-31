@@ -40,6 +40,7 @@ export const DrawerContent = forwardRef<
         className
       )}
       {...props}
+      translate="no"
     >
       <div className="bg-elevated mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full" />
       {children}

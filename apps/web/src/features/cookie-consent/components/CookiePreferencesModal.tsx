@@ -88,7 +88,10 @@ export function CookiePreferencesModal() {
     >
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-void/80 fixed inset-0 z-[70] backdrop-blur-sm" />
-        <DialogPrimitive.Content className="panel data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-[70] flex max-h-[min(90vh,640px)] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200">
+        <DialogPrimitive.Content
+          translate="no"
+          className="panel data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-[70] flex max-h-[min(90vh,640px)] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200"
+        >
           <div className="relative z-10 flex items-start justify-between gap-3 border-b border-[var(--border)] px-5 py-4 sm:px-6">
             <div className="space-y-1 pr-8">
               <DialogPrimitive.Title className="font-display text-lg font-semibold text-[var(--text)]">

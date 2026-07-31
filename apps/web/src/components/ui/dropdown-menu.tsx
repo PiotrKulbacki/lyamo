@@ -22,6 +22,7 @@ export const DropdownMenuContent = forwardRef<
         className
       )}
       {...props}
+      translate="no"
     />
   </DropdownMenuPrimitive.Portal>
 ));
@@ -41,6 +42,7 @@ export const DropdownMenuItem = forwardRef<
       className
     )}
     {...props}
+    translate="no"
   />
 ));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;

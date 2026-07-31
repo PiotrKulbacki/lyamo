@@ -37,6 +37,7 @@ export const AlertDialogContent = forwardRef<
         className
       )}
       {...props}
+      translate="no"
     />
   </AlertDialogPortal>
 ));

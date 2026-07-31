@@ -22,6 +22,7 @@ const PopoverContent = React.forwardRef<
         className
       )}
       {...props}
+      translate="no"
     />
   </PopoverPrimitive.Portal>
 ));
