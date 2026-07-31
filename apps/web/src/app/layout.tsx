@@ -50,7 +50,8 @@ export default async function RootLayout({
   return (
     <html
       lang={initialLocale}
-      className={`dark ${outfit.variable} ${jetbrains.variable}`}
+      translate="no"
+      className={`notranslate dark ${outfit.variable} ${jetbrains.variable}`}
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>

@@ -46,6 +46,7 @@ export const SheetContent = forwardRef<
         className
       )}
       {...props}
+      translate="no"
     >
       {children}
       <DialogPrimitive.Close className="text-muted hover:bg-elevated focus-visible:ring-warm/30 absolute right-4 top-4 rounded-lg p-1 transition hover:text-[var(--text)] focus-visible:outline-none focus-visible:ring-2">
