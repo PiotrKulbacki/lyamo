@@ -17,6 +17,7 @@ npm run studio -w @lyamo/reels
 # Render gotowej rolki (zapis do out/renders/) — bez serwera / bez portu
 npm run render:ai-chat -w @lyamo/reels
 npm run render:dashboard -w @lyamo/reels
+npm run render:scanner-ai -w @lyamo/reels
 ```
 
 `npm run dev` w root **nie** uruchamia rolek (tylko web + mobile).
@@ -31,7 +32,8 @@ Wszystkie pliki binarne (MP4, JPEG, PNG): **`apps/reels/out/`** — katalog loka
 apps/reels/out/
 ├── renders/              # Gotowe rolki MP4 (wynik renderu)
 │   ├── ai-chat-reel.mp4
-│   └── dashboard-reel.mp4
+│   ├── dashboard-reel.mp4
+│   └── scanner-ai-reel.mp4
 ├── sources/
 │   ├── audio/            # Lektor (np. dashboard-voiceover.mp3)
 │   ├── screens/          # Zrzuty ekranu (IMG_*.jpeg)
@@ -39,7 +41,9 @@ apps/reels/out/
 │       ├── ai-chat-reel-base.mp4
 │       ├── dashboard-scroll-1.mov
 │       ├── dashboard-scroll-2.mov
-│       └── dashboard-scroll-3.mp4
+│       ├── dashboard-scroll-3.mp4
+│       ├── scanner-ai.mp4          # oryginał HEVC (iPhone)
+│       └── scanner-ai-h264.mp4     # kopia H.264 do Remotion
 └── previews/             # Klatki testowe (remotion still)
     └── preview-*.png
 ```
@@ -63,6 +67,7 @@ W kodzie używaj `staticFile('screens/IMG_9976.jpeg')` lub `staticFile('videos/d
 | `src/Root.tsx`                       | Rejestracja kompozycji                               |
 | `src/compositions/AiChatReel.tsx`    | Rolka 1 — AI chat                                    |
 | `src/compositions/DashboardReel.tsx` | Rolka 2 — dashboard                                  |
+| `src/compositions/ScannerAiReel.tsx` | Rolka 3 — skaner AI                                  |
 | `src/components/Brand.tsx`           | Kolory, logo, animacje (DriftBackdrop, ClickRipple…) |
 
 Nowa rolka: dodaj `src/compositions/NazwaReel.tsx`, zarejestruj w `Root.tsx`, dodaj skrypt `render:nazwa` w `package.json`.
@@ -121,18 +126,53 @@ Nowa rolka: dodaj `src/compositions/NazwaReel.tsx`, zarejestruj w `Root.tsx`, do
 
 ---
 
-## Rolka 3 — Skaner paragonów (plan)
+## Rolka 3 — Skaner AI ✅
 
-**Screeny:** `out/sources/screens/IMG_9984.jpeg` → `IMG_9983.jpeg`
+**Kompozycja:** `ScannerAiReel`  
+**Gotowy plik:** `out/renders/scanner-ai-reel.mp4`  
+**Źródło:** `out/sources/videos/scanner-ai-h264.mp4` (z `scanner-ai.mp4` / `apps/web/public/marketing/scanner-ai.mp4`)  
+**Render:** `npm run render:scanner-ai -w @lyamo/reels`  
+**Audio:** po nagraniu → `out/sources/audio/scanner-ai-voiceover.pl.mp3` (podłącz w kompozycji jak dashboard)
 
-| Czas    | Scena           | Napisy                         |
-| ------- | --------------- | ------------------------------ |
-| 0–2,5 s | Upload / Skanuj | **Paragon? Zrób zdjęcie.**     |
-| 2,5–8 s | Skanowanie      | AI odczytuje kwotę i sklep     |
-| 8–14 s  | Archiwum        | Wszystko poukładane miesiącami |
-| 14–18 s | End card        | **Lyamo** · Koniec z Excelami  |
+Nagranie źródłowe ~**42,7 s** (HEVC). W rolce: hook + przyspieszenie środkowego scrolla pozycji → całość ~**33,6 s**.
 
-**Brakuje:** screen wyniku OCR (draft z kategoriami) tuż po skanie.
+| Czas rolki  | Scena (źródło)           | Efekt                           | Napisy                                      |
+| ----------- | ------------------------ | ------------------------------- | ------------------------------------------- |
+| 0–2,8 s     | Hook graficzny           | Logo + punch tekstu             | **Paragon? Zrób zdjęcie.**                  |
+| 2,8–8,8 s   | Analiza (src 0–6)        | Pełny kadr telefonu             | AI **analizuje** paragon…                   |
+| 8,8–14,8 s  | Pola (src 6–12)          | Lekki zoom na Kwota / Opis      | **36,52 €** · Lidl · gotowe                 |
+| 14,8–22,8 s | Pozycje (src 12–28 @2×)  | Scroll przyspieszony            | Pozycje z kategoriami — spożywcze i chemia  |
+| 22,8–28,8 s | Podsumowanie (src 30–36) | **Silny zoom** na sumę podziału | Suma **zgadza się** z paragonem             |
+| 28,8–31,8 s | Zapis (src 34–40 @2×)    | Pełny kadr                      | Zapis jednym tapnięciem                     |
+| 31,8–33,6 s | End card                 | Logo + CTA                      | **Lyamo** · Skanuj paragony z AI · lyamo.eu |
+
+**Zoom hero:** na zielonym komunikacie _„Suma podziału: 36.52 / 36.52 EUR — Zgadza się z kwotą paragonu”_ oraz kartach _Zakupy spożywcze 20,03 €_ / _Chemia 16,49 €_.
+
+### Tekst lektora (PL) — do nagrania (~30–32 s mowy)
+
+Czytaj spokojnie, jak w dashboardzie. Timecode = czas **w gotowej rolce** (po hooku startuje wideo).
+
+| Czas      | Scena        | Lektor                                                                                       |
+| --------- | ------------ | -------------------------------------------------------------------------------------------- |
+| 0:00–0:03 | Hook         | Paragon? Zrób zdjęcie.                                                                       |
+| 0:03–0:09 | Analiza      | Lyamo AI odczytuje kwotę, sklep i każdą pozycję.                                             |
+| 0:09–0:15 | Pola         | Trzydzieści sześć euro pięćdziesiąt dwa. Lidl w Berlinie — już na ekranie.                   |
+| 0:15–0:23 | Pozycje      | Każda linijka z kategorią. Spożywcze osobno, chemia osobno.                                  |
+| 0:23–0:29 | Podsumowanie | Podsumowanie: dwadzieścia euro na zakupy, szesnaście na chemię. Suma zgadza się z paragonem. |
+| 0:29–0:32 | Zapis / end  | Zapisujesz jednym tapnięciem. Lyamo. Skanuj paragony z AI. Wejdź na lyamo.eu.                |
+
+**Wersja ciągła (do czytnika / Voice Memos):**
+
+```
+Paragon? Zrób zdjęcie.
+Lyamo AI odczytuje kwotę, sklep i każdą pozycję.
+Trzydzieści sześć euro pięćdziesiąt dwa. Lidl w Berlinie — już na ekranie.
+Każda linijka z kategorią. Spożywcze osobno, chemia osobno.
+Podsumowanie: dwadzieścia euro na zakupy, szesnaście na chemię. Suma zgadza się z paragonem.
+Zapisujesz jednym tapnięciem. Lyamo. Skanuj paragony z AI. Wejdź na lyamo.eu.
+```
+
+Po nagraniu: zapisz jako `out/sources/audio/scanner-ai-voiceover.pl.mp3`, dopisz `<Audio>` w `ScannerAiReel.tsx` i zrób finalny render.
 
 ---
 
