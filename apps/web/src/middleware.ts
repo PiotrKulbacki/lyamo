@@ -41,6 +41,18 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = Boolean(sessionToken);
   const isPublic = isPublicPath(pathname);
 
+  // Meta's facebookexternalhit probes /meta.json (undocumented ads/health check).
+  // Return a cheap 404 at the edge — avoid Next.js /_not-found SSR cost.
+  if (pathname === '/meta.json') {
+    return new NextResponse('{}', {
+      status: 404,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'public, max-age=86400',
+      },
+    });
+  }
+
   if (!isAuthenticated && !isPublic) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/login';
@@ -73,5 +85,8 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)'],
+  matcher: [
+    '/meta.json',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
+  ],
 };

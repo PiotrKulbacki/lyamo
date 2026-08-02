@@ -6,6 +6,11 @@ import {
   DASHBOARD_REEL_DURATION,
   DASHBOARD_REEL_FPS,
 } from './compositions/DashboardReel';
+import {
+  ScannerAiReel,
+  SCANNER_AI_REEL_DURATION,
+  SCANNER_AI_REEL_FPS,
+} from './compositions/ScannerAiReel';
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -23,6 +28,14 @@ export const RemotionRoot: React.FC = () => {
         component={DashboardReel}
         durationInFrames={DASHBOARD_REEL_DURATION}
         fps={DASHBOARD_REEL_FPS}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="ScannerAiReel"
+        component={ScannerAiReel}
+        durationInFrames={SCANNER_AI_REEL_DURATION}
+        fps={SCANNER_AI_REEL_FPS}
         width={1080}
         height={1920}
       />
