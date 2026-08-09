@@ -17,6 +17,7 @@ npm run studio -w @lyamo/reels
 # Render gotowej rolki (zapis do out/renders/) — bez serwera / bez portu
 npm run render:ai-chat -w @lyamo/reels
 npm run render:dashboard -w @lyamo/reels
+npm run render:dashboard-en -w @lyamo/reels
 npm run render:scanner-ai -w @lyamo/reels
 ```
 
@@ -30,20 +31,30 @@ Wszystkie pliki binarne (MP4, JPEG, PNG): **`apps/reels/out/`** — katalog loka
 
 ```
 apps/reels/out/
-├── renders/              # Gotowe rolki MP4 (wynik renderu)
-│   ├── ai-chat-reel.mp4
-│   ├── dashboard-reel.mp4
-│   └── scanner-ai-reel.mp4
+├── renders/              # Gotowe rolki MP4 — per język (pl · en · de · es)
+│   ├── pl/
+│   │   ├── ai-chat-reel.mp4
+│   │   ├── dashboard-reel.mp4
+│   │   └── scanner-ai-reel.mp4
+│   ├── en/               # np. dashboard-reel.mp4
+│   ├── de/
+│   └── es/
 ├── sources/
-│   ├── audio/            # Lektor (np. dashboard-voiceover.mp3)
+│   ├── audio/            # Lektor — też per język
+│   │   ├── pl/dashboard-voiceover.mp3
+│   │   ├── en/           # dashboard-voiceover.mp3 (do wrzucenia)
+│   │   ├── de/
+│   │   └── es/
 │   ├── screens/          # Zrzuty ekranu (IMG_*.jpeg)
-│   └── videos/           # Nagrania ekranu używane w kompozycjach
+│   └── videos/           # Nagrania / bazowe MP4 do kompozycji
 │       ├── ai-chat-reel-base.mp4
 │       ├── dashboard-scroll-1.mov
 │       ├── dashboard-scroll-2.mov
 │       ├── dashboard-scroll-3.mp4
-│       ├── scanner-ai.mp4          # oryginał HEVC (iPhone)
-│       └── scanner-ai-h264.mp4     # kopia H.264 do Remotion
+│       ├── Dashboard-EN.mp4        # baza EN (napisy EN; audio cisza)
+│       ├── Dashboard-EN-h264.mp4   # H.264 do Remotion
+│       ├── scanner-ai.mp4
+│       └── scanner-ai-h264.mp4
 └── previews/             # Klatki testowe (remotion still)
     └── preview-*.png
 ```
@@ -54,21 +65,23 @@ Remotion ładuje źródła przez `public/` → symlinki do `out/sources/`:
 - `public/videos` → `out/sources/videos`
 - `public/audio` → `out/sources/audio`
 
-W kodzie używaj `staticFile('screens/IMG_9976.jpeg')` lub `staticFile('videos/dashboard-scroll-1.mov')`.
+W kodzie: `staticFile('videos/…')`, `staticFile('audio/en/dashboard-voiceover.mp3')`.
 
-**Zasada zapisu:** nowe materiały → `out/sources/`, gotowy MP4 → `out/renders/`. Nie kopiuj do `apps/web/`.
+**Zasada zapisu:** źródła → `out/sources/`; gotowy MP4 → `out/renders/{lang}/`. Nie kopiuj do `apps/web/`.  
+**Legacy:** stare kopie w `out/renders/*.mp4` (bez podkatalogu) = PL; kanoniczna lokalizacja to `renders/pl/`.
 
 ---
 
 ## Kod Remotion
 
-| Plik                                 | Opis                                                 |
-| ------------------------------------ | ---------------------------------------------------- |
-| `src/Root.tsx`                       | Rejestracja kompozycji                               |
-| `src/compositions/AiChatReel.tsx`    | Rolka 1 — AI chat                                    |
-| `src/compositions/DashboardReel.tsx` | Rolka 2 — dashboard                                  |
-| `src/compositions/ScannerAiReel.tsx` | Rolka 3 — skaner AI                                  |
-| `src/components/Brand.tsx`           | Kolory, logo, animacje (DriftBackdrop, ClickRipple…) |
+| Plik                                   | Opis                                                 |
+| -------------------------------------- | ---------------------------------------------------- |
+| `src/Root.tsx`                         | Rejestracja kompozycji                               |
+| `src/compositions/AiChatReel.tsx`      | Rolka 1 — AI chat                                    |
+| `src/compositions/DashboardReel.tsx`   | Rolka 2 — dashboard (PL)                             |
+| `src/compositions/DashboardEnReel.tsx` | Rolka 2 — dashboard (EN) + lektor                    |
+| `src/compositions/ScannerAiReel.tsx`   | Rolka 3 — skaner AI                                  |
+| `src/components/Brand.tsx`             | Kolory, logo, animacje (DriftBackdrop, ClickRipple…) |
 
 Nowa rolka: dodaj `src/compositions/NazwaReel.tsx`, zarejestruj w `Root.tsx`, dodaj skrypt `render:nazwa` w `package.json`.
 
@@ -97,9 +110,24 @@ Nowa rolka: dodaj `src/compositions/NazwaReel.tsx`, zarejestruj w `Root.tsx`, do
 
 ## Rolka 2 — Dashboard ✅
 
-**Kompozycja:** `DashboardReel`  
-**Gotowy plik:** `out/renders/dashboard-reel.mp4`  
-**Źródła:** `dashboard-scroll-{1,2,3}.*` w `out/sources/videos/`
+**Kompozycja PL:** `DashboardReel` → `out/renders/pl/dashboard-reel.mp4`  
+**Kompozycja EN:** `DashboardEnReel` → `out/renders/en/dashboard-reel.mp4`  
+**Źródła PL:** `dashboard-scroll-{1,2,3}.*` + `audio/pl/dashboard-voiceover.mp3` (legacy: `audio/dashboard-voiceover.mp3`)  
+**Źródła EN:** `videos/Dashboard-EN-h264.mp4` + `audio/en/dashboard-voiceover.mp3`  
+**Render EN:** `npm run render:dashboard-en -w @lyamo/reels`
+
+### EN — sync lektora
+
+|              | Wartość                                                  |
+| ------------ | -------------------------------------------------------- |
+| Lektor       | ~**36,81 s** (`audio/en/dashboard-voiceover.mp3`)        |
+| Baza wideo   | ~**39,29 s** (`Dashboard-EN.mp4`)                        |
+| Gotowa rolka | ~**37,7 s** (VO + 0,9 s ciszy)                           |
+| Tempo wideo  | `playbackRate ≈ 1,042` — cały cut mieści się w czasie VO |
+
+Oryginał lektora (kopia robocza): `apps/web/public/marketing/dashboard -EN.mp3` → kanonicznie w `out/sources/audio/en/`.
+
+### PL — timeline
 
 | Czas        | Scena               | Napisy / sync z lektorem                                |
 | ----------- | ------------------- | ------------------------------------------------------- |
@@ -109,7 +137,7 @@ Nowa rolka: dodaj `src/compositions/NazwaReel.tsx`, zarejestruj w `Root.tsx`, do
 | 24–29,8 s   | Historia            | Paragony rozbite na kategorie                           |
 | 29,8–36,4 s | End card            | Logo od „Lyamo. Finanse pod kontrolą…” + cisza na końcu |
 
-**Audio:** `out/sources/audio/dashboard-voiceover.mp3` (symlink `public/audio/`)  
+**Audio PL:** `out/sources/audio/pl/dashboard-voiceover.mp3`  
 **Bez zoomów** na nagraniach telefonu. Całość ~**36,4 s** (VO ~35,7 s + cisza na end card).
 
 ### Tekst lektora (PL) — sync z `dashboard-voiceover.mp3`

@@ -399,7 +399,8 @@
     "ai": {
       "title": "An assistant that calculates on your data.",
       "subtitle": "Ask about patterns, limits, or “what if I buy X?”. Answers use your budget, fixed costs, and days until payday.",
-      "eyebrow": "AI assistant"
+      "eyebrow": "AI assistant",
+      "disclaimer": "AI tips are informational and are not financial advice. AI proposes — you confirm."
     },
     "control": {
       "title": "Limits where spending usually slips.",
@@ -433,17 +434,32 @@
         "description": "Add expenses manually or scan receipts. Nothing links to your bank account."
       },
       "privacy": {
-        "title": "Privacy & consent",
-        "description": "Cookie preferences, Privacy Policy, Terms, and Impressum — clear and accessible."
+        "title": "Data & privacy",
+        "description": "We process data in the EU. Delete your account — we delete your data. Privacy Policy is available before you sign up."
+      },
+      "ai": {
+        "title": "AI under your control",
+        "description": "AI drafts receipts and answers from your numbers. Nothing is saved without your confirmation."
       },
       "payments": {
         "title": "Payments via Stripe",
-        "description": "Checkout and subscription management through Stripe Customer Portal."
+        "description": "Checkout and subscription management through Stripe Customer Portal — no card required to start."
       },
       "account": {
         "title": "Your account, your choice",
         "description": "Email verification, password reset, and full account deletion in Settings."
-      }
+      },
+      "legalHint": "Read before you create an account:"
+    },
+    "creator": {
+      "eyebrow": "Creator",
+      "title": "A real person behind Lyamo — not an anonymous team.",
+      "body": "I’m Piotr Kulbacki. I build Lyamo in Berlin as an independent product: expense control without bank login, clear privacy rules, and AI that you confirm.",
+      "name": "Piotr Kulbacki",
+      "role": "Lyamo creator · Software Engineer",
+      "cta": "Meet me at piotrkulbacki.com",
+      "photoAlt": "Photo of Piotr Kulbacki, creator of Lyamo",
+      "lockupAlt": "Piotr Kulbacki logo — Software Engineer"
     },
     "pricing": {
       "title": "Simple pricing. Full dashboard on Free.",
@@ -525,16 +541,23 @@
       "cancel": {
         "q": "How do I cancel a subscription?",
         "a": "Through the Stripe Customer Portal in Settings. You keep access until the end of the paid period."
+      },
+      "creator": {
+        "q": "Who built Lyamo?",
+        "a": "Lyamo is built by Piotr Kulbacki — an independent software engineer in Berlin. More about me: piotrkulbacki.com. Company details are also in the Impressum."
       }
     },
     "cta": {
       "title": "Stop guessing. Start knowing.",
       "subtitle": "Create a free account, set your payday, and see your first clear cycle.",
       "button": "Create your free account",
-      "trustLine": "No card required · Cancel paid plans anytime in Stripe"
+      "trustLine": "No card required · No bank login · Cancel paid plans anytime in Stripe"
     },
     "shot": {
-      "missing": "Screenshot coming soon"
+      "missing": "Screenshot coming soon",
+      "expandHint": "Click to enlarge",
+      "expandAria": "Enlarge screenshot: {{alt}}",
+      "close": "Close"
     }
   },
   "dashboard": {

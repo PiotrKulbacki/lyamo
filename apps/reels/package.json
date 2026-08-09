@@ -5,8 +5,9 @@
   "scripts": {
     "studio": "remotion studio --port 3333",
     "render:ai-chat": "remotion render AiChatReel out/renders/ai-chat-reel.mp4",
-    "render:dashboard": "remotion render DashboardReel out/renders/dashboard-reel.mp4",
-    "render:scanner-ai": "remotion render ScannerAiReel out/renders/scanner-ai-reel.mp4",
+    "render:dashboard": "remotion render DashboardReel out/renders/pl/dashboard-reel.mp4",
+    "render:dashboard-en": "remotion render DashboardEnReel out/renders/en/dashboard-reel.mp4",
+    "render:scanner-ai": "remotion render ScannerAiReel out/renders/pl/scanner-ai-reel.mp4",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
