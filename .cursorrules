@@ -9,6 +9,12 @@
 5. **Zakaz autonomicznego rozszerzania zakresu:** Agentowi surowo zabrania się autonomicznego dodawania, planowania lub sugerowania nowych funkcji systemu w kolejnych fazach bez wcześniejszego, wyraźnego zapytania użytkownika i uzyskania jego jednoznacznej zgody. Każda nowa funkcja przed wpisaniem do kamieni milowych musi zostać zatwierdzona przez użytkownika.
 6. **Formatowanie Prettier — zawsze na koniec pracy:** Po zmianach w plikach objętych Prettierem uruchom `npx prettier --write .`, następnie zweryfikuj `npm run format`. Powtarzaj aż check przejdzie bez ostrzeżeń.
 7. **Lokalna weryfikacja CI — obowiązkowa przed zakończeniem pracy:** Po każdej zmianie kodu uruchom lokalnie te same checki jakościowe co GitHub Actions (`.github/workflows/ci.yml`), w tej kolejności: `npm run format`, `npm run lint`, `npm run typecheck`, `npm run test`. Wszystkie muszą przejść bez błędów i ostrzeżeń traktowanych jako fail w CI. Nie kończ zadania ani nie proponuj pusha/PR, dopóki lokalne checki nie są zielone — CI nie jest miejscem na pierwsze wykrycie problemów lint/format/typecheck/test.
+8. **Tailwind CSS v4 — najnowszy zapis klas (obowiązkowy):**
+   - **Zakaz** `bg-[var(--token)]`, `text-[var(--token)]`, `border-[var(--token)]` itd.
+   - Tokeny z `@theme` (`--color-*`): używaj utilities, np. `border-line`, `text-fg-muted`, `bg-bg-elevated`, `text-accent`, `bg-accent/10`, `decoration-line`, `outline-accent`.
+   - Surowa zmienna CSS (poza theme lub gdy utility wygląda myląco, np. kolor `bg`): składnia nawiasowa `bg-(--bg)/95`, `w-(--sidebar-w)`, `shadow-(--shadow)` — **nigdy** `bg-[var(--bg)]/95`.
+   - Arbitrary values ze znakiem ujemnym: `left-[-1.91rem]`, **nie** `-left-[1.91rem]`.
+   - Przed zakończeniem pracy sprawdź ostrzeżenia Tailwind IntelliSense / lintera w zmienionych plikach i popraw je.
 
 ## Architektura Monorepo
 
@@ -31,6 +37,7 @@
 
 - **Formatowanie:** Prettier, 2 spacje, `printWidth: 100`, średniki, `prettier-plugin-tailwindcss`.
 - **Format on save:** Włączone w `.vscode/settings.json`.
+- **Tailwind v4:** klasy wg żelaznej reguły 8 (tokeny `@theme` + składnia `(--var)`, bez `[var(--…)]`).
 
 ## Bezpieczeństwo & Monitoring
 

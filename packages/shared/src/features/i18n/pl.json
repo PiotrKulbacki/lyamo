@@ -365,12 +365,12 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Kontrola wydatków z AI",
-      "title": "Wiedz, ile możesz jeszcze wydać — do następnej wypłaty.",
-      "subtitle": "Lyamo zamienia paragony i zakupy w czytelny budżet: ile poszło, ile zostało i ile dziennie możesz wydać. AI skanuje paragony i odpowiada na podstawie Twoich liczb — bez podpinania konta bankowego.",
+      "eyebrow": "Od wypłaty do wypłaty — bez zgadywania",
+      "title": "Sprawdź ile już wydałeś i na co",
+      "subtitle": "Lyamo pokazuje pozostały budżet i dzienny limit do następnej wypłaty. Ty dodajesz wydatki — my liczymy resztę.",
       "ctaPrimary": "Zacznij za darmo",
       "ctaSecondary": "Zobacz, jak działa",
-      "trustLine": "Bez karty · Pełny dashboard · Plan Free od razu"
+      "trustLine": "Bez karty · Bez banku · Plan Free od razu"
     },
     "why": {
       "title": "Nie kolejny notatnik. System kontroli wydatków.",
@@ -401,7 +401,8 @@
     "ai": {
       "title": "Asystent, który liczy na Twoich liczbach.",
       "subtitle": "Pytaj o wzorce, limity i „co jeśli kupię X?”. Odpowiedzi z kontekstem budżetu, kosztów stałych i dni do wypłaty.",
-      "eyebrow": "Asystent AI"
+      "eyebrow": "Asystent AI",
+      "disclaimer": "Wskazówki AI mają charakter informacyjny i nie stanowią porady finansowej. AI proponuje — Ty zatwierdzasz."
     },
     "control": {
       "title": "Limity tam, gdzie zwykle puszczają hamulce.",
@@ -429,26 +430,41 @@
     },
     "trust": {
       "title": "Twoje finanse. Twoje dane. Bez konta bankowego.",
-      "subtitle": "Zaprojektowane z myślą o prywatności w UE — Ty decydujesz.",
+      "subtitle": "Zbudowane pod prywatność w UE — Ty zostajesz przy sterze.",
       "noBank": {
         "title": "Bez podłączania banku",
         "description": "Dodajesz wydatki ręcznie lub skanujesz paragony. Nic nie łączy się z kontem bankowym."
       },
       "privacy": {
-        "title": "Prywatność i zgody",
-        "description": "Preferencje cookie, Polityka prywatności, Regulamin i Impressum — jasno dostępne."
+        "title": "Dane i prywatność",
+        "description": "Bezpiecznie przetwarzamy dane. Usuwasz konto — usuwamy dane. Polityka prywatności jest dostępna przed rejestracją."
+      },
+      "ai": {
+        "title": "AI pod Twoją kontrolą",
+        "description": "AI przygotowuje szkic paragonu i sugestie z Twoich liczb. Nic nie zapisuje się bez Twojej zgody."
       },
       "payments": {
         "title": "Płatności przez Stripe",
-        "description": "Checkout i zarządzanie subskrypcją w Stripe Customer Portal."
+        "description": "Checkout i zarządzanie subskrypcją w bezpiecznym Stripe Customer Portal — bez karty na starcie."
       },
       "account": {
         "title": "Twoje konto, Twój wybór",
         "description": "Weryfikacja e-mail, reset hasła i pełne usunięcie konta w Ustawieniach."
-      }
+      },
+      "legalHint": "Przeczytaj przed założeniem konta:"
+    },
+    "creator": {
+      "eyebrow": "Twórca",
+      "title": "Za Lyamo stoi realna osoba — nie anonimowy zespół.",
+      "body": "Nazywam się Piotr Kulbacki. Buduję Lyamo w Berlinie jako niezależny produkt: kontrola wydatków bez podpinania banku, z jasnymi zasadami prywatności i AI, które Ty zatwierdzasz.",
+      "name": "Piotr Kulbacki",
+      "role": "Twórca Lyamo · Software Engineer",
+      "cta": "Poznaj mnie na piotrkulbacki.com",
+      "photoAlt": "Zdjęcie Piotra Kulbackiego, twórcy Lyamo",
+      "lockupAlt": "Logo Piotra Kulbackiego — Software Engineer"
     },
     "pricing": {
-      "title": "Prosty cennik. Pełny pulpit już w Free.",
+      "title": "Prosty cennik. Pełny pulpit już za Free",
       "subtitle": "Płać za więcej AI i dłuższe archiwum zdjęć — nie za podstawową kontrolę wydatków.",
       "perMonth": "/ miesiąc",
       "featured": "Wyróżniony",
@@ -527,16 +543,23 @@
       "cancel": {
         "q": "Jak anulować subskrypcję?",
         "a": "Przez Stripe Customer Portal w Ustawieniach. Dostęp zostaje do końca opłaconego okresu."
+      },
+      "creator": {
+        "q": "Kim jest twórca Lyamo?",
+        "a": "Lyamo buduje Piotr Kulbacki — niezależny software engineer z Berlina. Więcej o mnie: piotrkulbacki.com. Dane firmy znajdziesz też w Impressum."
       }
     },
     "cta": {
       "title": "Przestań zgadywać. Zacznij wiedzieć.",
       "subtitle": "Załóż darmowe konto, ustaw dzień wypłaty i zobacz pierwszy czytelny cykl.",
       "button": "Utwórz darmowe konto",
-      "trustLine": "Bez karty · Płatne plany anulujesz w Stripe kiedy chcesz"
+      "trustLine": "Bez karty · Bez banku · Płatne plany anulujesz w Stripe kiedy chcesz"
     },
     "shot": {
-      "missing": "Screenshot wkrótce"
+      "missing": "Screenshot wkrótce",
+      "expandHint": "Kliknij, aby powiększyć",
+      "expandAria": "Powiększ zrzut ekranu: {{alt}}",
+      "close": "Zamknij"
     }
   },
   "dashboard": {
