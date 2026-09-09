@@ -31,11 +31,6 @@ export default function ImpressumPage() {
               {OPERATOR.email}
             </a>
           </LegalField>
-          <LegalField label={t('legal.impressum.provider.labels.phone')}>
-            <a href={`tel:${OPERATOR.phoneTel}`} className="text-warm hover:underline">
-              {OPERATOR.phoneDisplay}
-            </a>
-          </LegalField>
           <LegalField label={t('legal.impressum.provider.labels.contactForm')}>
             <Link href={CONTACT_FORM_HREF} className="text-warm hover:underline">
               {t('legal.impressum.provider.contactFormLink')}

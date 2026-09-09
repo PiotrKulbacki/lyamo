@@ -190,7 +190,6 @@
         "product": "Service",
         "address": "Address",
         "email": "Email",
-        "phone": "Phone",
         "contactForm": "Contact form",
         "vatId": "VAT ID (USt-IdNr.)"
       },
