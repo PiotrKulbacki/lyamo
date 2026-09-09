@@ -833,78 +833,6 @@
       "immediateAccessConsentRequired": "Please confirm immediate access to PRO/Premium to continue"
     }
   },
-  "legal": {
-    "backToHome": "Back to home",
-    "terms": {
-      "title": "Terms of Service",
-      "sections": {
-        "overview": {
-          "p1": "Lyamo is a subscription SaaS that helps you track expenses, scan receipts with AI (OCR), categorize transactions, and use an AI financial assistant for informational insights.",
-          "p2": "By creating an account and using the Service you agree to the Terms."
-        },
-        "subscription": {
-          "title": "Subscriptions",
-          "p1": "Subscriptions are billed via Stripe and renew for the selected billing cycle. You can cancel at any time; cancellation prevents the next renewal and takes effect at the end of the current billing cycle."
-        },
-        "withdrawal": {
-          "title": "Right of withdrawal",
-          "p1": "As a consumer you generally have 14 days to withdraw from a distance contract. For PRO/Premium, when you request immediate access, you acknowledge that the service performance may begin immediately and you waive the statutory right of withdrawal once the service starts."
-        },
-        "refund": {
-          "title": "Voluntary refund (money-back)",
-          "p1": "We may offer refunds for up to 7 days after purchase if you have not used the app and have not sent any AI scans/messages.",
-          "p2": "AI features are informational and may be inaccurate. You remain responsible for verifying extracted data and for any decisions you make."
-        },
-        "complaints": {
-          "title": "Complaints",
-          "p1": "For complaints, contact us using the details in the Impressum."
-        }
-      }
-    },
-    "privacy": {
-      "title": "Privacy Policy",
-      "sections": {
-        "dataProcessing": {
-          "title": "Data we process",
-          "p1": "We process personal data to provide Lyamo, manage your account, process subscriptions, and deliver the AI features you request.",
-          "p2": "This includes account data (e.g. email), transaction data you save, chat messages, and receipt scan results.",
-          "p3": "We store receipt images only for the time needed for your selected plan and delete them according to our retention policy. You can delete your account and data at any time from Settings."
-        },
-        "security": {
-          "title": "Security",
-          "p1": "We use appropriate security measures and we do not sell your personal data."
-        },
-        "cookies": {
-          "title": "Cookies",
-          "intro": "We use the following cookie categories:",
-          "list": {
-            "necessary": "Necessary cookies — required for the app to function securely.",
-            "analytics": "Analytics cookies — help us understand how the product is used (for example via PostHog and Vercel Analytics)."
-          },
-          "outro": "Analytics cookies are enabled only after you give consent. You can manage your preferences using the Cookie settings link. We store your cookie decision for up to 365 days."
-        }
-      }
-    },
-    "impressum": {
-      "title": "Impressum",
-      "sections": {
-        "provider": {
-          "title": "Provider",
-          "name": "Piotr Kulbacki (Einzelunternehmen) — Lyamo",
-          "labels": {
-            "address": "Address",
-            "email": "E-mail",
-            "phone": "Phone"
-          },
-          "items": {
-            "address": "Bendastr. 11, 12051 Berlin, Germany",
-            "email": "kontakt@lyamo.eu",
-            "phone": "+49 30 00000000 (virtual number)"
-          }
-        }
-      }
-    }
-  },
   "seo": {
     "home": {
       "title": "Lyamo — know what you can spend until payday",
@@ -916,15 +844,15 @@
     },
     "terms": {
       "title": "Terms of Service",
-      "description": "Terms of Service for Lyamo — subscriptions, withdrawal rights, and refund policy."
+      "description": "Terms of Service for Lyamo: subscriptions, VAT, withdrawal rights, and refund policy."
     },
     "privacy": {
       "title": "Privacy Policy",
-      "description": "How Lyamo processes personal data, cookies, and security under GDPR."
+      "description": "How Lyamo processes personal data, cookies, processors, and security under GDPR."
     },
     "impressum": {
       "title": "Impressum",
-      "description": "Legal imprint (Impressum) for Lyamo — provider details and contact information."
+      "description": "Legal imprint (Impressum) for Lyamo: provider details, contact, and VAT ID when issued."
     }
   },
   "cookies": {
@@ -955,7 +883,7 @@
       },
       "marketing": {
         "title": "Marketing",
-        "description": "Used for optional marketing tools and non-essential third-party widgets. Not required to use the app."
+        "description": "Reserved for optional marketing tools. No marketing pixels or ad scripts are loaded at present. Not required to use the app."
       }
     }
   }

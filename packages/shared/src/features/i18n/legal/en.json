@@ -1,0 +1,201 @@
+{
+  "backToHome": "Back to home",
+  "terms": {
+    "title": "Terms of Service",
+    "sections": {
+      "general": {
+        "title": "1. General provisions",
+        "p1": "These Terms govern the use of {{productName}}, a subscription SaaS for tracking expenses, scanning receipts with AI (OCR), categorizing transactions, and using an informational AI assistant. The operator is {{legalName}}, {{address}}. Full provider details are in the",
+        "impressumLink": "legal notice (Impressum)",
+        "p2": "German law applies. This choice of law does not deprive a consumer of the protection of mandatory provisions of the country of their habitual residence (Rome I Regulation). The German and Polish versions are legally relevant; the English and Spanish versions are provided for convenience."
+      },
+      "scope": {
+        "title": "2. Service and plans",
+        "p1": "Lyamo is a consumer (B2C) digital service. Plans, quotas, and photo retention currently include:",
+        "list": {
+          "item1": "FREE: 5 AI scans and 10 AI chat messages per month; receipt images are deleted immediately after OCR.",
+          "item2": "PRO: 50 AI scans and 50 AI chat messages per month; receipt images are stored for 60 days.",
+          "item3": "PREMIUM: 120 AI scans and 250 AI chat messages per month; receipt images are stored for 365 days."
+        }
+      },
+      "subscription": {
+        "title": "3. Subscriptions and payments",
+        "p1": "A paid contract is formed when Stripe payment succeeds. Subscriptions are billed via Stripe in PLN, EUR, GBP or USD, renew for the selected billing cycle, and may include published promotions (for example PROMO50). You can cancel at any time; cancellation stops the next renewal and takes effect at the end of the current billing cycle. Failed renewal is followed by a short dunning period, then the account is downgraded to FREE."
+      },
+      "vat": {
+        "title": "4. Prices and VAT",
+        "p1": "Current prices are shown in the application. The operator is a small business under § 19 UStG (Kleinunternehmer) and does not charge VAT. Displayed prices are therefore the amount payable.",
+        "vatNote": "The VAT identification number (USt-IdNr.) {{vatId}} is published in the",
+        "impressumLink": "legal notice"
+      },
+      "withdrawal": {
+        "title": "5. Right of withdrawal",
+        "p1": "As a consumer you generally have 14 days to withdraw from a distance contract. For PRO/Premium, checkout requires a separate confirmation that the digital service may start immediately. If you give that confirmation, you acknowledge that you lose the statutory right of withdrawal once performance has begun. Payment is not possible without this confirmation. You can contact us at the email in the Impressum if you wish to withdraw where the right still applies."
+      },
+      "refund": {
+        "title": "6. Voluntary refund (money-back)",
+        "p1": "Independently of the statutory right of withdrawal, we may offer a refund for up to 7 days after purchase if you have not used the app and have not sent any AI scans or messages.",
+        "p2": "AI features are informational and may be inaccurate. You remain responsible for verifying extracted data and for any decisions you make."
+      },
+      "ai": {
+        "title": "7. AI, data, and liability",
+        "intro": "Lyamo does not provide financial, tax, or legal advice.",
+        "list": {
+          "item1": "You must verify OCR results and AI replies before relying on them. The service may hallucinate or misread amounts, dates, or merchants.",
+          "item2": "You remain responsible for the accuracy of data you enter and for how you use the service.",
+          "item3": "The operator is liable without limitation for intent, gross negligence, injury to life, body or health, and under the German Product Liability Act.",
+          "item4": "In cases of slight negligence, liability is limited to the breach of essential contractual duties (Kardinalpflichten) and to foreseeable damage typical for this type of contract, subject to mandatory consumer protection law."
+        }
+      },
+      "cancellation": {
+        "title": "8. Cancellation",
+        "p1": "You can cancel a paid subscription through the Stripe customer portal in Settings, or by emailing the operator. Cancellation takes effect at the end of the current billing period. You can delete your account and associated application data at any time in Settings."
+      },
+      "inactive": {
+        "title": "9. Inactive accounts",
+        "p1": "The operator may delete an account if you do not sign in for 24 months. You will receive an email notice before deletion."
+      },
+      "complaints": {
+        "title": "10. Complaints",
+        "intro": "If something goes wrong (for example a payment error or a service failure), you may file a complaint.",
+        "list": {
+          "item1": "Send it to {{email}} and include your account email, the date, and a short description.",
+          "item2": "We will review the complaint within 14 days of receipt.",
+          "item3": "If we accept a technical error on our side, we will restore access or process a refund as appropriate."
+        }
+      },
+      "privacy": {
+        "title": "11. Personal data",
+        "p1": "Personal data is processed as described in the",
+        "privacyLink": "Privacy Policy"
+      },
+      "disputes": {
+        "title": "12. Consumer dispute resolution",
+        "p1": "The operator is neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board. Consumers in the EU may still use the European Commission's ODR platform if it remains available."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "sections": {
+      "controller": {
+        "title": "1. Data controller",
+        "p1": "The controller of your personal data is {{legalName}}, {{address}}. Email: {{email}}.",
+        "p2": "Further provider details are in the",
+        "impressumLink": "legal notice (Impressum)"
+      },
+      "purposes": {
+        "title": "2. Purposes and legal bases",
+        "intro": "We process personal data only for specified purposes:",
+        "list": {
+          "item1": "User account (registration, login, settings) - Art. 6(1)(b) GDPR (contract).",
+          "item2": "Expense tracking, receipt OCR, and the AI assistant - Art. 6(1)(b) GDPR (contract).",
+          "item3": "Subscriptions, invoices, and billing - Art. 6(1)(b) GDPR (contract) and Art. 6(1)(c) GDPR (legal obligation).",
+          "item4": "Contact form and support emails - Art. 6(1)(b) GDPR (pre-contractual request) or Art. 6(1)(f) GDPR (responding to enquiries).",
+          "item5": "Necessary cookies (session, language, consent record) - Art. 6(1)(b) and Art. 6(1)(f) GDPR.",
+          "item6": "Analytics and error monitoring (PostHog, Vercel Analytics, Sentry) - Art. 6(1)(a) GDPR (consent).",
+          "item7": "Legal obligations such as accounting records - Art. 6(1)(c) GDPR."
+        }
+      },
+      "specialCategories": {
+        "title": "3. Special categories of data",
+        "p1": "Receipts that you upload may incidentally contain special categories of personal data (Art. 9 GDPR), for example pharmacy purchases. We do not request such data as a separate category. Processing happens only to provide the service you ordered. By uploading a receipt you give explicit consent to that processing (Art. 9(2)(a) GDPR). You can delete receipts and your account at any time."
+      },
+      "retention": {
+        "title": "4. What we store and for how long",
+        "intro": "We process account data (email, name, settings), transactions you save, AI chat messages, receipt scan results, and billing metadata. Retention:",
+        "list": {
+          "item1": "Receipt images: deleted immediately after OCR on FREE; 60 days on PRO; 365 days on PREMIUM.",
+          "item2": "Transactions, chat, and account data: until you delete them or delete the account.",
+          "item3": "Inactive accounts may be deleted after 24 months without sign-in, after an email notice.",
+          "item4": "Cookie consent is stored for up to 365 days.",
+          "item5": "Billing and invoice data are kept for the period required by German tax and accounting law.",
+          "item6": "You can delete your account and application data at any time from Settings."
+        }
+      },
+      "recipients": {
+        "title": "5. Recipients (processors and independent controllers)",
+        "intro": "To provide the service we use trusted providers. Your data may be processed by:",
+        "list": {
+          "item1": "OpenAI, L.L.C. (USA) - receipt OCR and AI chat. According to OpenAI API terms, API data is not used to train OpenAI models.",
+          "item2": "Stripe Payments Europe, Ltd. (Ireland) - subscriptions. Stripe acts as an independent controller for payment card data; we do not receive your full card number.",
+          "item3": "Supabase, Inc. (USA/EU) - database and receipt image storage.",
+          "item4": "Vercel Inc. (USA/EU) - application hosting and, with consent, Web Analytics.",
+          "item5": "Brevo (France/EU) - transactional email.",
+          "item6": "PostHog (EU) - product analytics, only after you consent.",
+          "item7": "Functional Software, Inc. / Sentry (USA/EU) - error monitoring, only after analytics consent.",
+          "item8": "Upstash, Inc. (USA/EU) - rate limiting (request metadata such as IP address).",
+          "item9": "Google Ireland Limited / Google LLC - Google Sign-In (email, name, profile picture) if you choose that login method."
+        }
+      },
+      "transfers": {
+        "title": "6. International transfers",
+        "p1": "Some providers (in particular OpenAI, Supabase, Vercel, Sentry, Upstash, and Google) may process data in the United States or other countries outside the EEA. Where required, transfers are based on the European Commission's Standard Contractual Clauses and/or the EU-US Data Privacy Framework, as applicable to the provider."
+      },
+      "rights": {
+        "title": "7. Your rights",
+        "intro": "Under the GDPR you have the right to:",
+        "list": {
+          "item1": "Access your data (in the app and by emailing the controller).",
+          "item2": "Rectify data (edit in Settings or by contacting us).",
+          "item3": "Erase data - delete individual data or the entire account in Settings. Deletion of application data is permanent.",
+          "item4": "Restrict processing.",
+          "item5": "Object to processing based on legitimate interests.",
+          "item6": "Data portability where processing is based on a contract or consent. A self-service export is not yet available; you can request a copy by email.",
+          "item7": "Withdraw consent for optional cookies without affecting the lawfulness of processing before withdrawal.",
+          "item8": "Lodge a complaint with a supervisory authority, in particular the Berlin DPA listed below, or another authority in your country of residence (for example UODO in Poland)."
+        }
+      },
+      "google": {
+        "title": "8. Google account data",
+        "p1": "If you use Google Sign-In, we access only your email address, first and last name, and profile picture to create an account and authorize access. We do not access Google Drive, Gmail, or other Google data. This profile data is not sold."
+      },
+      "cookies": {
+        "title": "9. Cookies",
+        "intro": "We use the following cookie categories (TDDDG § 25):",
+        "list": {
+          "necessary": "Necessary cookies - required for sign-in, session security, language, and storing your cookie choice. These cannot be disabled.",
+          "analytics": "Analytics cookies - PostHog, Vercel Analytics, and Sentry, only after consent.",
+          "marketing": "Marketing cookies - this category is reserved. No marketing pixels or ad scripts are loaded at present."
+        },
+        "tableIntro": "Cookies and similar technologies we use:",
+        "table": {
+          "session": "sec_session - necessary - keeps you signed in (up to 7 days).",
+          "locale": "sec_locale - necessary - language preference (up to 1 year).",
+          "consent": "sec_cookie_consent - necessary - stores your cookie decision (up to 365 days).",
+          "posthog": "PostHog cookies / localStorage - analytics - product usage, only after consent.",
+          "vercel": "Vercel Analytics - analytics - aggregated traffic, only after consent."
+        },
+        "outro": "Analytics technologies are enabled only after you give consent. We store your cookie decision for up to 365 days. You can change it at any time:",
+        "manage": "Open cookie settings"
+      },
+      "dpo": {
+        "title": "10. Data protection officer and complaints",
+        "p1": "No data protection officer has been appointed, as this is not legally required for this service. You may contact the controller at {{email}} or lodge a complaint with the competent supervisory authority:"
+      },
+      "security": {
+        "title": "11. Security",
+        "p1": "We use HTTPS, hashed passwords, access-controlled storage for receipt images, and we do not sell your personal data. No processing is fully automated decision-making with legal effects under Art. 22 GDPR."
+      }
+    }
+  },
+  "impressum": {
+    "title": "Impressum",
+    "intro": "This page identifies the provider of the {{productName}} digital service as required by § 5 of the German Digital Services Act (DDG) and Article 5 of the EU e-Commerce Directive.",
+    "provider": {
+      "title": "Service provider",
+      "country": "Germany",
+      "labels": {
+        "legalName": "Name",
+        "product": "Service",
+        "address": "Address",
+        "email": "Email",
+        "phone": "Phone",
+        "contactForm": "Contact form",
+        "vatId": "VAT ID (USt-IdNr.)"
+      },
+      "contactFormLink": "Open the contact form (no login required)",
+      "legalForm": "Sole proprietor (Einzelunternehmen). Not entered in the commercial register (Handelsregister)."
+    }
+  }
+}

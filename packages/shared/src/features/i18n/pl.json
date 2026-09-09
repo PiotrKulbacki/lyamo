@@ -835,78 +835,6 @@
       "immediateAccessConsentRequired": "Potwierdź zgodę na natychmiastowy dostęp do PRO/Premium, aby kontynuować"
     }
   },
-  "legal": {
-    "backToHome": "Wróć do strony głównej",
-    "terms": {
-      "title": "Regulamin",
-      "sections": {
-        "overview": {
-          "p1": "Lyamo to subskrypcyjny SaaS, który pomaga śledzić wydatki, skanować paragony z użyciem AI (OCR), kategoryzować transakcje oraz korzystać z asystenta finansowego AI w celu uzyskania informacji.",
-          "p2": "Tworząc konto i korzystając z Usługi akceptujesz niniejszy Regulamin."
-        },
-        "subscription": {
-          "title": "Subskrypcje",
-          "p1": "Subskrypcje są rozliczane przez Stripe i odnawiają się na wybrany okres rozliczeniowy. Możesz anulować subskrypcję w dowolnym momencie — anulowanie zapobiega kolejnemu automatycznemu przedłużeniu i zaczyna obowiązywać z końcem bieżącego okresu rozliczeniowego."
-        },
-        "withdrawal": {
-          "title": "Prawo odstąpienia",
-          "p1": "Jako konsument masz co do zasady 14 dni na odstąpienie od umowy zawartej na odległość. W przypadku PRO/Premium, jeśli włączysz natychmiastowy dostęp, potwierdzasz, że świadczenie może rozpocząć się niezwłocznie i akceptujesz utratę ustawowego prawa odstąpienia po rozpoczęciu świadczenia."
-        },
-        "refund": {
-          "title": "Dobrowolny zwrot (money-back)",
-          "p1": "Możemy zaoferować zwrot w okresie do 7 dni od zakupu, jeśli nie korzystałeś/-aś z aplikacji oraz nie wysyłałeś/-aś żadnych skanów ani wiadomości w ramach AI.",
-          "p2": "Funkcje AI mają charakter informacyjny i mogą być błędne. Ty ponosisz odpowiedzialność za weryfikację danych oraz za decyzje podejmowane na ich podstawie."
-        },
-        "complaints": {
-          "title": "Reklamacje",
-          "p1": "W sprawach reklamacji skontaktuj się z nami przez dane wskazane w sekcji Impressum."
-        }
-      }
-    },
-    "privacy": {
-      "title": "Polityka prywatności",
-      "sections": {
-        "dataProcessing": {
-          "title": "Przetwarzane dane",
-          "p1": "Przetwarzamy dane osobowe w celu świadczenia Lyamo, zarządzania Twoim kontem, obsługi subskrypcji oraz dostarczania funkcji AI.",
-          "p2": "Obejmuje to dane konta (np. e-mail), dane transakcji, wiadomości czatu oraz wyniki skanowania paragonów.",
-          "p3": "Obrazy paragonów przechowujemy tylko przez czas potrzebny dla wybranego planu i usuwamy je zgodnie z polityką retencji. Możesz trwale usunąć konto i dane w dowolnym momencie w Ustawieniach."
-        },
-        "security": {
-          "title": "Bezpieczeństwo",
-          "p1": "Stosujemy odpowiednie środki bezpieczeństwa i nie sprzedajemy Twoich danych osobowych."
-        },
-        "cookies": {
-          "title": "Pliki cookie",
-          "intro": "Używamy następujących kategorii plików cookie:",
-          "list": {
-            "necessary": "Niezbędne pliki cookie — wymagane do bezpiecznego działania aplikacji.",
-            "analytics": "Pliki cookie analityczne — pomagają nam zrozumieć, jak korzystasz z produktu (np. PostHog i Vercel Analytics)."
-          },
-          "outro": "Analityka jest aktywowana dopiero po Twojej zgodzie. Możesz zarządzać preferencjami przez link do Ustawień cookies. Twoją decyzję przechowujemy do 365 dni."
-        }
-      }
-    },
-    "impressum": {
-      "title": "Impressum",
-      "sections": {
-        "provider": {
-          "title": "Dostawca",
-          "name": "Piotr Kulbacki (jednoosobowa działalność) — Lyamo",
-          "labels": {
-            "address": "Adres",
-            "email": "E-mail",
-            "phone": "Telefon"
-          },
-          "items": {
-            "address": "Bendastr. 11, 12051 Berlin, Niemcy",
-            "email": "kontakt@lyamo.eu",
-            "phone": "+49 30 00000000 (numer wirtualny)"
-          }
-        }
-      }
-    }
-  },
   "seo": {
     "home": {
       "title": "Lyamo — wiedz, ile możesz wydać do wypłaty",
@@ -918,15 +846,15 @@
     },
     "terms": {
       "title": "Regulamin",
-      "description": "Regulamin Lyamo — subskrypcje, prawo odstąpienia i polityka zwrotów."
+      "description": "Regulamin Lyamo: subskrypcje, VAT, prawo odstąpienia i polityka zwrotów."
     },
     "privacy": {
       "title": "Polityka prywatności",
-      "description": "Jak Lyamo przetwarza dane osobowe, pliki cookie i zabezpieczenia zgodnie z RODO."
+      "description": "Jak Lyamo przetwarza dane osobowe, pliki cookie, podmioty przetwarzające i zabezpieczenia zgodnie z RODO."
     },
     "impressum": {
       "title": "Impressum",
-      "description": "Impressum Lyamo — dane usługodawcy i dane kontaktowe."
+      "description": "Impressum Lyamo: dane usługodawcy, kontakt i USt-IdNr., gdy numer zostanie nadany."
     }
   },
   "cookies": {
@@ -957,7 +885,7 @@
       },
       "marketing": {
         "title": "Marketingowe",
-        "description": "Służą opcjonalnym narzędziom marketingowym i nieistotnym widgetom zewnętrznym. Nie są wymagane do korzystania z aplikacji."
+        "description": "Zarezerwowane dla opcjonalnych narzędzi marketingowych. Obecnie nie ładujemy pikseli reklamowych ani skryptów marketingowych. Nie są wymagane do korzystania z aplikacji."
       }
     }
   }
