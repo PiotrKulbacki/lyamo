@@ -6,8 +6,6 @@ export const OPERATOR = {
   postalCode: '12051',
   city: 'Berlin',
   email: 'kontakt@lyamo.eu',
-  phoneDisplay: '+49 157 35166871',
-  phoneTel: '+4915735166871',
 } as const;
 
 /** German VAT ID - public by law once issued. Set NEXT_PUBLIC_UST_IDNR. */

@@ -190,7 +190,6 @@
         "product": "Servicio",
         "address": "Dirección",
         "email": "Correo",
-        "phone": "Teléfono",
         "contactForm": "Formulario de contacto",
         "vatId": "NIF-IVA (USt-IdNr.)"
       },
