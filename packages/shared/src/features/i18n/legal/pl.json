@@ -1,0 +1,201 @@
+{
+  "backToHome": "Wróć do strony głównej",
+  "terms": {
+    "title": "Regulamin",
+    "sections": {
+      "general": {
+        "title": "1. Postanowienia ogólne",
+        "p1": "Niniejszy Regulamin określa zasady korzystania z {{productName}}, subskrypcyjnego SaaS do śledzenia wydatków, skanowania paragonów AI (OCR), kategoryzacji transakcji oraz korzystania z informacyjnego asystenta AI. Usługodawcą jest {{legalName}}, {{address}}. Pełne dane usługodawcy znajdują się w",
+        "impressumLink": "Impressum (nocie prawnej)",
+        "p2": "Prawem właściwym jest prawo niemieckie. Wybór prawa nie pozbawia konsumenta ochrony wynikającej z bezwzględnie wiążących przepisów państwa jego zwykłego pobytu (rozporządzenie Rzym I). Wersje niemiecka i polska są prawnie istotne; wersje angielska i hiszpańska służą wygodzie."
+      },
+      "scope": {
+        "title": "2. Usługa i plany",
+        "p1": "Lyamo jest cyfrową usługą konsumencką (B2C). Plany, limity i retencja zdjęć obecnie obejmują:",
+        "list": {
+          "item1": "FREE: 5 skanów AI i 10 wiadomości czatu AI miesięcznie; zdjęcia paragonów są usuwane natychmiast po OCR.",
+          "item2": "PRO: 50 skanów AI i 50 wiadomości czatu AI miesięcznie; zdjęcia paragonów są przechowywane przez 60 dni.",
+          "item3": "PREMIUM: 120 skanów AI i 250 wiadomości czatu AI miesięcznie; zdjęcia paragonów są przechowywane przez 365 dni."
+        }
+      },
+      "subscription": {
+        "title": "3. Subskrypcje i płatności",
+        "p1": "Umowa płatna dochodzi do skutku z chwilą skutecznej płatności Stripe. Subskrypcje rozlicza Stripe w PLN, EUR, GBP lub USD, odnawiają się na wybrany okres i mogą obejmować opublikowane promocje (np. PROMO50). Możesz anulować w dowolnym momencie; anulowanie wstrzymuje kolejne odnowienie i działa od końca bieżącego okresu rozliczeniowego. Po nieudanym odnowieniu następuje krótki okres dunning, a następnie konto jest obniżane do FREE."
+      },
+      "vat": {
+        "title": "4. Ceny i VAT",
+        "p1": "Aktualne ceny są pokazane w aplikacji. Usługodawca jest małym przedsiębiorcą w rozumieniu § 19 UStG (Kleinunternehmer) i nie dolicza VAT. Wyświetlane ceny są więc kwotą do zapłaty.",
+        "vatNote": "Numer identyfikacyjny VAT (USt-IdNr.) {{vatId}} jest opublikowany w",
+        "impressumLink": "Impressum"
+      },
+      "withdrawal": {
+        "title": "5. Prawo odstąpienia",
+        "p1": "Jako konsument masz co do zasady 14 dni na odstąpienie od umowy zawartej na odległość. Przy PRO/Premium checkout wymaga osobnego potwierdzenia, że usługa cyfrowa może rozpocząć się natychmiast. Składając to potwierdzenie, przyjmujesz do wiadomości, że tracisz ustawowe prawo odstąpienia z chwilą rozpoczęcia świadczenia. Bez tego potwierdzenia płatność nie jest możliwa. Jeśli prawo odstąpienia nadal przysługuje, skontaktuj się z nami na adres e-mail z Impressum."
+      },
+      "refund": {
+        "title": "6. Dobrowolny zwrot (money-back)",
+        "p1": "Niezależnie od ustawowego prawa odstąpienia możemy zaoferować zwrot do 7 dni od zakupu, jeśli nie korzystałeś z aplikacji i nie wysyłałeś skanów ani wiadomości AI.",
+        "p2": "Funkcje AI mają charakter informacyjny i mogą być błędne. Ty odpowiadasz za weryfikację danych i za decyzje podejmowane na ich podstawie."
+      },
+      "ai": {
+        "title": "7. AI, dane i odpowiedzialność",
+        "intro": "Lyamo nie świadczy porad finansowych, podatkowych ani prawnych.",
+        "list": {
+          "item1": "Wyniki OCR i odpowiedzi AI musisz sprawdzić przed ich użyciem. Usługa może halucynować albo źle odczytać kwoty, daty lub sprzedawców.",
+          "item2": "Odpowiadasz za poprawność wprowadzonych danych i za sposób korzystania z usługi.",
+          "item3": "Usługodawca odpowiada bez ograniczeń za umyślność, rażące niedbalstwo, szkodę na życiu, ciele lub zdrowiu oraz na podstawie niemieckiej ustawy o odpowiedzialności za produkt.",
+          "item4": "Przy lekkim niedbalstwie odpowiedzialność ogranicza się do naruszenia istotnych obowiązków umownych (Kardinalpflichten) i do typowej, przewidywalnej szkody, z zastrzeżeniem bezwzględnie wiążącego prawa konsumenckiego."
+        }
+      },
+      "cancellation": {
+        "title": "8. Wypowiedzenie",
+        "p1": "Płatną subskrypcję możesz anulować przez portal klienta Stripe w Ustawieniach albo e-mailem do usługodawcy. Anulowanie działa od końca bieżącego okresu rozliczeniowego. Konto i powiązane dane aplikacji możesz usunąć w dowolnym momencie w Ustawieniach."
+      },
+      "inactive": {
+        "title": "9. Konta nieaktywne",
+        "p1": "Usługodawca może usunąć konto, jeśli nie zalogujesz się przez 24 miesiące. Przed usunięciem otrzymasz powiadomienie e-mail."
+      },
+      "complaints": {
+        "title": "10. Reklamacje",
+        "intro": "W razie problemów (np. błąd płatności albo niewykonanie usługi) możesz złożyć reklamację.",
+        "list": {
+          "item1": "Wyślij ją na {{email}} i podaj e-mail konta, datę oraz krótki opis.",
+          "item2": "Rozpatrzymy reklamację w ciągu 14 dni od otrzymania.",
+          "item3": "Jeśli uznamy błąd techniczny po naszej stronie, przywrócimy dostęp albo zrealizujemy zwrot, stosownie do sytuacji."
+        }
+      },
+      "privacy": {
+        "title": "11. Dane osobowe",
+        "p1": "Dane osobowe są przetwarzane zgodnie z",
+        "privacyLink": "Polityką prywatności"
+      },
+      "disputes": {
+        "title": "12. Pozasądowe rozstrzyganie sporów",
+        "p1": "Usługodawca nie jest zobowiązany ani gotów uczestniczyć w postępowaniu przed stałym polubownym sądem konsumenckim. Konsumenci w UE mogą korzystać z platformy ODR Komisji Europejskiej, o ile pozostaje dostępna."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Polityka prywatności",
+    "sections": {
+      "controller": {
+        "title": "1. Administrator",
+        "p1": "Administratorem Twoich danych osobowych jest {{legalName}}, {{address}}. E-mail: {{email}}.",
+        "p2": "Dalsze dane usługodawcy znajdziesz w",
+        "impressumLink": "Impressum (nocie prawnej)"
+      },
+      "purposes": {
+        "title": "2. Cele i podstawy prawne",
+        "intro": "Dane osobowe przetwarzamy wyłącznie w określonych celach:",
+        "list": {
+          "item1": "Konto użytkownika (rejestracja, logowanie, ustawienia) - art. 6 ust. 1 lit. b RODO (umowa).",
+          "item2": "Śledzenie wydatków, OCR paragonów i asystent AI - art. 6 ust. 1 lit. b RODO (umowa).",
+          "item3": "Subskrypcje, faktury i rozliczenia - art. 6 ust. 1 lit. b RODO (umowa) oraz art. 6 ust. 1 lit. c RODO (obowiązek prawny).",
+          "item4": "Formularz kontaktowy i e-maile wsparcia - art. 6 ust. 1 lit. b RODO (działania przedumowne) albo art. 6 ust. 1 lit. f RODO (odpowiedź na zapytanie).",
+          "item5": "Niezbędne pliki cookie (sesja, język, zapis zgody) - art. 6 ust. 1 lit. b i lit. f RODO.",
+          "item6": "Analityka i monitoring błędów (PostHog, Vercel Analytics, Sentry) - art. 6 ust. 1 lit. a RODO (zgoda).",
+          "item7": "Obowiązki prawne, np. przechowywanie dokumentów księgowych - art. 6 ust. 1 lit. c RODO."
+        }
+      },
+      "specialCategories": {
+        "title": "3. Szczególne kategorie danych",
+        "p1": "Paragony, które wgrywasz, mogą przypadkowo zawierać szczególne kategorie danych osobowych (art. 9 RODO), np. zakupy w aptece. Nie żądamy takich danych jako osobnej kategorii. Przetwarzanie następuje wyłącznie w celu świadczenia zamówionej usługi. Wgrywając paragon, wyrażasz wyraźną zgodę na to przetwarzanie (art. 9 ust. 2 lit. a RODO). Paragony i konto możesz usunąć w dowolnym momencie."
+      },
+      "retention": {
+        "title": "4. Jakie dane przechowujemy i jak długo",
+        "intro": "Przetwarzamy dane konta (e-mail, imię, ustawienia), zapisane transakcje, wiadomości czatu AI, wyniki skanów oraz metadane rozliczeń. Retencja:",
+        "list": {
+          "item1": "Zdjęcia paragonów: na FREE usuwane natychmiast po OCR; 60 dni na PRO; 365 dni na PREMIUM.",
+          "item2": "Transakcje, czat i dane konta: do ich usunięcia albo usunięcia konta.",
+          "item3": "Konta nieaktywne mogą zostać usunięte po 24 miesiącach bez logowania, po powiadomieniu e-mail.",
+          "item4": "Zgoda cookie jest przechowywana do 365 dni.",
+          "item5": "Dane billingowe i fakturowe przechowujemy przez okres wymagany niemieckim prawem podatkowym i rachunkowym.",
+          "item6": "Konto i dane aplikacji możesz usunąć w dowolnym momencie w Ustawieniach."
+        }
+      },
+      "recipients": {
+        "title": "5. Odbiorcy (podmioty przetwarzające i niezależni administratorzy)",
+        "intro": "Do świadczenia usługi korzystamy z zaufanych dostawców. Twoje dane mogą przetwarzać:",
+        "list": {
+          "item1": "OpenAI, L.L.C. (USA) - OCR paragonów i czat AI. Zgodnie z warunkami API OpenAI dane z API nie służą do trenowania modeli OpenAI.",
+          "item2": "Stripe Payments Europe, Ltd. (Irlandia) - subskrypcje. Stripe jest niezależnym administratorem danych karty; nie otrzymujemy pełnego numeru karty.",
+          "item3": "Supabase, Inc. (USA/UE) - baza danych i przechowywanie zdjęć paragonów.",
+          "item4": "Vercel Inc. (USA/UE) - hosting aplikacji oraz, za zgodą, Web Analytics.",
+          "item5": "Brevo (Francja/UE) - e-maile transakcyjne.",
+          "item6": "PostHog (UE) - analityka produktu, tylko po zgodzie.",
+          "item7": "Functional Software, Inc. / Sentry (USA/UE) - monitoring błędów, tylko po zgodzie na analitykę.",
+          "item8": "Upstash, Inc. (USA/UE) - limity zapytań (metadane żądania, np. adres IP).",
+          "item9": "Google Ireland Limited / Google LLC - Google Sign-In (e-mail, imię, zdjęcie profilowe), jeśli wybierzesz to logowanie."
+        }
+      },
+      "transfers": {
+        "title": "6. Przekazania poza EOG",
+        "p1": "Niektórzy dostawcy (w szczególności OpenAI, Supabase, Vercel, Sentry, Upstash i Google) mogą przetwarzać dane w Stanach Zjednoczonych lub innych państwach poza EOG. Tam gdzie jest to wymagane, podstawą są standardowe klauzule umowne Komisji Europejskiej i/lub ramy EU-US Data Privacy Framework, zależnie od dostawcy."
+      },
+      "rights": {
+        "title": "7. Twoje prawa",
+        "intro": "Zgodnie z RODO masz prawo do:",
+        "list": {
+          "item1": "Dostępu do danych (w aplikacji i e-mailem do administratora).",
+          "item2": "Sprostowania (w Ustawieniach albo przez kontakt z nami).",
+          "item3": "Usunięcia danych - pojedynczych albo całego konta w Ustawieniach. Usunięcie danych aplikacji jest trwałe.",
+          "item4": "Ograniczenia przetwarzania.",
+          "item5": "Sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie.",
+          "item6": "Przenoszenia danych, gdy podstawą jest umowa albo zgoda. Eksport samoobsługowy nie jest jeszcze dostępny; kopię możesz zlecić e-mailem.",
+          "item7": "Cofnięcia zgody na opcjonalne cookie bez wpływu na zgodność z prawem przetwarzania sprzed cofnięcia.",
+          "item8": "Wniesienia skargi do organu nadzorczego, w szczególności do berlińskiego organu wskazanego poniżej albo organu w kraju zamieszkania (np. UODO w Polsce)."
+        }
+      },
+      "google": {
+        "title": "8. Dane konta Google",
+        "p1": "Jeśli korzystasz z Google Sign-In, uzyskujemy wyłącznie adres e-mail, imię i nazwisko oraz zdjęcie profilowe, aby utworzyć konto i autoryzować dostęp. Nie mamy dostępu do Google Drive, Gmail ani innych danych Google. Tych danych profilowych nie sprzedajemy."
+      },
+      "cookies": {
+        "title": "9. Pliki cookie",
+        "intro": "Używamy następujących kategorii plików cookie (TDDDG § 25):",
+        "list": {
+          "necessary": "Niezbędne cookie - wymagane do logowania, bezpieczeństwa sesji, języka i zapisania Twojej decyzji cookie. Nie można ich wyłączyć.",
+          "analytics": "Cookie analityczne - PostHog, Vercel Analytics i Sentry, tylko po zgodzie.",
+          "marketing": "Cookie marketingowe - kategoria zarezerwowana. Obecnie nie ładujemy pikseli reklamowych ani skryptów marketingowych."
+        },
+        "tableIntro": "Pliki cookie i podobne technologie, których używamy:",
+        "table": {
+          "session": "sec_session - niezbędne - utrzymuje zalogowanie (do 7 dni).",
+          "locale": "sec_locale - niezbędne - preferencja języka (do 1 roku).",
+          "consent": "sec_cookie_consent - niezbędne - zapis decyzji cookie (do 365 dni).",
+          "posthog": "Cookie / localStorage PostHog - analityka - użycie produktu, tylko po zgodzie.",
+          "vercel": "Vercel Analytics - analityka - zagregowany ruch, tylko po zgodzie."
+        },
+        "outro": "Technologie analityczne włączamy dopiero po Twojej zgodzie. Decyzję cookie przechowujemy do 365 dni. Możesz ją zmienić w dowolnym momencie:",
+        "manage": "Otwórz ustawienia cookie"
+      },
+      "dpo": {
+        "title": "10. Inspektor ochrony danych i skargi",
+        "p1": "Nie wyznaczono inspektora ochrony danych, ponieważ nie jest to prawnie wymagane dla tej usługi. Możesz skontaktować się z administratorem pod {{email}} albo złożyć skargę do właściwego organu nadzorczego:"
+      },
+      "security": {
+        "title": "11. Bezpieczeństwo",
+        "p1": "Stosujemy HTTPS, hashowane hasła, magazyn zdjęć paragonów z kontrolą dostępu i nie sprzedajemy Twoich danych osobowych. Nie prowadzimy w pełni zautomatyzowanego podejmowania decyzji wywołującego skutki prawne w rozumieniu art. 22 RODO."
+      }
+    }
+  },
+  "impressum": {
+    "title": "Impressum",
+    "intro": "Ta strona identyfikuje dostawcę usługi cyfrowej {{productName}} zgodnie z § 5 niemieckiej ustawy o usługach cyfrowych (DDG) oraz art. 5 dyrektywy o e-handlu.",
+    "provider": {
+      "title": "Usługodawca",
+      "country": "Niemcy",
+      "labels": {
+        "legalName": "Imię i nazwisko",
+        "product": "Usługa",
+        "address": "Adres",
+        "email": "E-mail",
+        "phone": "Telefon",
+        "contactForm": "Formularz kontaktowy",
+        "vatId": "NIP UE (USt-IdNr.)"
+      },
+      "contactFormLink": "Otwórz formularz kontaktowy (bez logowania)",
+      "legalForm": "Jednoosobowa działalność (Einzelunternehmen). Brak wpisu w rejestrze handlowym (Handelsregister)."
+    }
+  }
+}

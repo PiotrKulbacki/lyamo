@@ -23,7 +23,7 @@ export function LegalPageShell({ title, children }: LegalPageShellProps) {
         {t('legal.backToHome')}
       </Link>
 
-      <h1 className="font-display text-3xl font-bold text-[var(--text)]">{title}</h1>
+      <h1 className="font-display text-(--text) text-3xl font-bold">{title}</h1>
 
       <div className="text-muted mt-8 space-y-8 text-sm leading-7">{children}</div>
     </div>

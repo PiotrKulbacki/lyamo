@@ -1,0 +1,201 @@
+{
+  "backToHome": "Zurück zur Startseite",
+  "terms": {
+    "title": "Nutzungsbedingungen",
+    "sections": {
+      "general": {
+        "title": "1. Allgemeine Bestimmungen",
+        "p1": "Diese Nutzungsbedingungen regeln die Nutzung von {{productName}}, einem abo-basierten SaaS zum Erfassen von Ausgaben, Scannen von Belegen mit KI (OCR), Kategorisieren von Transaktionen und Nutzen eines informativen KI-Assistenten. Anbieter ist {{legalName}}, {{address}}. Vollständige Anbieterangaben stehen im",
+        "impressumLink": "Impressum",
+        "p2": "Es gilt deutsches Recht. Diese Rechtswahl entzieht Verbrauchern nicht den Schutz zwingender Vorschriften des Staates ihres gewöhnlichen Aufenthalts (Rom-I-Verordnung). Maßgeblich sind die deutsche und die polnische Fassung; Englisch und Spanisch dienen der Verständlichkeit."
+      },
+      "scope": {
+        "title": "2. Leistung und Tarife",
+        "p1": "Lyamo ist ein digitaler Verbraucherdienst (B2C). Tarife, Kontingente und Foto-Speicherung umfassen derzeit:",
+        "list": {
+          "item1": "FREE: 5 KI-Scans und 10 KI-Chatnachrichten pro Monat; Belegbilder werden unmittelbar nach dem OCR gelöscht.",
+          "item2": "PRO: 50 KI-Scans und 50 KI-Chatnachrichten pro Monat; Belegbilder werden 60 Tage gespeichert.",
+          "item3": "PREMIUM: 120 KI-Scans und 250 KI-Chatnachrichten pro Monat; Belegbilder werden 365 Tage gespeichert."
+        }
+      },
+      "subscription": {
+        "title": "3. Abonnements und Zahlungen",
+        "p1": "Ein entgeltlicher Vertrag kommt zustande, wenn die Stripe-Zahlung erfolgreich ist. Abonnements werden über Stripe in PLN, EUR, GBP oder USD abgerechnet, verlängern sich für den gewählten Zeitraum und können veröffentlichte Aktionen enthalten (z. B. PROMO50). Sie können jederzeit kündigen; die Kündigung verhindert die nächste Verlängerung und wirkt zum Ende des laufenden Abrechnungszeitraums. Nach fehlgeschlagener Verlängerung folgt eine kurze Mahnphase, danach wird das Konto auf FREE zurückgestuft."
+      },
+      "vat": {
+        "title": "4. Preise und Umsatzsteuer",
+        "p1": "Aktuelle Preise sind in der Anwendung ausgewiesen. Der Anbieter ist Kleinunternehmer nach § 19 UStG und berechnet keine Umsatzsteuer. Die angezeigten Preise sind daher der Zahlbetrag.",
+        "vatNote": "Die Umsatzsteuer-Identifikationsnummer (USt-IdNr.) {{vatId}} ist im",
+        "impressumLink": "Impressum"
+      },
+      "withdrawal": {
+        "title": "5. Widerrufsrecht",
+        "p1": "Verbraucher haben grundsätzlich 14 Tage Zeit, um einen Fernabsatzvertrag zu widerrufen. Für PRO/Premium ist vor dem Checkout eine gesonderte Bestätigung erforderlich, dass die digitale Leistung sofort beginnen darf. Mit dieser Bestätigung erkennen Sie an, dass Sie das gesetzliche Widerrufsrecht verlieren, sobald die Leistung begonnen hat. Ohne diese Bestätigung ist die Zahlung nicht möglich. Soweit das Widerrufsrecht noch besteht, können Sie uns über die E-Mail im Impressum kontaktieren."
+      },
+      "refund": {
+        "title": "6. Freiwillige Rückerstattung (Money-back)",
+        "p1": "Unabhängig vom gesetzlichen Widerrufsrecht können wir bis zu 7 Tage nach dem Kauf eine Rückerstattung anbieten, wenn Sie die App nicht genutzt und keine KI-Scans oder Nachrichten gesendet haben.",
+        "p2": "KI-Funktionen sind nur Hinweise und können ungenau sein. Sie bleiben verantwortlich für die Prüfung der Daten und für Ihre Entscheidungen."
+      },
+      "ai": {
+        "title": "7. KI, Daten und Haftung",
+        "intro": "Lyamo erteilt keine Finanz-, Steuer- oder Rechtsberatung.",
+        "list": {
+          "item1": "OCR-Ergebnisse und KI-Antworten müssen Sie vor der Verwendung prüfen. Der Dienst kann halluzinieren oder Beträge, Daten oder Händler falsch lesen.",
+          "item2": "Sie bleiben verantwortlich für die Richtigkeit der eingegebenen Daten und für die Nutzung des Dienstes.",
+          "item3": "Der Anbieter haftet unbeschränkt für Vorsatz, grobe Fahrlässigkeit, Verletzung von Leben, Körper oder Gesundheit sowie nach dem Produkthaftungsgesetz.",
+          "item4": "Bei leichter Fahrlässigkeit ist die Haftung auf die Verletzung wesentlicher Vertragspflichten (Kardinalpflichten) und auf den vertragstypischen, vorhersehbaren Schaden beschränkt, vorbehaltlich zwingenden Verbraucherschutzrechts."
+        }
+      },
+      "cancellation": {
+        "title": "8. Kündigung",
+        "p1": "Ein bezahltes Abo können Sie über das Stripe-Kundenportal in den Einstellungen oder per E-Mail an den Anbieter kündigen. Die Kündigung wirkt zum Ende des laufenden Abrechnungszeitraums. Ihr Konto und die zugehörigen Anwendungsdaten können Sie jederzeit in den Einstellungen löschen."
+      },
+      "inactive": {
+        "title": "9. Inaktive Konten",
+        "p1": "Der Anbieter kann ein Konto löschen, wenn Sie sich 24 Monate nicht anmelden. Vor der Löschung erhalten Sie eine E-Mail-Benachrichtigung."
+      },
+      "complaints": {
+        "title": "10. Beschwerden",
+        "intro": "Bei technischen Problemen (z. B. Zahlungsfehler oder Leistungsstörung) können Sie eine Beschwerde einreichen.",
+        "list": {
+          "item1": "Senden Sie sie an {{email}} und geben Sie Ihre Konto-E-Mail, das Datum und eine kurze Beschreibung an.",
+          "item2": "Wir prüfen die Beschwerde innerhalb von 14 Tagen nach Eingang.",
+          "item3": "Bei einem von uns zu vertretenden technischen Fehler stellen wir den Zugang wieder her oder erstatten den Betrag, soweit angemessen."
+        }
+      },
+      "privacy": {
+        "title": "11. Personenbezogene Daten",
+        "p1": "Personenbezogene Daten werden verarbeitet, wie in der",
+        "privacyLink": "Datenschutzerklärung beschrieben"
+      },
+      "disputes": {
+        "title": "12. Verbraucherstreitbeilegung",
+        "p1": "Der Anbieter ist weder bereit noch verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen. Verbraucher in der EU können die OS-Plattform der Europäischen Kommission nutzen, soweit sie verfügbar bleibt."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "sections": {
+      "controller": {
+        "title": "1. Verantwortlicher",
+        "p1": "Verantwortlicher für Ihre personenbezogenen Daten ist {{legalName}}, {{address}}. E-Mail: {{email}}.",
+        "p2": "Weitere Anbieterangaben stehen im",
+        "impressumLink": "Impressum"
+      },
+      "purposes": {
+        "title": "2. Zwecke und Rechtsgrundlagen",
+        "intro": "Wir verarbeiten personenbezogene Daten nur für festgelegte Zwecke:",
+        "list": {
+          "item1": "Nutzerkonto (Registrierung, Anmeldung, Einstellungen) - Art. 6 Abs. 1 lit. b DSGVO (Vertrag).",
+          "item2": "Ausgabenverwaltung, Beleg-OCR und KI-Assistent - Art. 6 Abs. 1 lit. b DSGVO (Vertrag).",
+          "item3": "Abonnements, Rechnungen und Abrechnung - Art. 6 Abs. 1 lit. b DSGVO (Vertrag) und Art. 6 Abs. 1 lit. c DSGVO (rechtliche Pflicht).",
+          "item4": "Kontaktformular und Support-E-Mails - Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Anfrage) oder Art. 6 Abs. 1 lit. f DSGVO (Beantwortung von Anfragen).",
+          "item5": "Notwendige Cookies (Sitzung, Sprache, Einwilligungsnachweis) - Art. 6 Abs. 1 lit. b und lit. f DSGVO.",
+          "item6": "Analyse und Fehlermonitoring (PostHog, Vercel Analytics, Sentry) - Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).",
+          "item7": "Rechtliche Pflichten wie buchhalterische Aufbewahrung - Art. 6 Abs. 1 lit. c DSGVO."
+        }
+      },
+      "specialCategories": {
+        "title": "3. Besondere Kategorien von Daten",
+        "p1": "Belege, die Sie hochladen, können zufällig besondere Kategorien personenbezogener Daten enthalten (Art. 9 DSGVO), etwa Apothekenkäufe. Wir fordern solche Daten nicht als eigene Kategorie an. Die Verarbeitung erfolgt nur zur Erbringung der von Ihnen beauftragten Leistung. Mit dem Upload erteilen Sie eine ausdrückliche Einwilligung (Art. 9 Abs. 2 lit. a DSGVO). Belege und Konto können Sie jederzeit löschen."
+      },
+      "retention": {
+        "title": "4. Welche Daten wir speichern und wie lange",
+        "intro": "Wir verarbeiten Kontodaten (E-Mail, Name, Einstellungen), gespeicherte Transaktionen, KI-Chatnachrichten, Scan-Ergebnisse und Abrechnungsmetadaten. Speicherdauer:",
+        "list": {
+          "item1": "Belegbilder: auf FREE unmittelbar nach dem OCR gelöscht; 60 Tage auf PRO; 365 Tage auf PREMIUM.",
+          "item2": "Transaktionen, Chat und Kontodaten: bis Sie sie oder das Konto löschen.",
+          "item3": "Inaktive Konten können nach 24 Monaten ohne Anmeldung nach E-Mail-Hinweis gelöscht werden.",
+          "item4": "Die Cookie-Entscheidung wird bis zu 365 Tage gespeichert.",
+          "item5": "Abrechnungs- und Rechnungsdaten werden für den nach deutschem Steuer- und Handelsrecht erforderlichen Zeitraum aufbewahrt.",
+          "item6": "Konto und Anwendungsdaten können Sie jederzeit in den Einstellungen löschen."
+        }
+      },
+      "recipients": {
+        "title": "5. Empfänger (Auftragsverarbeiter und eigene Verantwortliche)",
+        "intro": "Zur Leistungserbringung setzen wir vertrauenswürdige Anbieter ein. Ihre Daten können verarbeitet werden durch:",
+        "list": {
+          "item1": "OpenAI, L.L.C. (USA) - Beleg-OCR und KI-Chat. Nach den OpenAI-API-Bedingungen werden API-Daten nicht zum Training von OpenAI-Modellen verwendet.",
+          "item2": "Stripe Payments Europe, Ltd. (Irland) - Abonnements. Stripe ist für Kartendaten eigener Verantwortlicher; wir erhalten nicht Ihre vollständige Kartennummer.",
+          "item3": "Supabase, Inc. (USA/EU) - Datenbank und Speicherung von Belegbildern.",
+          "item4": "Vercel Inc. (USA/EU) - Hosting der Anwendung und, mit Einwilligung, Web Analytics.",
+          "item5": "Brevo (Frankreich/EU) - transaktionale E-Mails.",
+          "item6": "PostHog (EU) - Produktanalyse, nur nach Einwilligung.",
+          "item7": "Functional Software, Inc. / Sentry (USA/EU) - Fehlermonitoring, nur nach Analytics-Einwilligung.",
+          "item8": "Upstash, Inc. (USA/EU) - Rate-Limiting (Anfragemetadaten wie IP-Adresse).",
+          "item9": "Google Ireland Limited / Google LLC - Google Sign-In (E-Mail, Name, Profilbild), wenn Sie diese Anmeldung wählen."
+        }
+      },
+      "transfers": {
+        "title": "6. Drittlandtransfers",
+        "p1": "Einige Anbieter (insbesondere OpenAI, Supabase, Vercel, Sentry, Upstash und Google) können Daten in den USA oder anderen Staaten außerhalb des EWR verarbeiten. Soweit erforderlich, stützen sich Transfers auf Standardvertragsklauseln der Europäischen Kommission und/oder das EU-US Data Privacy Framework, je nach Anbieter."
+      },
+      "rights": {
+        "title": "7. Ihre Rechte",
+        "intro": "Nach der DSGVO haben Sie das Recht auf:",
+        "list": {
+          "item1": "Auskunft über Ihre Daten (in der App und per E-Mail an den Verantwortlichen).",
+          "item2": "Berichtigung (in den Einstellungen oder durch Kontaktaufnahme).",
+          "item3": "Löschung - einzelne Daten oder das gesamte Konto in den Einstellungen. Die Löschung der Anwendungsdaten ist endgültig.",
+          "item4": "Einschränkung der Verarbeitung.",
+          "item5": "Widerspruch gegen Verarbeitung auf Grundlage berechtigter Interessen.",
+          "item6": "Datenübertragbarkeit, soweit die Verarbeitung auf Vertrag oder Einwilligung beruht. Ein Selbstbedienungs-Export ist noch nicht verfügbar; eine Kopie können Sie per E-Mail anfordern.",
+          "item7": "Widerruf der Einwilligung für optionale Cookies, ohne die Rechtmäßigkeit der Verarbeitung vor dem Widerruf zu berühren.",
+          "item8": "Beschwerde bei einer Aufsichtsbehörde, insbesondere bei der unten genannten Berliner Behörde oder einer Behörde in Ihrem Wohnsitzstaat (z. B. UODO in Polen)."
+        }
+      },
+      "google": {
+        "title": "8. Daten aus dem Google-Konto",
+        "p1": "Wenn Sie Google Sign-In nutzen, greifen wir nur auf E-Mail-Adresse, Vor- und Nachname sowie Profilbild zu, um ein Konto anzulegen und den Zugang zu autorisieren. Wir greifen nicht auf Google Drive, Gmail oder andere Google-Daten zu. Diese Profildaten werden nicht verkauft."
+      },
+      "cookies": {
+        "title": "9. Cookies",
+        "intro": "Wir verwenden folgende Cookie-Kategorien (TDDDG § 25):",
+        "list": {
+          "necessary": "Notwendige Cookies - erforderlich für Anmeldung, Sitzungssicherheit, Sprache und Speicherung Ihrer Cookie-Entscheidung. Diese können nicht deaktiviert werden.",
+          "analytics": "Analyse-Cookies - PostHog, Vercel Analytics und Sentry, nur nach Einwilligung.",
+          "marketing": "Marketing-Cookies - diese Kategorie ist reserviert. Derzeit werden keine Marketing-Pixel oder Werbeskripte geladen."
+        },
+        "tableIntro": "Cookies und ähnliche Technologien, die wir verwenden:",
+        "table": {
+          "session": "sec_session - notwendig - hält Sie angemeldet (bis zu 7 Tage).",
+          "locale": "sec_locale - notwendig - Spracheinstellung (bis zu 1 Jahr).",
+          "consent": "sec_cookie_consent - notwendig - speichert Ihre Cookie-Entscheidung (bis zu 365 Tage).",
+          "posthog": "PostHog-Cookies / localStorage - Analyse - Produktnutzung, nur nach Einwilligung.",
+          "vercel": "Vercel Analytics - Analyse - aggregierter Traffic, nur nach Einwilligung."
+        },
+        "outro": "Analyse-Technologien werden erst nach Ihrer Einwilligung aktiviert. Wir speichern Ihre Cookie-Entscheidung bis zu 365 Tage. Sie können sie jederzeit ändern:",
+        "manage": "Cookie-Einstellungen öffnen"
+      },
+      "dpo": {
+        "title": "10. Datenschutzbeauftragter und Beschwerden",
+        "p1": "Ein Datenschutzbeauftragter ist nicht bestellt, weil dies für diesen Dienst gesetzlich nicht erforderlich ist. Sie können den Verantwortlichen unter {{email}} kontaktieren oder Beschwerde bei der zuständigen Aufsichtsbehörde einlegen:"
+      },
+      "security": {
+        "title": "11. Sicherheit",
+        "p1": "Wir verwenden HTTPS, gehashte Passwörter, zugangskontrollierten Speicher für Belegbilder und verkaufen Ihre personenbezogenen Daten nicht. Es findet keine ausschließlich automatisierte Entscheidungsfindung mit Rechtswirkung im Sinne von Art. 22 DSGVO statt."
+      }
+    }
+  },
+  "impressum": {
+    "title": "Impressum",
+    "intro": "Diese Seite benennt den Anbieter des digitalen Dienstes {{productName}} gemäß § 5 DDG und Artikel 5 der E-Commerce-Richtlinie.",
+    "provider": {
+      "title": "Diensteanbieter",
+      "country": "Deutschland",
+      "labels": {
+        "legalName": "Name",
+        "product": "Dienst",
+        "address": "Adresse",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "contactForm": "Kontaktformular",
+        "vatId": "USt-IdNr."
+      },
+      "contactFormLink": "Kontaktformular öffnen (ohne Anmeldung)",
+      "legalForm": "Einzelunternehmen. Nicht im Handelsregister eingetragen."
+    }
+  }
+}

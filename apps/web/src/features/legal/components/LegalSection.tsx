@@ -1,11 +1,20 @@
+import type { ReactNode } from 'react';
+
 type LegalSectionProps = {
   title?: string;
-  paragraphs?: string[];
-  list?: string[];
+  paragraphs?: ReactNode[];
+  list?: ReactNode[];
   ordered?: boolean;
+  children?: ReactNode;
 };
 
-export function LegalSection({ title, paragraphs, list, ordered = false }: LegalSectionProps) {
+export function LegalSection({
+  title,
+  paragraphs,
+  list,
+  ordered = false,
+  children,
+}: LegalSectionProps) {
   const ListTag = ordered ? 'ol' : 'ul';
   const listClassName = ordered
     ? 'mb-4 ml-5 list-decimal space-y-2 last:mb-0'
@@ -14,7 +23,7 @@ export function LegalSection({ title, paragraphs, list, ordered = false }: Legal
   return (
     <section>
       {title ? (
-        <h2 className="font-display mb-4 text-xl font-semibold text-[var(--text)]">{title}</h2>
+        <h2 className="font-display text-(--text) mb-4 text-xl font-semibold">{title}</h2>
       ) : null}
 
       {paragraphs?.map((paragraph, index) => (
@@ -30,6 +39,8 @@ export function LegalSection({ title, paragraphs, list, ordered = false }: Legal
           ))}
         </ListTag>
       ) : null}
+
+      {children}
     </section>
   );
 }

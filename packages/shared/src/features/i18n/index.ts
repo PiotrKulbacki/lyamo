@@ -2,6 +2,10 @@ import de from './de.json';
 import en from './en.json';
 import es from './es.json';
 import pl from './pl.json';
+import legalDe from './legal/de.json';
+import legalEn from './legal/en.json';
+import legalEs from './legal/es.json';
+import legalPl from './legal/pl.json';
 
 export type Locale = 'en' | 'de' | 'pl' | 'es';
 
@@ -12,7 +16,12 @@ export const DEFAULT_LOCALE: Locale = 'en';
 type TranslationValue = string | { [key: string]: TranslationValue };
 type TranslationTree = { [key: string]: TranslationValue };
 
-const translations: Record<Locale, TranslationTree> = { en, de, pl, es };
+const translations: Record<Locale, TranslationTree> = {
+  en: { ...(en as TranslationTree), legal: legalEn as TranslationTree },
+  de: { ...(de as TranslationTree), legal: legalDe as TranslationTree },
+  pl: { ...(pl as TranslationTree), legal: legalPl as TranslationTree },
+  es: { ...(es as TranslationTree), legal: legalEs as TranslationTree },
+};
 
 function resolveKey(tree: TranslationTree, key: string): string | undefined {
   const parts = key.split('.');
