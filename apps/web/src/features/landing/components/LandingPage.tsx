@@ -26,8 +26,8 @@ import { PlanPriceDisplay } from '@web/features/billing/components/ProPriceDispl
 import { useT } from '@web/features/i18n/LocaleProvider';
 import { ProductShot } from '@web/features/landing/components/ProductShot';
 import { MARKETING_SHOTS } from '@web/features/landing/marketing-assets';
+import { OPERATOR } from '@web/lib/legal';
 
-const CREATOR_SITE_URL = 'https://piotrkulbacki.com';
 const CREATOR_AVATAR_SRC = '/marketing/creator-avatar.png';
 const CREATOR_LOCKUP_SRC = '/marketing/creator-lockup.png';
 
@@ -444,7 +444,7 @@ export function LandingPage() {
                   {t('landing.creator.role')}
                 </p>
                 <a
-                  href={CREATOR_SITE_URL}
+                  href={OPERATOR.website}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-ghost mt-6 inline-flex items-center gap-2"
