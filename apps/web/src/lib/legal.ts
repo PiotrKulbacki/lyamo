@@ -6,6 +6,7 @@ export const OPERATOR = {
   postalCode: '12051',
   city: 'Berlin',
   email: 'kontakt@lyamo.eu',
+  website: 'https://piotrkulbacki.com',
 } as const;
 
 /** German VAT ID - public by law once issued. Set NEXT_PUBLIC_UST_IDNR. */
