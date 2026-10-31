@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useT } from '@web/features/i18n/LocaleProvider';
 import { useCookieConsent } from '@web/features/cookie-consent';
 import { LyamoLogo } from '@web/features/layout/components/LyamoLogo';
+import { OPERATOR } from '@web/lib/legal';
 
 export function PublicFooter() {
   const t = useT();
@@ -18,6 +19,15 @@ export function PublicFooter() {
           </Link>
           <p className="text-muted text-sm">
             {t('layout.footer.copyright', { year: new Date().getFullYear() })}
+            {' · '}
+            <a
+              href={OPERATOR.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-warm transition"
+            >
+              {OPERATOR.legalName}
+            </a>
           </p>
         </div>
 
