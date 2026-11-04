@@ -8,14 +8,17 @@ import { getUserFromBearerToken } from '@web/features/auth/services/auth.service
  */
 export async function protectMutation(
   request: Request,
-  options: { bearer?: boolean; multipart?: boolean } = {}
+  options: { bearer?: boolean; multipart?: boolean; bodyless?: boolean } = {}
 ): Promise<NextResponse | null> {
   const type = request.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase();
+  // Vercel may expose an empty request as a stream and omit Content-Length.
+  // Only handlers that explicitly accept no body can omit Content-Type.
   const hasBody = request.body !== null && request.headers.get('content-length') !== '0';
   if (
     hasBody &&
     type !== 'application/json' &&
-    !(options.multipart && type === 'multipart/form-data')
+    !(options.multipart && type === 'multipart/form-data') &&
+    !(options.bodyless && !type)
   ) {
     return NextResponse.json({ error: 'auth.errors.generic' }, { status: 415 });
   }

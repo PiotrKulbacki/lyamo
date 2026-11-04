@@ -6,7 +6,7 @@ import { createBillingPortalSession } from '@web/features/billing/services/strip
 
 export async function POST(request: Request) {
   try {
-    const rejected = await protectMutation(request, { bearer: true });
+    const rejected = await protectMutation(request, { bearer: true, bodyless: true });
     if (rejected) return rejected;
 
     const user = await getAuthenticatedUser(request);

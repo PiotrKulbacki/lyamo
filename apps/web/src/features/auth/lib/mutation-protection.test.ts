@@ -112,3 +112,38 @@ test('allows receipt multipart only with same origin or verified bearer', async 
     })
   ).toBeNull();
 });
+
+test('supports Vercel empty request streams only for explicitly bodyless handlers', async () => {
+  const empty = (headers: Record<string, string>) =>
+    new Request('https://lyamo.example/api/auth/logout', {
+      method: 'POST',
+      headers,
+      body: new Uint8Array(0),
+    });
+  expect((await protectMutation(empty({ origin: 'https://lyamo.example' })))?.status).toBe(415);
+  expect(
+    await protectMutation(empty({ origin: 'https://lyamo.example' }), { bodyless: true })
+  ).toBeNull();
+  expect(
+    (await protectMutation(empty({ origin: 'https://evil.example' }), { bodyless: true }))?.status
+  ).toBe(403);
+  expect(
+    (
+      await protectMutation(
+        empty({ cookie: 'sec_session=valid', authorization: 'Bearer invalid' }),
+        { bodyless: true, bearer: true }
+      )
+    )?.status
+  ).toBe(403);
+  expect(
+    (
+      await protectMutation(
+        empty({
+          origin: 'https://lyamo.example',
+          'content-type': 'application/x-www-form-urlencoded',
+        }),
+        { bodyless: true }
+      )
+    )?.status
+  ).toBe(415);
+});
