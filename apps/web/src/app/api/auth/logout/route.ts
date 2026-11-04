@@ -11,7 +11,7 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const rejected = await protectMutation(request);
+    const rejected = await protectMutation(request, { bodyless: true });
     if (rejected) return rejected;
 
     const body = (await request.json().catch(() => ({}))) as { refreshToken?: string };
