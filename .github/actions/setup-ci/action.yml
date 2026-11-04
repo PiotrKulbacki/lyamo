@@ -1,0 +1,26 @@
+name: Prepare CI dependencies
+description: Restore exact installed dependencies, or install from the lockfile.
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      id: node
+      uses: actions/setup-node@v5
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+
+    - name: Restore installed dependencies
+      id: dependencies
+      uses: actions/cache@v5
+      with:
+        path: |
+          node_modules
+          apps/*/node_modules
+          packages/*/node_modules
+        key: modules-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.node.outputs.node-version }}-${{ hashFiles('package-lock.json', 'package.json', 'apps/*/package.json', 'packages/*/package.json', '.npmrc') }}
+
+    - name: Install dependencies on cache miss
+      if: steps.dependencies.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm ci --no-audit --no-fund

@@ -13,7 +13,12 @@ export default defineConfig({
   testDir: './apps/web/e2e',
   workers: 1,
   retries: 0,
-  use: { baseURL, browserName: 'chromium', trace: 'retain-on-failure' },
+  use: {
+    baseURL,
+    browserName: 'chromium',
+    channel: process.env.LYAMO_TEST_BROWSER_CHANNEL === 'chrome' ? 'chrome' : undefined,
+    trace: 'retain-on-failure',
+  },
   webServer: {
     command: `npm exec -w web -- next dev --turbopack --hostname 127.0.0.1 --port ${url.port}`,
     url: `${baseURL}/login`,

@@ -21,8 +21,27 @@ npm run test:e2e
 `test:quality` uruchamia kolejno te same checki co CI: `npm run format`,
 `npm run lint`, `npm run typecheck`, `npm run test`. Zatrzymuje się na pierwszym
 błędzie. Formatowanie: `npx prettier --write .`, potem ponownie checki.
-CI dodatkowo uruchamia integrację PostgreSQL i smoke E2E, a na Linuksie instaluje
-Chromium z zależnościami systemowymi (`npx playwright install --with-deps chromium`).
+CI uruchamia trzy niezależne zadania równolegle: `checks` (format/lint/typy/unit),
+`build` (pełny build i integracja PostgreSQL), `browser` (E2E). Końcowy check
+`quality` wymaga sukcesu wszystkich trzech. Każdy runner ma osobny katalog i bazę.
+Nie uruchamia dodatkowego kontenera PostgreSQL ani nie tworzy `.env`.
+
+Na przypiętym obrazie `ubuntu-24.04` CI używa już zainstalowanego Chrome przez
+`LYAMO_TEST_BROWSER_CHANNEL=chrome`; wersja przeglądarki trafia do logu. Nie pobiera
+Chromium ani pakietów systemowych przy każdym przebiegu. Lokalnie domyślny pozostaje
+Chromium z Playwright; mając zainstalowany Chrome, można użyć tego samego przełącznika.
+Kanał Chrome korzysta z wersji obrazu runnera, nie z binariów przypiętych do Playwright.
+
+Cache `node_modules` jest przywracany wyłącznie przy dokładnym dopasowaniu systemu,
+architektury, wersji Node, lockfile i manifestów pakietów. Przy braku trafienia
+wykonuje `npm ci --no-audit --no-fund`; zmiana zależności wymusza instalację. Osobny
+cache obejmuje wyłącznie cache kompilatora Next, bez `.env`, bazy lub pełnego builda.
+Nowy commit anuluje starszy przebieg tego samego PR.
+
+Celem jest około minuty dla rozgrzanego cache, bez gwarancji dla pierwszej instalacji,
+zmiany lockfile lub kolejki GitHub. Poprzedni CI #107: instalacja 62 s, Docker 22 s,
+build 46 s, instalacja przeglądarki 35 s, E2E 23 s, testy jednostkowe 4 s. Wszystkie
+kroki miały sukces po około 4 minutach, mimo pozostającego statusu `in_progress`.
 
 Każde z czterech poleceń `test:quality`, `test:integration`, `build:test`,
 `test:e2e` tworzy osobny, tymczasowy klaster **rzeczywistego PostgreSQL 16** przez

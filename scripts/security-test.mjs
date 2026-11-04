@@ -52,6 +52,10 @@ Object.assign(env, {
   NEXT_PUBLIC_APP_URL: `http://127.0.0.1:${webPort}`,
   EXPO_PUBLIC_API_URL: `http://127.0.0.1:${webPort}`,
   LYAMO_TEST_ENV: '1',
+  // Only allow the named local browser channel; never inherit arbitrary service settings.
+  ...(process.env.LYAMO_TEST_BROWSER_CHANNEL === 'chrome'
+    ? { LYAMO_TEST_BROWSER_CHANNEL: 'chrome' }
+    : {}),
   NEXT_TELEMETRY_DISABLED: '1',
   TURBO_TELEMETRY_DISABLED: '1',
   ENABLE_AI: 'false',
