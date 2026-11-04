@@ -38,3 +38,5 @@ S00 ukończone lokalnie na gałęzi `codex/security-s00-test-environment`, baza 
 ## Optymalizacja CI po publikacji S00
 
 Commit `39afc81` w PR #74: równoległe checks/build/browser, końcowy quality, cache zależności i Next, Chrome runnera, bez kontenera bazy. Pełna weryfikacja lokalna zielona. CI #107 ostatecznie success. Pierwszy pomiar CI #108: browser success 64 s, kroki build/integracja i cache success po 127 s; status build i całego przebiegu nie jest jeszcze zakończony, checks/quality oczekują. Około minuty przy rozgrzanym cache pozostaje celem, bez potwierdzenia pełnego pomiaru. Źródło bieżącego stanu: checki PR #74.
+
+Końcowy pomiar optymalizacji: [CI #109](https://github.com/PiotrKulbacki/lyamo/actions/runs/41881213744), commit `f63e84b`, **success, 88 s**. Wszystkie cztery zadania zielone. Kolejny commit uzupełnia wyłącznie dokumentację pomiaru; stan aktualnego head należy sprawdzić w PR #74.

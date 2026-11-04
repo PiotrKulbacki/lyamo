@@ -41,8 +41,10 @@ origin dla cache kompilatora; tylko E2E rezerwuje losowy port serwera.
 
 Pierwszy pomiar CI #108: browser 64 s (success), kroki build/integracja 127 s
 (sukces kroków, lecz zbiorczy status nadal w toku). Pozostałe zadania czekały na runnerów.
-Celem jest około minuty dla rozgrzanego cache; nie jest to jeszcze potwierdzony
-pomiar całego workflow. Brak gwarancji dla pierwszej instalacji,
+Potwierdzony pełny [CI #109](https://github.com/PiotrKulbacki/lyamo/actions/runs/41881213744)
+z cache zakończył się sukcesem w **88 s**: browser 68 s, checks 74 s, build/integracja
+71 s (równolegle), końcowy quality 4 s. Celem pozostaje około minuty; 60 s nie jest
+gwarancją. Brak gwarancji czasu dla pierwszej instalacji,
 zmiany lockfile lub kolejki GitHub. Poprzedni CI #107: instalacja 62 s, Docker 22 s,
 build 46 s, instalacja przeglądarki 35 s, E2E 23 s, testy jednostkowe 4 s. Wszystkie
 kroki miały sukces po około 4 minutach, mimo pozostającego statusu `in_progress`.
