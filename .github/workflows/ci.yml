@@ -1,12 +1,14 @@
 name: CI
 
+# One run per PR commit. No rerun after merge to dev: the PR already tested that code.
+# Documentation-only PRs skip CI (no required status checks are configured).
 on:
-  push:
-    branches:
-      - dev
   pull_request:
     branches:
       - dev
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
 
 permissions:
   contents: read
