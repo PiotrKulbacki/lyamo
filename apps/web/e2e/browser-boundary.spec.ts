@@ -73,6 +73,8 @@ for (const state of ['unknown', 'expired', 'deleted']) {
       await page.goto(path);
       expect(new URL(page.url()).pathname).toBe(path);
     }
+    await page.goto('/');
+    await expect(page).toHaveURL(`${baseURL}/`);
     await page.goto('/dashboard');
     await expect(page).toHaveURL(`${baseURL}/login`);
     expect((await context.cookies()).some((c) => c.name === 'sec_session')).toBe(false);
@@ -109,6 +111,33 @@ test('browser login and cookie mutations reject foreign origin; same-origin logi
   // This cleanup GET cannot log out a live session.
   expect((await request.get('/api/auth/session/clear', { maxRedirects: 0 })).status()).toBe(307);
   expect((await request.get('/api/auth/me')).status()).toBe(200);
+});
+
+test('home sends a database-validated session to the dashboard', async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  const token = randomUUID();
+  const session = await prisma.session.create({
+    data: {
+      userId: id,
+      token: createHash('sha256').update(token).digest('hex'),
+      expiresAt: new Date(Date.now() + 60000),
+    },
+  });
+  try {
+    await page.goto('/');
+    await expect(page).toHaveURL(`${baseURL}/`);
+    await context.addCookies([
+      { name: 'sec_session', value: token, url: baseURL!, httpOnly: true, sameSite: 'Lax' },
+    ]);
+    await page.goto('/');
+    await expect(page).toHaveURL(`${baseURL}/dashboard`, { timeout: 30_000 });
+    expect((await page.request.get('/api/auth/me')).status()).toBe(200);
+  } finally {
+    await prisma.session.delete({ where: { id: session.id } });
+  }
 });
 
 test('native login, bearer mutation and refresh remain cookie-free', async ({ request }) => {
