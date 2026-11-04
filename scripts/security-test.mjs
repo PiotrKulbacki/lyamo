@@ -40,7 +40,8 @@ const env = Object.fromEntries(
 );
 const directory = await mkdtemp(join(tmpdir(), 'lyamo-security-'));
 const port = await freePort();
-const webPort = await freePort();
+// Only E2E starts a web server. Keep the build origin stable for the compiler cache.
+const webPort = mode === 'e2e' ? await freePort() : 3000;
 const password = randomBytes(24).toString('hex');
 const dbUrl = `postgresql://lyamo_test:${password}@127.0.0.1:${port}/lyamo_security_test`;
 Object.assign(env, {

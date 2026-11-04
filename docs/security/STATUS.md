@@ -34,3 +34,7 @@ Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkowni
 ## Rejestr kolejnego kroku
 
 S00 ukończone lokalnie na gałęzi `codex/security-s00-test-environment`, baza `5562bfc`; commit implementacji `1bea54a`, push wykonany, [PR #74 do dev](https://github.com/PiotrKulbacki/lyamo/pull/74). CI w momencie zapisu: w toku; [aktualne checki](https://github.com/PiotrKulbacki/lyamo/pull/74/checks). Merge pozostaje użytkownikowi. Raport obejmuje zastane instrukcje programu. Następne zadanie: S01, na osobnej gałęzi po zweryfikowaniu bazy zawierającej S00. Po każdym zadaniu agent publikuje commit i PR oraz sprawdza CI; merge wykonuje użytkownik. Gotowe polecenie znajduje się w raporcie S00.
+
+## Optymalizacja CI po publikacji S00
+
+Commit `39afc81` w PR #74: równoległe checks/build/browser, końcowy quality, cache zależności i Next, Chrome runnera, bez kontenera bazy. Pełna weryfikacja lokalna zielona. CI #107 ostatecznie success. Pierwszy pomiar CI #108: browser success 64 s, kroki build/integracja i cache success po 127 s; status build i całego przebiegu nie jest jeszcze zakończony, checks/quality oczekują. Około minuty przy rozgrzanym cache pozostaje celem, bez potwierdzenia pełnego pomiaru. Źródło bieżącego stanu: checki PR #74.

@@ -36,9 +36,13 @@ Cache `node_modules` jest przywracany wyłącznie przy dokładnym dopasowaniu sy
 architektury, wersji Node, lockfile i manifestów pakietów. Przy braku trafienia
 wykonuje `npm ci --no-audit --no-fund`; zmiana zależności wymusza instalację. Osobny
 cache obejmuje wyłącznie cache kompilatora Next, bez `.env`, bazy lub pełnego builda.
-Nowy commit anuluje starszy przebieg tego samego PR.
+Nowy commit anuluje starszy przebieg tego samego PR. Build ma stały, lokalny
+origin dla cache kompilatora; tylko E2E rezerwuje losowy port serwera.
 
-Celem jest około minuty dla rozgrzanego cache, bez gwarancji dla pierwszej instalacji,
+Pierwszy pomiar CI #108: browser 64 s (success), kroki build/integracja 127 s
+(sukces kroków, lecz zbiorczy status nadal w toku). Pozostałe zadania czekały na runnerów.
+Celem jest około minuty dla rozgrzanego cache; nie jest to jeszcze potwierdzony
+pomiar całego workflow. Brak gwarancji dla pierwszej instalacji,
 zmiany lockfile lub kolejki GitHub. Poprzedni CI #107: instalacja 62 s, Docker 22 s,
 build 46 s, instalacja przeglądarki 35 s, E2E 23 s, testy jednostkowe 4 s. Wszystkie
 kroki miały sukces po około 4 minutach, mimo pozostającego statusu `in_progress`.
