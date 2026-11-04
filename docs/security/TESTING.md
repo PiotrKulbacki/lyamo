@@ -1,0 +1,69 @@
+# Weryfikacja lokalna programu bezpieczeństwa
+
+Używaj Node 26 (`nvm use`) i `npm ci` z głównego katalogu. `.nvmrc`,
+`engines` i CI wskazują tę samą wersję. `packageManager` wskazuje npm 10.9.2;
+npm 11.20.0 dołączony do lokalnego Node 26 również działa. Dla nowszego npm
+repo zapisuje `allowScripts` dla przypiętych narzędzi binarnych; po aktualizacji
+ich wersji należy ponownie przejrzeć wymagane skrypty, bez zbiorowego zezwalania.
+
+## Polecenia
+
+```sh
+nvm use
+npm ci
+npm run test:quality
+npm run test:integration
+npm run build:test
+npx playwright install chromium
+npm run test:e2e
+```
+
+`test:quality` uruchamia kolejno te same checki co CI: `npm run format`,
+`npm run lint`, `npm run typecheck`, `npm run test`. Zatrzymuje się na pierwszym
+błędzie. Formatowanie: `npx prettier --write .`, potem ponownie checki.
+CI dodatkowo uruchamia integrację PostgreSQL i smoke E2E, a na Linuksie instaluje
+Chromium z zależnościami systemowymi (`npx playwright install --with-deps chromium`).
+
+Każde z czterech poleceń `test:quality`, `test:integration`, `build:test`,
+`test:e2e` tworzy osobny, tymczasowy klaster **rzeczywistego PostgreSQL 16** przez
+przypięty pakiet `embedded-postgres`. Nie wymaga Dockera ani zewnętrznej bazy.
+Wymaga prawa uruchamiania lokalnych procesów i otwierania portów loopback;
+nie uruchamiaj jako root. Pierwsza instalacja pobiera binaria dla danej platformy.
+
+Runner `scripts/security-test.mjs` wybiera wolne porty, losowe hasło, bazę
+`lyamo_security_test` i rolę `lyamo_test`; sprawdza tożsamość bazy przed migracjami.
+Przekazuje procesom świeże środowisko, bez odziedziczonych kluczy usług i adresów
+baz. `LYAMO_TEST_ENV=1` pomija odczyt głównego `.env` w konfiguracji Next.js.
+Runner odmawia startu przy `.env*` w `apps/web`: Next.js wczytuje takie pliki automatycznie.
+Zwykły tryb aplikacji nadal korzysta z dotychczasowej konfiguracji.
+
+Runner generuje Prisma Client i stosuje wszystkie wersjonowane migracje, po czym
+zatrzymuje i usuwa klaster w `finally`. Nie używa seeda ani danych klientów.
+`build:test` uruchamia pełne `npm run build`; migracje wykonywane przez web build
+trafiają do tego samego zweryfikowanego klastra. Zwykłe `npm run build` poza
+runnerem nadal może uruchomić migracje na bazie wskazanej w środowisku lub `.env`.
+
+## Rozszerzanie scenariuszy
+
+- `apps/web/integration/*.test.ts`: Vitest z prawdziwym Prisma/PostgreSQL.
+  Zwykłe testy jednostkowe ich nie uruchamiają. Scenariusz S00 tworzy użytkownika
+  `@example.invalid`, równocześnie tworzy osiem sesji, sprawdza hasze, odwołuje
+  sesję dwukrotnie i usuwa fixture z kontrolą kaskady. To sprawdzenie infrastruktury,
+  a nie dowód naprawienia atomowych tokenów lub rotacji z przyszłych zadań.
+- `apps/web/e2e/*.spec.ts`: Playwright/Chromium i własny Next dev z Turbopack na loopback.
+  Nie przejmuje istniejącego serwera. Smoke otwiera `/login` oraz sprawdza `401`
+  z `/api/auth/me` w przeglądarce bez sesji. Google i wysyłka poczty wymagają
+  osobnych kontrolowanych testów w odpowiednich zadaniach.
+- Każdy kolejny test tworzy unikalne dane i usuwa je w `finally`; testy
+  równoczesnych operacji muszą wykonywać rzeczywiste zapytania do PostgreSQL.
+
+Nie uruchamiaj dwóch runnerów web jednocześnie w tym samym katalogu: Next dev
+i build współdzielą `apps/web/.next`. Bazy i porty są niezależne. Lokalne ślady
+Playwright są ignorowane przez Git; nie publikuj śladów zawierających dane auth.
+
+## Hosting
+
+Na 2026-11-04 oficjalna [dokumentacja Vercel](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions)
+wymienia Node 26.x jako obsługiwany runtime. Nie potwierdza to konfiguracji
+konkretnego projektu Lyamo: w S00 CLI Vercel nie jest zalogowany i nie ma
+powiązanego projektu. Aktualna mapa dostępów znajduje się w `reports/S00.md`.

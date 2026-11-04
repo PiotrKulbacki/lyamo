@@ -22,12 +22,37 @@
     "db:migrate": "npm run migrate:dev -w @lyamo/database",
     "db:migrate:deploy": "dotenv -e .env -- npm run migrate:deploy -w @lyamo/database",
     "db:status": "npm run migrate:status -w @lyamo/database",
-    "db:seed": "npm run db:seed -w @lyamo/database"
+    "db:seed": "npm run db:seed -w @lyamo/database",
+    "test:integration": "node scripts/security-test.mjs integration",
+    "test:e2e": "node scripts/security-test.mjs e2e",
+    "test:quality": "node scripts/security-test.mjs quality",
+    "build:test": "node scripts/security-test.mjs build"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "turbo": "^2.5.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "embedded-postgres": "16.15.0-beta.19",
+    "@playwright/test": "1.64.1"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "prisma@6.19.3": true,
+    "esbuild@0.28.1": true,
+    "sharp@0.34.5": true,
+    "unrs-resolver@1.12.2": true,
+    "@sentry/cli@2.58.6": true,
+    "@embedded-postgres/darwin-arm64@16.15.0-beta.19": true,
+    "@embedded-postgres/darwin-x64@16.15.0-beta.19": true,
+    "@embedded-postgres/linux-x64@16.15.0-beta.19": true,
+    "@embedded-postgres/linux-arm64@16.15.0-beta.19": true,
+    "@embedded-postgres/linux-arm@16.15.0-beta.19": true,
+    "@embedded-postgres/linux-ia32@16.15.0-beta.19": true,
+    "@embedded-postgres/linux-ppc64@16.15.0-beta.19": true,
+    "@embedded-postgres/windows-x64@16.15.0-beta.19": true,
+    "core-js": false,
+    "fsevents": false
   }
 }

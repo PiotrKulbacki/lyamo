@@ -74,3 +74,12 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Auth PostgreSQL integration
+        run: npm run test:integration
+
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser smoke test
+        run: npm run test:e2e
