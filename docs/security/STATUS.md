@@ -1,22 +1,22 @@
 # Stan programu bezpieczeństwa
 
-Aktualizacja: 2026-11-04. S00 ukończone lokalnie; żadna poprawka aplikacji nie jest jeszcze wdrożona.
+Aktualizacja: 2026-11-04. S00 scalone do dev (PR #74). S01 ukończone lokalnie; publikacja i CI w toku, bez potwierdzonego wdrożenia.
 
 Następne zadanie: **S01**. Ostatni raport: [S00](reports/S00.md).
 
-| Zadanie | Stan                  | Raport                |
-| ------- | --------------------- | --------------------- |
-| S00     | ukończone             | [S00](reports/S00.md) |
-| S01     | gotowe do rozpoczęcia | —                     |
-| S02     | oczekuje              | —                     |
-| S03     | oczekuje              | —                     |
-| S04     | oczekuje              | —                     |
-| S05     | oczekuje              | —                     |
-| S06     | oczekuje              | —                     |
-| S07     | oczekuje              | —                     |
-| S08     | oczekuje              | —                     |
-| S09     | oczekuje              | —                     |
-| S10     | oczekuje              | —                     |
+| Zadanie | Stan      | Raport                |
+| ------- | --------- | --------------------- |
+| S00     | ukończone | [S00](reports/S00.md) |
+| S01     | w toku    | —                     |
+| S02     | oczekuje  | —                     |
+| S03     | oczekuje  | —                     |
+| S04     | oczekuje  | —                     |
+| S05     | oczekuje  | —                     |
+| S06     | oczekuje  | —                     |
+| S07     | oczekuje  | —                     |
+| S08     | oczekuje  | —                     |
+| S09     | oczekuje  | —                     |
+| S10     | oczekuje  | —                     |
 
 Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkownika / ukończone. Oznacz ukończenie tylko po spełnieniu kryteriów karty; brak połączenia z produkcją nie oznacza, że poprawka została wdrożona.
 

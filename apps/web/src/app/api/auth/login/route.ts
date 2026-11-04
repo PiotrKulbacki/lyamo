@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { loginSchema } from '@shared/features/auth/schemas';
 import { prisma } from '@lyamo/database';
@@ -17,6 +18,9 @@ const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request);
+    if (rejected) return rejected;
+
     const rateLimit = await checkAuthRateLimit(request, 'login');
     if (!rateLimit.allowed) {
       return jsonError(RATE_LIMIT_ERROR, 429);

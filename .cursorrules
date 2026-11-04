@@ -1,75 +1,31 @@
-# Reguły dla Agentów AI — Lyamo
+# Reguły pracy — Lyamo
 
-## Żelazne reguły (nienaruszalne)
+## Zakres i źródła prawdy
 
-1. **TypeScript strict + architektura modułowa:** Używaj TypeScript w trybie strict i architektury modułowej (katalogi `features/`). Zamiast relatywnych importów, używaj Path Aliases (`@shared/*`, `@web/*`, `@mobile/*`).
-2. **Nie cofaj kodu:** Nigdy nie cofaj kodu do wcześniejszego stanu (nie usuwaj działających implementacji) bez wyraźnego polecenia od użytkownika.
-3. **Błędy UI przez toast:** Błędy dla użytkownika (np. błędy autoryzacji czy logowania) muszą być zawsze obsługiwane za pomocą wyskakujących powiadomień typu `toast`. Nigdy nie renderuj błędów jako statycznego tekstu pod przyciskami lub inputami.
-4. **i18n bez hardkodu:** Zakaz hardkodowania tekstów w komponentach. Zawsze używaj funkcji tłumaczeń i plików JSON z pakietu `@shared/features/i18n`.
-5. **Zakaz autonomicznego rozszerzania zakresu:** Agentowi surowo zabrania się autonomicznego dodawania, planowania lub sugerowania nowych funkcji systemu w kolejnych fazach bez wcześniejszego, wyraźnego zapytania użytkownika i uzyskania jego jednoznacznej zgody. Każda nowa funkcja przed wpisaniem do kamieni milowych musi zostać zatwierdzona przez użytkownika.
-6. **Formatowanie Prettier — zawsze na koniec pracy:** Po zmianach w plikach objętych Prettierem uruchom `npx prettier --write .`, następnie zweryfikuj `npm run format`. Powtarzaj aż check przejdzie bez ostrzeżeń.
-7. **Lokalna weryfikacja CI — obowiązkowa przed zakończeniem pracy:** Po każdej zmianie kodu uruchom lokalnie te same checki jakościowe co GitHub Actions (`.github/workflows/ci.yml`), w tej kolejności: `npm run format`, `npm run lint`, `npm run typecheck`, `npm run test`. Wszystkie muszą przejść bez błędów i ostrzeżeń traktowanych jako fail w CI. Nie kończ zadania ani nie proponuj pusha/PR, dopóki lokalne checki nie są zielone — CI nie jest miejscem na pierwsze wykrycie problemów lint/format/typecheck/test.
-8. **Tailwind CSS v4 — najnowszy zapis klas (obowiązkowy):**
-   - **Zakaz** `bg-[var(--token)]`, `text-[var(--token)]`, `border-[var(--token)]` itd.
-   - Tokeny z `@theme` (`--color-*`): używaj utilities, np. `border-line`, `text-fg-muted`, `bg-bg-elevated`, `text-accent`, `bg-accent/10`, `decoration-line`, `outline-accent`.
-   - Surowa zmienna CSS (poza theme lub gdy utility wygląda myląco, np. kolor `bg`): składnia nawiasowa `bg-(--bg)/95`, `w-(--sidebar-w)`, `shadow-(--shadow)` — **nigdy** `bg-[var(--bg)]/95`.
-   - Arbitrary values ze znakiem ujemnym: `left-[-1.91rem]`, **nie** `-left-[1.91rem]`.
-   - Przed zakończeniem pracy sprawdź ostrzeżenia Tailwind IntelliSense / lintera w zmienionych plikach i popraw je.
+- Stosuj AGENTS.md oraz instrukcję użytkownika. Kod, manifesty i konfiguracja mają pierwszeństwo przed opisami stacku w dokumentacji.
+- Wykonuj przydzielone zadanie; bez niezwiązanych refaktorów, nowych funkcji lub aktualizacji zależności. Zachowuj zastane zmiany i działające zachowanie poza zakresem zadania.
+- W programie bezpieczeństwa stosuj lokalny skill lyamo-security-task, własną kartę zadania i raport poprzednika. Nie rozpoczynaj kolejnego etapu ani nie deleguj bez polecenia.
 
-## Architektura Monorepo
+## Kod i interfejs
 
-- **Struktura:** Turborepo z `/apps/web` (Next.js), `/apps/mobile` (Expo), `/packages/shared` (wspólny kod).
-- **Walidacja Zod:** Schematy formularzy w `packages/shared/src/schemas/` oraz `packages/shared/src/features/*/schemas` — współdzielone między web, mobile i backend.
-- **Path Aliases:** `@shared/*`, `@web/*`, `@mobile/*` — nigdy `../../../../`.
-- **Zmienne środowiskowe:** Rozdziel publiczne (Expo/Next Frontend) od tajnych (Next Backend). Waliduj przez `t3-env`.
-- **Feature-Driven:** Kod domenowy w `features/` (auth, billing, ai). Każdy moduł ma własne routing, serwisy, walidację, typy i komponenty.
-- **i18n od Dnia 1:** Tłumaczenia (en, de, pl, es) w `packages/shared/src/features/i18n/`.
+- TypeScript strict; kod domenowy w istniejących `features/`. Wspólne schematy Zod i kontrakty w `packages/shared`. Używaj istniejących aliasów `@shared/*`, `@web/*`, `@mobile/*`; krótkie importy względne wewnątrz modułu są dozwolone.
+- Teksty interfejsu przez istniejący system i18n (PL/EN/DE/ES), błędy przez toast. Zachowuj dostępne etykiety i istniejący sposób obsługi formularzy; blokuj ponowny submit podczas wysyłania.
+- Stosuj konfigurację Prettier i lokalne konwencje komponentu. Wersję Tailwind i składnię sprawdzaj w pakiecie aplikacji; nie zakładaj v4 w całym monorepo. Nie wprowadzaj nowych tokenów, jeśli istnieją odpowiednie.
+- Web i mobile korzystają ze wspólnego API: zachowuj zgodność albo opisz zmianę kontraktu i potrzebną aktualizację klienta.
 
-## Baza Danych & Migracje
+## Bezpieczeństwo i dane
 
-- **IaC:** Zakaz ręcznych zmian w bazie przez panel. Każda zmiana przez ORM (Prisma/Drizzle).
-- **Migracje plikowe:** Generuj `.sql` lokalnie, commituj do Git.
-- **Pipeline Vercel:** `npx [orm] migrate deploy && next build`.
-- **Indeksy:** Od dnia 1 dla kolumn `user_id`, `date`, `status`.
-- **Cache agregacji:** Tabela `user_period_aggregations` — invalidacja przy mutacjach transakcji/kosztów stałych; odświeżanie przez cron `/api/cron/refresh-aggregations`.
+- Auth jest własną implementacją Lyamo. Nie zastępuj go Supabase Auth. Prisma jest właścicielem schematu i wersjonowanych migracji SQL; bez równoległych zmian schematu przez panel lub MCP.
+- Weryfikuj uprawnienia na serwerze. Obecność cookie lub nagłówka Bearer nie dowodzi uwierzytelnienia. Mutujące API cookies obejmuj wspólną ochroną CSRF; wyjątki muszą mieć własny model zabezpieczeń.
+- Sekrety tylko po stronie serwera i przez istniejącą walidację środowiska. Nie wypisuj sekretów, pełnych połączeń, tokenów ani danych klientów do logów, raportów lub repo.
+- Przed buildem lub migracją sprawdź cel bazy: web build wykonuje `migrate deploy`. Testy i lokalny build wyłącznie w izolacji opisanej w `docs/security/TESTING.md`, przez runnery S00. Nigdy na produkcyjnej bazie.
+- Zachowaj istniejące limity, idempotencję webhooków, invalidację cache i prywatność danych w zmienianych przepływach. Nie dodawaj usług monitoringu, flag ani infrastruktury bez związku z zadaniem.
+- Promocja dwóch darmowych miesięcy pozostaje kuponem Stripe; nie dodawaj drugiego rabatu lub automatycznego trialu.
 
-## Środowisko IDE & Code Style
+## Weryfikacja i publikacja
 
-- **Formatowanie:** Prettier, 2 spacje, `printWidth: 100`, średniki, `prettier-plugin-tailwindcss`.
-- **Format on save:** Włączone w `.vscode/settings.json`.
-- **Tailwind v4:** klasy wg żelaznej reguły 8 (tokeny `@theme` + składnia `(--var)`, bez `[var(--…)]`).
-
-## Bezpieczeństwo & Monitoring
-
-- **Rate Limiting:** Na dedykowanych Route Handlers (Upstash Redis), nie globalne Middleware.
-- **Fallback walutowy:** Przy awarii API kursów — ostatnie znane dane z bazy.
-- **Sentry/Axiom:** Monitoring błędów od dnia 1 (webhooki Stripe, API AI) — `captureServerException` w serwisach.
-- **OAuth:** Ustal dostawców tożsamości przed implementacją auth.
-- **Feature Flags:** PostHog lub `.env` (`ENABLE_AI`, `NEXT_PUBLIC_ENABLE_AI`).
-- **Analityka:** PostHog z silnym typowaniem TypeScript.
-
-## Optymalizacja Kosztów
-
-- **In-Memory Buffers:** OCR paragonów bez permanentnego storage S3.
-- **Quota Limits:** Liczniki operacji AI w bazie (`monthly_ai_scans_count`).
-
-## UX/UI & Asynchroniczność
-
-- **Form Submissions:** Blokuj inputy i przycisk po kliknięciu (stan `loading`/`disabled`).
-- **Loadery & Optimistic UI:** Szkielety stron, Optimistic UI gdzie możliwe.
-- **Webhooks:** Stripe i długie procesy przez webhooki z idempotency.
-
-## Prawne & Prywatność
-
-- **RODO/GDPR:** Kaskadowe usuwanie danych przy „Usuń konto".
-- **AI Disclaimers:** Widoczny zapis wyłączający odpowiedzialność prawną za porady LLM.
-
-## Gałęzie Git
-
-- `main` — produkcja
-- `dev` — aktywny development (domyślna gałąź robocza)
-
-## Dokumentacja żywego kontekstu
-
-- `ARCHITECTURE.md` — stack technologiczny i decyzje architektoniczne
-- `PROGRESS.md` — status faz projektu i ostatnie zmiany
+- Używaj Node z `.nvmrc` (26) i zależności z lockfile.
+- Formatuj tylko zmienione pliki obsługiwane przez Prettier, potem sprawdź całe repo. Nie wykonuj zbiorowych zmian formatowania cudzej pracy.
+- Dla zmian kodu uruchom `npm run test:quality` (format → lint → typecheck → test), wymagane testy integracyjne/E2E oraz `npm run build:test`, gdy zmiana dotyczy aplikacji. Szczegóły checków: `.github/workflows/ci.yml`. Testuj negatywne ścieżki i ryzyko; same mocki nie dowodzą atomowości bazy.
+- Przejrzyj diff, zaktualizuj raport i stan zadania. Commit, push gałęzi `codex/` i PR do zweryfikowanego `dev` są autoryzowane przez AGENTS.md. Sprawdź CI; nie deklaruj sukcesu bez wyniku.
+- `main` jest gałęzią produkcyjną. Domyślnie merge wykonuje użytkownik, bez auto-merge; wyjątek wymaga jego wyraźnego polecenia. Publikacja PR sama nie upoważnia do wdrożenia produkcyjnego.

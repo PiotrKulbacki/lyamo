@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { CHAT_ERROR_CODES, chatRequestSchema } from '@shared/features/ai/schemas';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
@@ -10,6 +11,9 @@ const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const aiDisabled = requireAiEnabled();
     if (aiDisabled) {
       return aiDisabled;

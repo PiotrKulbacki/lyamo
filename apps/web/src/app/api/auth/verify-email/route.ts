@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { AUTH_ERROR_CODES } from '@shared/features/auth/schemas';
@@ -13,6 +14,9 @@ const verifyEmailSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request);
+    if (rejected) return rejected;
+
     const rateLimit = await checkAuthRateLimit(request, 'verify-email');
     if (!rateLimit.allowed) {
       return jsonError(RATE_LIMIT_ERROR, 429);

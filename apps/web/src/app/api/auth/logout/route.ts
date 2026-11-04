@@ -1,7 +1,9 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { AUTH_COOKIE_NAME } from '@web/features/auth/types';
 import {
+  clearSessionCookie,
   jsonError,
   revokeRefreshToken,
   revokeSession,
@@ -9,6 +11,9 @@ import {
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request);
+    if (rejected) return rejected;
+
     const body = (await request.json().catch(() => ({}))) as { refreshToken?: string };
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get(AUTH_COOKIE_NAME)?.value;
@@ -22,13 +27,7 @@ export async function POST(request: Request) {
     }
 
     const response = NextResponse.json({ success: true });
-    response.cookies.set(AUTH_COOKIE_NAME, '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 0,
-    });
+    clearSessionCookie(response);
 
     return response;
   } catch {

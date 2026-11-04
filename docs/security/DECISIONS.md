@@ -42,3 +42,11 @@ Każdy agent dopisuje krótko decyzję, powód, zadanie i ewentualne skutki migr
 - Testy integracyjne używają rzeczywistego, tymczasowego PostgreSQL 16 z `embedded-postgres`; E2E używa Playwright/Chromium. Docker nie jest wymagany. Po późniejszym uruchomieniu przez użytkownika potwierdzono sprawny silnik; pozostawiono lokalny PostgreSQL ze względu na zgłoszone spowolnienie komputera i brak korzyści z dodatkowego kontenera dla S00.
 - `scripts/security-test.mjs` tworzy i sprawdza własną bazę przed migracją. Przekazuje świeże środowisko i `LYAMO_TEST_ENV=1`, aby Next.js nie wczytywał głównego `.env`. To flaga wyłącznie lokalnych testów, nie ustawienie hostingu. Bazy/porty nie są kontraktem produkcyjnym.
 - Bez zmian schematu, kontraktów API, mechanizmów logowania, Stripe, mobile lub danych produkcyjnych. Instrukcja następnych testów: `TESTING.md`.
+
+## S01 — granica przeglądarki (2026-11-04)
+
+- Przekierowania po logowaniu korzystają z listy istniejących ścieżek panelu w `safeAuthRedirect`; nowe trasy wymagają jawnego dopisania do listy.
+- Wszystkie mutujące API cookies wywołują `protectMutation` przed skutkami ubocznymi: dokładny Origin z `NEXT_PUBLIC_APP_URL`, kontrola Fetch Metadata i JSON (multipart tylko dla skanowania). Cookie-free native JSON bez Origin/Fetch Metadata pozostaje kompatybilne. Wyjątek dla innego Origin wymaga opt-in w handlerze używającym zweryfikowanego Bearera, bez cookies. Sam Authorization nie zwalnia cookies z ochrony. Nie otwieraj dowolnego CORS.
+- Callback Google i podpisany webhook Stripe zachowują własne mechanizmy zabezpieczeń. Obecność cookie nie dowodzi sesji; middleware nie przekierowuje publicznych stron na tej podstawie. Nieaktualne cookie jest czyszczone w Route Handlerze po sprawdzeniu sesji.
+- Zachowujemy `sec_session`, bez migracji nazwy w S01: wspólne atrybuty zapisu/usuwania, HttpOnly/SameSite=Lax/Path=/, Secure w produkcji. Przejście na `__Host-` wymaga osobnego etapowego wygaszenia starej nazwy (szczegóły w raporcie).
+- Użytkownik jednorazowo upoważnił agenta S01 również do merge i pełnego wdrożenia po checkach. Nie zmienia to domyślnego upoważnienia kolejnych zadań.
