@@ -19,7 +19,7 @@ Gdy odpowiednia wtyczka nie udostępnia potrzebnej funkcji, Codex obsługuje zew
 
 - Preferuj dostępną integrację. Potwierdź dostęp do repo i status CI; uprawnienia do czytania nie gwarantują push/PR.
 - W razie potrzeby oficjalne CLI: `gh auth login`, następnie `gh auth status`. Użytkownik kończy logowanie w przeglądarce. Istniejący remote SSH wymaga osobno sprawnego uwierzytelnienia Git; `gh` i SSH to różne ścieżki.
-- Minimalnie: odczyt repo/PR/checków; zapis repo/PR tylko dla publikacji przygotowanych zmian. Nowe gałęzie `codex/security-sxx-...`, PR zwykle do `dev` po sprawdzeniu rzeczywistej konfiguracji. Nie zakładaj, że `dev` jest produkcją.
+- Minimalnie: odczyt repo/PR/checków; zapis repo/PR tylko dla publikacji przygotowanych zmian. Nowe gałęzie `codex/security-sxx-...`, PR bezpośrednio do `main`; merge wdraża produkcję. `dev` nie jest etapem pośrednim.
 - Źródło: [uwierzytelnianie GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github).
 
 ### Supabase

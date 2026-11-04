@@ -1,12 +1,15 @@
 name: CI
 
+# One run per PR commit. Merging the PR into main deploys production (Vercel),
+# so there is no rerun after merge: the PR already tested that code.
+# Documentation-only PRs skip CI (no required status checks are configured).
 on:
-  push:
-    branches:
-      - dev
   pull_request:
     branches:
-      - dev
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
 
 permissions:
   contents: read
