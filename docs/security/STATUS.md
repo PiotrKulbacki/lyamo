@@ -7,7 +7,8 @@ Następne zadanie: **S02**. Ostatni raport: [S01](reports/S01.md).
 Zgłoszona regresja po S01: udane Google OAuth wracało na landing page po usunięciu
 przekierowania middleware. Osobna [poprawka logowania](reports/S01-google-login-hotfix.md)
 zweryfikowana lokalnie: quality, integracja 2/2, E2E 14/14 i build; callback
-kieruje do panelu, strona główna sprawdza ważność sesji. Publikacja PR w toku.
+kieruje do panelu, strona główna sprawdza ważność sesji. [PR #81](https://github.com/PiotrKulbacki/lyamo/pull/81)
+do `dev`, implementacja `7e48227`, [CI #118](https://github.com/PiotrKulbacki/lyamo/actions/runs/41907901963): success.
 Nie rozpoczęto S02 ani nie wdrożono tej poprawki na produkcję.
 
 | Zadanie | Stan                  | Raport                |

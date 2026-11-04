@@ -47,5 +47,9 @@ na `/dashboard` po powrocie z Google pozwala wykorzystać zapisaną sesję.
 ## Publikacja i przekazanie
 
 Docelowy PR do `dev`; merge i wydanie produkcyjne pozostają po stronie użytkownika.
-Wszystkie wymagane checki lokalne przeszły; diff sprawdzony. URL PR, SHA i CI
-zostaną zapisane po publikacji. Brak migracji i zmian środowiska.
+Wszystkie wymagane checki lokalne przeszły; diff sprawdzony. Implementacja:
+`7e482278c4bf9b43aeab7571146762ebc3a71694`, [PR #81](https://github.com/PiotrKulbacki/lyamo/pull/81)
+do `dev`. [CI #118](https://github.com/PiotrKulbacki/lyamo/actions/runs/41907901963):
+**success** (checks, browser, build/integracja, quality). Brak migracji i zmian
+środowiska. Końcowy commit dokumentacyjny uzupełnia wynik publikacji; jego CI
+należy sprawdzić w tym samym PR. S02 pozostaje kolejnym zadaniem, bez rozpoczęcia.
