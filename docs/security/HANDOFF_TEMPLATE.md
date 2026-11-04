@@ -1,7 +1,7 @@
 # Raport Sxx — nazwa zadania
 
 - Stan: ukończone / wymaga działania użytkownika / w toku.
-- Data, gałąź, bazowy commit, commit implementacji, URL PR i wynik CI. Po checkach obowiązkowo commit, push i PR; merge wyłącznie użytkownika. Przy blokadzie podaj rzeczywisty stan publikacji.
+- Data, gałąź, bazowy commit. Raport wchodzi do tego samego commita co zmiana; URL PR, commit i wynik CI agent podaje w odpowiedzi końcowej, bez dodatkowego commita. Po `npm run test:quality` obowiązkowo commit, push i PR do `main`; merge (wdrożenie produkcyjne) wyłącznie użytkownika. Przy blokadzie podaj rzeczywisty stan publikacji.
 - Środowisko: lokalne / testowe / preview / produkcja; identyfikator bez sekretów.
 - Zmiany: maksymalnie 6 konkretnych punktów; odnośniki do plików.
 - Kontrakty dla następnego agenta: pola modelu, funkcje, kody odpowiedzi, migracje, flagi.
