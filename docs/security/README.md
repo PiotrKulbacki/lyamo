@@ -12,7 +12,7 @@ W kolejnych czatach podmieniaj identyfikator na wskazany w raporcie poprzednika.
 
 ## Zakres i upoważnienie
 
-Użytkownik zatwierdził naprawy i usprawnienia z audytu. Przydzielenie konkretnego Sxx uruchamia wyłącznie jego realizację. Po każdym zadaniu agent wykonuje wymagane checki, commit, push i PR do zweryfikowanej gałęzi docelowej (domyślnie `dev`), sprawdza CI i podaje URL PR, commit i wynik CI w odpowiedzi końcowej (raport i STATUS.md są częścią tego samego commita; bez dodatkowego commita uruchamiającego CI ponownie). Użytkownik wykonuje merge; agent nie scala PR ani nie włącza automatycznego merge. To stałe upoważnienie do publikacji zadania, bez ponownego pytania. Nie upoważnia do nieuzgodnionego wdrożenia produkcyjnego. Zwykłe poprawki kodu i testy w przydzielonym zakresie nie wymagają ponownego zatwierdzania samego pomysłu.
+Użytkownik zatwierdził naprawy i usprawnienia z audytu. Przydzielenie konkretnego Sxx uruchamia wyłącznie jego realizację. Po każdym zadaniu agent wykonuje wymagane checki, commit, push i PR bezpośrednio do `main`, sprawdza CI i podaje URL PR, commit i wynik CI w odpowiedzi końcowej (raport i STATUS.md są częścią tego samego commita; bez dodatkowego commita uruchamiającego CI ponownie). Użytkownik wykonuje merge, który wdraża produkcję; agent nie scala PR ani nie włącza automatycznego merge. To stałe upoważnienie do publikacji zadania, bez ponownego pytania. Nie upoważnia do nieuzgodnionego wdrożenia produkcyjnego. Zwykłe poprawki kodu i testy w przydzielonym zakresie nie wymagają ponownego zatwierdzania samego pomysłu.
 
 Połączenie konta z platformą nie jest samo w sobie poleceniem wdrożenia. Zapis zdalny wymaga ustalonego celu i środowiska oraz objęcia operacji przydzielonym zadaniem. S10 przygotowuje wydanie; jeśli użytkownik już przydzielił wdrożenie na wskazaną produkcję, nie pytaj o to ponownie. Nie wykonuj nieuzgodnionego obciążenia klienta, kasowania danych, masowego odłączania kont ani wymuszania resetu wszystkim użytkownikom. Ewentualny taki krok przedstaw jako konkretny plan z oceną skutków.
 
@@ -24,7 +24,7 @@ Połączenie konta z platformą nie jest samo w sobie poleceniem wdrożenia. Zap
 - Konto po wymaganych potwierdzeniach otrzymuje FREE. Zakup pakietu jest osobnym krokiem; zgoda na analitykę nie może blokować aplikacji.
 - Web i mobile korzystają ze wspólnego API. Zachowaj kompatybilność albo jawnie opisz potrzebną aktualizację mobile.
 - Tłumaczenia: PL, EN, DE, ES; błędy zgodnie z istniejącym systemem toast.
-- Repozytorium wykryte lokalnie: `PiotrKulbacki/lyamo`; gałąź bieżąca `dev`. Przed zdalną operacją zweryfikuj ponownie.
+- Repozytorium wykryte lokalnie: `PiotrKulbacki/lyamo`; PR trafiają do `main` (produkcja). Przed zdalną operacją zweryfikuj ponownie.
 
 ## Etapy — jeden wiersz to jedno zadanie jednego agenta
 

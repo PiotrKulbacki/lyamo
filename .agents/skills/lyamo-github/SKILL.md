@@ -6,7 +6,7 @@ description: Work with Lyamo GitHub branches, pull requests and CI for an assign
 # Lyamo GitHub
 
 - Read the task card and `docs/security/INTEGRATIONS.md` GitHub section. Prefer connected GitHub tools; if insufficient, use authenticated official Git/gh. Read an installed GitHub producer skill when available and relevant. Verify actual authentication and write capabilities; installation alone is insufficient.
-- Confirm remote, repository, working tree and base branch. Initial observed remote was `PiotrKulbacki/lyamo`; `dev` is the expected integration target, but inspect current settings. Use `codex/security-sxx-...` for a new branch. Do not merge another agent's unpublished work by assumption.
+- Confirm remote, repository, working tree and base branch. Initial observed remote was `PiotrKulbacki/lyamo`; PRs target `main` directly (merging deploys production on Vercel); `dev` is no longer used as an intermediate step. Use `codex/security-sxx-...` for a new branch. Do not merge another agent's unpublished work by assumption.
 - Before publication inspect the final diff and required checks. A PR represents this one task, including its report and status. Do not bulk-format unrelated application files for a documentation-only change.
 - Keep tokens and env contents out of output. Do not print full CLI credential configuration. Use minimal repo/PR/check permissions and the existing authenticated identity.
 - Respect the assigned publication scope. Local implementation does not imply automatic merge to main or production. If creating a PR is authorised, publish the concrete reviewed result and record its URL/SHA; do not ask repeatedly for existing permission.
