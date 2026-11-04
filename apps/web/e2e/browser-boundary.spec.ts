@@ -146,3 +146,21 @@ test('OAuth callback uses state and webhook still uses Stripe signature', async 
   });
   expect([400, 503]).toContain(hook.status());
 });
+
+test('bodyless API clients reach authentication on every supported route', async ({
+  request,
+  baseURL,
+}) => {
+  for (const [method, path] of [
+    ['POST', '/api/billing/portal'],
+    ['DELETE', '/api/auth/me'],
+    ['DELETE', '/api/categories/synthetic-absent'],
+    ['DELETE', '/api/recurring-expenses/synthetic-absent'],
+    ['DELETE', '/api/transactions/synthetic-absent'],
+    ['DELETE', '/api/transactions/group/synthetic-absent'],
+  ]) {
+    expect((await request.fetch(path!, { method, headers: { origin: baseURL! } })).status()).toBe(
+      401
+    );
+  }
+});

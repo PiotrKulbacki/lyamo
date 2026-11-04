@@ -74,7 +74,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
 export async function DELETE(request: Request, context: RouteContext) {
   try {
-    const rejected = await protectMutation(request, { bearer: true });
+    const rejected = await protectMutation(request, { bearer: true, bodyless: true });
     if (rejected) return rejected;
 
     const user = await getAuthenticatedUser(request);
