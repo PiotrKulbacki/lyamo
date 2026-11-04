@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { forgotPasswordSchema } from '@shared/features/auth/schemas';
 import { jsonError } from '@web/features/auth/services/auth.service';
@@ -8,6 +9,9 @@ const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request);
+    if (rejected) return rejected;
+
     const rateLimit = await checkAuthRateLimit(request, 'forgot-password');
     if (!rateLimit.allowed) {
       return jsonError(RATE_LIMIT_ERROR, 429);

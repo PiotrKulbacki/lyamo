@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import { jsonError } from '@web/features/auth/services/auth.service';
@@ -12,6 +13,9 @@ const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request, { bearer: true, multipart: true });
+    if (rejected) return rejected;
+
     const aiDisabled = requireAiEnabled();
     if (aiDisabled) {
       return aiDisabled;

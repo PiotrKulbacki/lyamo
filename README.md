@@ -26,7 +26,7 @@ packages/
 
 ## Wymagania
 
-- Node.js **22** (zobacz `.nvmrc`)
+- Node.js **26** (zobacz `.nvmrc` i `engines`)
 - npm **10.9+**
 
 ```bash
@@ -37,7 +37,7 @@ nvm use   # opcjonalnie, jeśli używasz nvm
 
 ```bash
 # Instalacja zależności
-npm install
+npm ci
 
 # Konfiguracja środowiska
 cp .env.example .env
@@ -81,6 +81,8 @@ CI uruchamia się przy push i Pull Request do `dev`.
 
 ## Dokumentacja
 
+- [`docs/security/TESTING.md`](./docs/security/TESTING.md) — odizolowany PostgreSQL, testy auth, E2E i bezpieczny build
+- [`docs/security/README.md`](./docs/security/README.md) — plan zabezpieczenia kont, zadania dla kolejnych agentów i połączenia z platformami
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — decyzje architektoniczne i stack
 - [`PROGRESS.md`](./PROGRESS.md) — status faz projektu
 - [`PROJECT_START_CHECKLIST.md`](./PROJECT_START_CHECKLIST.md) — checklista przedstartowa

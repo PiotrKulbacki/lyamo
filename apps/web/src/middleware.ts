@@ -1,15 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const AUTH_COOKIE_NAME = 'sec_session';
+import { AUTH_COOKIE_NAME } from '@web/features/auth/types';
 
-const AUTH_ONLY_PUBLIC_PATHS = [
-  '/login',
-  '/register',
-  '/forgot-password',
-  '/reset-password',
-  '/verify-email',
-];
 const PUBLIC_PATHS = [
   '/',
   '/login',
@@ -38,7 +31,8 @@ function isPublicPath(pathname: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const sessionToken = request.cookies.get(AUTH_COOKIE_NAME)?.value;
-  const isAuthenticated = Boolean(sessionToken);
+  // This is only a fast missing-cookie check; the app layout validates the session.
+  const hasSessionCookie = Boolean(sessionToken);
   const isPublic = isPublicPath(pathname);
 
   // Meta's facebookexternalhit probes /meta.json (undocumented ads/health check).
@@ -53,32 +47,11 @@ export function middleware(request: NextRequest) {
     });
   }
 
-  if (!isAuthenticated && !isPublic) {
+  if (!hasSessionCookie && !isPublic) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/login';
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
-  }
-
-  if (isAuthenticated && AUTH_ONLY_PUBLIC_PATHS.includes(pathname)) {
-    const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = '/dashboard';
-    dashboardUrl.search = '';
-    return NextResponse.redirect(dashboardUrl);
-  }
-
-  if (isAuthenticated && pathname === '/contact') {
-    const appContactUrl = request.nextUrl.clone();
-    appContactUrl.pathname = '/settings/contact';
-    appContactUrl.search = '';
-    return NextResponse.redirect(appContactUrl);
-  }
-
-  if (isAuthenticated && pathname === '/') {
-    const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = '/dashboard';
-    dashboardUrl.search = '';
-    return NextResponse.redirect(dashboardUrl);
   }
 
   return NextResponse.next();

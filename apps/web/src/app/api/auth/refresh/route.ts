@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { prisma } from '@lyamo/database';
 import { hashToken, signAccessToken } from '@web/features/auth/lib/tokens';
@@ -5,6 +6,9 @@ import { jsonError, toSafeUser } from '@web/features/auth/services/auth.service'
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request);
+    if (rejected) return rejected;
+
     const body = (await request.json()) as { refreshToken?: string };
 
     if (!body.refreshToken) {

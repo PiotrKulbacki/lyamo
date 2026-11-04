@@ -54,24 +54,24 @@ export async function createMobileTokens(userId: string): Promise<{
   return { accessToken, refreshToken };
 }
 
-export function setSessionCookie(response: NextResponse, token: string): void {
-  response.cookies.set(AUTH_COOKIE_NAME, token, {
+function sessionCookieOptions() {
+  return {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     path: '/',
+  };
+}
+
+export function setSessionCookie(response: NextResponse, token: string): void {
+  response.cookies.set(AUTH_COOKIE_NAME, token, {
+    ...sessionCookieOptions(),
     maxAge: SESSION_DURATION_MS / 1000,
   });
 }
 
 export function clearSessionCookie(response: NextResponse): void {
-  response.cookies.set(AUTH_COOKIE_NAME, '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
+  response.cookies.set(AUTH_COOKIE_NAME, '', { ...sessionCookieOptions(), maxAge: 0 });
 }
 
 export function buildAuthResponse(

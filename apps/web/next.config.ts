@@ -3,7 +3,10 @@ import { loadEnvConfig } from '@next/env';
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
-loadEnvConfig(path.resolve(__dirname, '../..'));
+// The isolated test runner supplies every setting and must never load local service secrets.
+if (process.env.LYAMO_TEST_ENV !== '1') {
+  loadEnvConfig(path.resolve(__dirname, '../..'));
+}
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@lyamo/shared', '@lyamo/database'],
