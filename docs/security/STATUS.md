@@ -22,7 +22,7 @@ Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkowni
 
 ## Potwierdzone połączenia
 
-2026-11-04 (S00): Supabase MCP i CLI odczytują projekt `lyamo` (`jrusrgsrujbflyoudske`); Stripe MCP potwierdza konto Lyamo w trybie live. GitHub MCP i SSH odczytują repo `PiotrKulbacki/lyamo`; MCP potwierdza admin dla `PiotrKulbacki`, token `gh` nieważny. Vercel CLI niezalogowany i bez powiązania projektu; brak narzędzi Vercel. Publikacja GitHub S00 w toku na polecenie użytkownika; bez zmian w usługach produkcyjnych. Szczegóły: [raport S00](reports/S00.md).
+2026-11-04 (S00): Supabase MCP i CLI odczytują projekt `lyamo` (`jrusrgsrujbflyoudske`); Stripe MCP potwierdza konto Lyamo w trybie live. GitHub MCP i SSH odczytują repo `PiotrKulbacki/lyamo`; MCP potwierdza admin dla `PiotrKulbacki`, token `gh` nieważny. Vercel CLI niezalogowany i bez powiązania projektu; brak narzędzi Vercel. S00 opublikowano w GitHub na polecenie użytkownika; bez zmian w usługach produkcyjnych. Szczegóły: [raport S00](reports/S00.md).
 
 ## Środowisko i ograniczenia
 
@@ -33,4 +33,4 @@ Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkowni
 
 ## Rejestr kolejnego kroku
 
-S00 ukończone lokalnie na gałęzi `codex/security-s00-test-environment`, baza `5562bfc`; publikacja commit/push/PR w toku. Raport obejmuje zastane instrukcje programu. Następne zadanie: S01, na osobnej gałęzi po zweryfikowaniu bazy zawierającej S00. Po każdym zadaniu agent publikuje commit i PR oraz sprawdza CI; merge wykonuje użytkownik. Gotowe polecenie znajduje się w raporcie S00.
+S00 ukończone lokalnie na gałęzi `codex/security-s00-test-environment`, baza `5562bfc`; commit implementacji `1bea54a`, push wykonany, [PR #74 do dev](https://github.com/PiotrKulbacki/lyamo/pull/74). CI w momencie zapisu: w toku; [aktualne checki](https://github.com/PiotrKulbacki/lyamo/pull/74/checks). Merge pozostaje użytkownikowi. Raport obejmuje zastane instrukcje programu. Następne zadanie: S01, na osobnej gałęzi po zweryfikowaniu bazy zawierającej S00. Po każdym zadaniu agent publikuje commit i PR oraz sprawdza CI; merge wykonuje użytkownik. Gotowe polecenie znajduje się w raporcie S00.
