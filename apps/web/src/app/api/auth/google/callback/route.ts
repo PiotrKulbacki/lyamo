@@ -92,7 +92,7 @@ export async function GET(request: Request) {
 
     const sessionToken = await createWebSession(user.id);
 
-    const response = NextResponse.redirect(`${env.NEXT_PUBLIC_APP_URL}/`);
+    const response = NextResponse.redirect(`${env.NEXT_PUBLIC_APP_URL}/dashboard`);
     setSessionCookie(response, sessionToken);
 
     response.cookies.set(OAUTH_STATE_COOKIE, '', { maxAge: 0, path: '/' });
