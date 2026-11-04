@@ -39,7 +39,8 @@
     "NEXT_PUBLIC_APP_URL",
     "EXPO_PUBLIC_API_URL",
     "SKIP_ENV_VALIDATION",
-    "NODE_ENV"
+    "NODE_ENV",
+    "LYAMO_TEST_ENV"
   ],
   "tasks": {
     "build": {
