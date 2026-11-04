@@ -37,7 +37,7 @@ S01: GitHub MCP/SSH zapisują PR i merge; Vercel CLI zalogowany jako `piotr01`. 
 
 - Node 26.13.0 / npm 11.20.0; `.nvmrc`, engines i CI: Node 26. Zależności zainstalowane. Vercel Lyamo potwierdzone i ustawione na 26.x w S01.
 - Instrukcja izolacji, integracji auth i E2E: [TESTING.md](TESTING.md). Tymczasowy PostgreSQL 16 jest uruchamiany lokalnie bez Dockera. S01: format/lint/typecheck/test (166 testów), integracja (1), E2E (13) i pełny build przeszły lokalnie i w CI, również po poprawce bodyless dla adaptera Vercel.
-- Zwykły web build wykonuje migracje. Do lokalnej weryfikacji używaj `npm run build:test`; runner sprawdza własną bazę i nie korzysta z produkcyjnego `.env`.
+- Zwykły web build wykonuje migracje. Build, integrację i E2E wykonuje CI na PR; lokalnie `npm run build:test` tylko do diagnozy błędu CI (runner sprawdza własną bazę i nie korzysta z produkcyjnego `.env`).
 - Nadal wymagają weryfikacji we właściwych etapach: izolacja usług Preview (część zmiennych ma wspólny zakres Production/Preview), Stripe test/Sandbox, Google, poczta, Redis i monitoring. Testy lokalne pozostają całkowicie izolowane.
 
 ## Rejestr kolejnego kroku
