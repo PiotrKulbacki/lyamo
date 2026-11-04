@@ -1,22 +1,22 @@
 # Stan programu bezpieczeństwa
 
-Aktualizacja: 2026-11-04. S00 i S01 scalone do dev oraz main. Finalizacja S01: pierwsze wydanie Ready ujawniło różnicę pustych żądań adaptera Vercel; poprawka przechodzi weryfikację i publikację.
+Aktualizacja: 2026-11-04. S00 i S01 scalone do dev oraz main. S01 wdrożone na lyamo.eu: Ready, Node 26, SHA `81a16f5`; kontrola HTTP 12/12.
 
 Następne zadanie: **S02**. Ostatni raport: [S01](reports/S01.md).
 
-| Zadanie | Stan      | Raport                |
-| ------- | --------- | --------------------- |
-| S00     | ukończone | [S00](reports/S00.md) |
-| S01     | w toku    | [S01](reports/S01.md) |
-| S02     | oczekuje  | —                     |
-| S03     | oczekuje  | —                     |
-| S04     | oczekuje  | —                     |
-| S05     | oczekuje  | —                     |
-| S06     | oczekuje  | —                     |
-| S07     | oczekuje  | —                     |
-| S08     | oczekuje  | —                     |
-| S09     | oczekuje  | —                     |
-| S10     | oczekuje  | —                     |
+| Zadanie | Stan                  | Raport                |
+| ------- | --------------------- | --------------------- |
+| S00     | ukończone             | [S00](reports/S00.md) |
+| S01     | ukończone             | [S01](reports/S01.md) |
+| S02     | gotowe do rozpoczęcia | —                     |
+| S03     | oczekuje              | —                     |
+| S04     | oczekuje              | —                     |
+| S05     | oczekuje              | —                     |
+| S06     | oczekuje              | —                     |
+| S07     | oczekuje              | —                     |
+| S08     | oczekuje              | —                     |
+| S09     | oczekuje              | —                     |
+| S10     | oczekuje              | —                     |
 
 Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkownika / ukończone. Oznacz ukończenie tylko po spełnieniu kryteriów karty; brak połączenia z produkcją nie oznacza, że poprawka została wdrożona.
 
@@ -29,13 +29,13 @@ S01: GitHub MCP/SSH zapisują PR i merge; Vercel CLI zalogowany jako `piotr01`. 
 ## Środowisko i ograniczenia
 
 - Node 26.13.0 / npm 11.20.0; `.nvmrc`, engines i CI: Node 26. Zależności zainstalowane. Vercel Lyamo potwierdzone i ustawione na 26.x w S01.
-- Instrukcja izolacji, integracji auth i E2E: [TESTING.md](TESTING.md). Tymczasowy PostgreSQL 16 jest uruchamiany lokalnie bez Dockera. S01: format/lint/typecheck/test (166 testów), integracja (1), E2E (13) i pełny build przeszły dla pierwszej implementacji lokalnie i w CI; aktualne liczby obejmują poprawkę bodyless, weryfikowaną przed kolejnym wydaniem.
+- Instrukcja izolacji, integracji auth i E2E: [TESTING.md](TESTING.md). Tymczasowy PostgreSQL 16 jest uruchamiany lokalnie bez Dockera. S01: format/lint/typecheck/test (166 testów), integracja (1), E2E (13) i pełny build przeszły lokalnie i w CI, również po poprawce bodyless dla adaptera Vercel.
 - Zwykły web build wykonuje migracje. Do lokalnej weryfikacji używaj `npm run build:test`; runner sprawdza własną bazę i nie korzysta z produkcyjnego `.env`.
 - Nadal wymagają weryfikacji we właściwych etapach: izolacja usług Preview (część zmiennych ma wspólny zakres Production/Preview), Stripe test/Sandbox, Google, poczta, Redis i monitoring. Testy lokalne pozostają całkowicie izolowane.
 
 ## Rejestr kolejnego kroku
 
-S01: implementacja `cc2000b5286ac2180079a08724bd712cc1bd7eff`, [PR #75 do dev](https://github.com/PiotrKulbacki/lyamo/pull/75) scalony jako `6590efb`. [CI #112](https://github.com/PiotrKulbacki/lyamo/actions/runs/41886302000) i [CI dev](https://github.com/PiotrKulbacki/lyamo/actions/runs/41899409363) zakończone sukcesem. [Wydanie #76 do main](https://github.com/PiotrKulbacki/lyamo/pull/76) scalone jako `6ce15f7`. Użytkownik jednorazowo upoważnił agenta S01 do merge i wdrożenia. S02 nie rozpoczęto; gotowe polecenie w raporcie S01. Kolejne zadania zachowują domyślną zasadę merge przez użytkownika.
+S01: implementacja `cc2000b`, poprawka `3eace00823f923b2693c4c5bf5ddd72afb08cbd6`; [PR #75](https://github.com/PiotrKulbacki/lyamo/pull/75) i [PR #77](https://github.com/PiotrKulbacki/lyamo/pull/77) scalone do dev, końcowy merge kodu `e4ac2c5`. [CI poprawki](https://github.com/PiotrKulbacki/lyamo/actions/runs/41902215210) oraz [CI dev](https://github.com/PiotrKulbacki/lyamo/actions/runs/41902656353): success. [Wydanie #78](https://github.com/PiotrKulbacki/lyamo/pull/78) do main: `81a16f5f2d3d5de5193fc21aaea00a5574607e12`, Vercel `dpl_93Uo424EVAU9SrNVSgqos1AVHgWc`, Production Ready, domena `lyamo.eu`, kontrola HTTP 12/12. Dokumentacyjne commity po wydaniu nie zmieniają aplikacji. Użytkownik jednorazowo upoważnił agenta S01 do merge i wdrożenia. S02 nie rozpoczęto; gotowe polecenie w raporcie S01. Następne zadania zachowują domyślną zasadę merge przez użytkownika.
 
 ## Optymalizacja CI po publikacji S00
 
