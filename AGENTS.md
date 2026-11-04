@@ -4,7 +4,7 @@ Stosuj istniejące reguły z `.cursorrules`. Kod i konfiguracja mają pierwszeń
 
 ## Publikacja po każdym zadaniu
 
-Po zakończeniu każdego zadania agent uruchamia wymagane checki, przegląda diff, tworzy commit, wykonuje push gałęzi `codex/` i otwiera PR do `dev` (po potwierdzeniu właściwej gałęzi docelowej). Jest to stałe upoważnienie użytkownika do tych operacji; nie pytaj ponownie o publikację poprawnie zweryfikowanego zadania. PR obejmuje zmiany zadania, raport i aktualizację stanu. Sprawdź wynik CI i zapisz URL PR oraz commit w przekazaniu. Jeśli publikację blokuje dostęp lub check, opisz konkretny brak; nie deklaruj publikacji ani gotowości bez dowodu.
+Po zakończeniu każdego zadania agent uruchamia wymagane checki, przegląda diff, tworzy commit, wykonuje push gałęzi `codex/` i otwiera PR do `dev` (po potwierdzeniu właściwej gałęzi docelowej). Jest to stałe upoważnienie użytkownika do tych operacji; nie pytaj ponownie o publikację poprawnie zweryfikowanego zadania. PR obejmuje zmiany zadania, raport i aktualizację stanu w jednym commicie. Lokalnie uruchamiaj tylko `npm run test:quality`; pełny zestaw (build, integracja, E2E) wykonuje CI raz na PR. Sprawdź wynik CI i podaj URL PR, commit i wynik CI w odpowiedzi końcowej, bez dodatkowego commita dokumentacji (ponownie uruchamia CI). Jeśli publikację blokuje dostęp lub check, opisz konkretny brak; nie deklaruj publikacji ani gotowości bez dowodu.
 
 **Merge wykonuje wyłącznie użytkownik.** Agent nie scala PR i nie włącza automatycznego merge. Upoważnienie do commit/push/PR nie jest zgodą na wdrożenie produkcyjne ani na rozpoczęcie kolejnego zadania.
 

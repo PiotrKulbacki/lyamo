@@ -12,6 +12,14 @@ ich wersji należy ponownie przejrzeć wymagane skrypty, bez zbiorowego zezwalan
 nvm use
 npm ci
 npm run test:quality
+```
+
+Agent lokalnie uruchamia tylko `test:quality`. Pełny zestaw (`build:test`,
+`test:integration`, `test:e2e`) wykonuje CI raz dla każdego commita w PR do `dev`.
+Po merge CI nie uruchamia się ponownie; PR zmieniające wyłącznie `docs/**` lub `*.md`
+nie uruchamiają CI. Lokalnie pozostałe polecenia służą do diagnozy błędu CI:
+
+```sh
 npm run test:integration
 npm run build:test
 npx playwright install chromium
