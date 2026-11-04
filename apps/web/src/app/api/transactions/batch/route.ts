@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { createTransactionBatchSchema } from '@shared/features/transactions/schemas';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
@@ -7,6 +8,9 @@ import { createTransactionBatch } from '@web/features/transactions/services/tran
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);

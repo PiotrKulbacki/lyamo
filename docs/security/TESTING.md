@@ -20,7 +20,7 @@ npm run test:e2e
 
 `test:quality` uruchamia kolejno te same checki co CI: `npm run format`,
 `npm run lint`, `npm run typecheck`, `npm run test`. Zatrzymuje się na pierwszym
-błędzie. Formatowanie: `npx prettier --write .`, potem ponownie checki.
+błędzie. Formatuj tylko zmienione pliki przez `npx prettier --write <pliki>`, potem ponownie checki.
 CI uruchamia trzy niezależne zadania równolegle: `checks` (format/lint/typy/unit),
 `build` (pełny build i integracja PostgreSQL), `browser` (E2E). Końcowy check
 `quality` wymaga sukcesu wszystkich trzech. Każdy runner ma osobny katalog i bazę.

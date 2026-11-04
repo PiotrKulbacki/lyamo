@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { prisma } from '@lyamo/database';
 import { buildCustomCategoryKey } from '@shared/features/transactions/categories';
@@ -19,6 +20,9 @@ type RouteContext = {
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);
@@ -80,6 +84,9 @@ export async function PATCH(request: Request, context: RouteContext) {
 
 export async function DELETE(request: Request, context: RouteContext) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);

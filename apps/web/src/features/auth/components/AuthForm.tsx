@@ -1,5 +1,6 @@
 'use client';
 
+import { safeAuthRedirect } from '@web/features/auth/lib/safe-redirect';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -93,7 +94,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       }
 
       toast.success(t(mode === 'login' ? 'auth.success.login' : 'auth.success.register'));
-      const redirect = searchParams.get('redirect') ?? '/dashboard';
+      const redirect = safeAuthRedirect(searchParams.get('redirect'));
       router.push(redirect);
       router.refresh();
     } catch {

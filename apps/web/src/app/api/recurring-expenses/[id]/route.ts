@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import {
   updateRecurringExpenseSchema,
@@ -35,6 +36,9 @@ export async function GET(request: Request, context: RouteContext) {
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);
@@ -70,6 +74,9 @@ export async function PATCH(request: Request, context: RouteContext) {
 
 export async function DELETE(request: Request, context: RouteContext) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);

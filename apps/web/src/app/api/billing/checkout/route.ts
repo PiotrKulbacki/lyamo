@@ -1,3 +1,4 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { checkoutRequestSchema, isPaidPlan } from '@shared/features/billing';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
@@ -6,6 +7,9 @@ import { createCheckoutSession } from '@web/features/billing/services/stripe-che
 
 export async function POST(request: Request) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);

@@ -1,9 +1,11 @@
+import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { updateUserSchema } from '@shared/features/user/schemas';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import {
   getUserFromBearerToken,
   getUserFromSession,
+  clearSessionCookie,
   jsonError,
 } from '@web/features/auth/services/auth.service';
 import { deleteUserAccount, updateUser } from '@web/features/user/services/user.service';
@@ -20,7 +22,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ user: bearerUser });
     }
 
-    return jsonError('auth.errors.unauthorized', 401);
+    const response = jsonError('auth.errors.unauthorized', 401);
+    clearSessionCookie(response);
+    return response;
   } catch {
     return jsonError('auth.errors.generic', 500);
   }
@@ -28,6 +32,9 @@ export async function GET(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);
@@ -50,6 +57,9 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const rejected = await protectMutation(request, { bearer: true });
+    if (rejected) return rejected;
+
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);
@@ -58,13 +68,7 @@ export async function DELETE(request: Request) {
     await deleteUserAccount(user.id);
 
     const response = NextResponse.json({ message: 'settings.success.accountDeleted' });
-    response.cookies.set('sec_session', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 0,
-    });
+    clearSessionCookie(response);
 
     return response;
   } catch {

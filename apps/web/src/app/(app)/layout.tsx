@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const user = await getUserFromSession();
 
   if (!user) {
-    redirect('/login');
+    redirect('/api/auth/session/clear');
   }
 
   const dehydratedState = await prefetchAppShellData(user);
