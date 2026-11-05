@@ -25,7 +25,9 @@ export async function POST(request: Request) {
       return jsonError(firstError, 400);
     }
 
-    await createAndSendPasswordReset(parsed.data.email, { locale: parsed.data.locale });
+    await createAndSendPasswordReset(parsed.data.email, { locale: parsed.data.locale }).catch(
+      () => {}
+    );
 
     // Always succeed to avoid email enumeration.
     return NextResponse.json({ ok: true });

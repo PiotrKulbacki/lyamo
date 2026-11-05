@@ -10,6 +10,15 @@ if (process.env.LYAMO_TEST_ENV !== '1') {
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@lyamo/shared', '@lyamo/database'],
+  async headers() {
+    return ['/verify-email', '/reset-password', '/api/auth/:path*'].map((source) => ({
+      source,
+      headers: [
+        { key: 'Cache-Control', value: 'no-store' },
+        { key: 'Referrer-Policy', value: 'no-referrer' },
+      ],
+    }));
+  },
 };
 
 const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;

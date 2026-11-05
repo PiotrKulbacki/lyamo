@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { env } from '@web/env';
 import { deleteExpiredRegistrations } from '@web/features/auth/services/registration-cleanup.service';
 import { captureServerException } from '@web/lib/sentry-server';
+import { processMailOutbox } from '@web/features/email/services/mail-outbox.service';
 
 export const runtime = 'nodejs';
 
@@ -16,6 +17,7 @@ export async function GET(request: Request) {
   }
   try {
     await cleanupAuthState();
+    await processMailOutbox();
     const deleted = await deleteExpiredRegistrations();
     return NextResponse.json({ success: true, deleted });
   } catch (error) {

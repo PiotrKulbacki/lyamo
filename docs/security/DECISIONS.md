@@ -72,3 +72,8 @@ Aktualizacja na polecenie użytkownika: Preview pomija migracje i kontynuuje bui
 - Świeżość 5 minut dla usunięcia konta i jawnego dołączenia Google. Ponowne hasło albo ten sam Google/sub, OIDC state/nonce/PKCE oraz podpisany świeży auth_time. Brak claimu odmawia podniesienia uprawnień. Jawne połączenie nie porównuje e-maila i nie przenosi powiązań. S07 rozszerza ten kontrakt o MFA.
 - Minimalny SecurityEvent w transakcji jest powiadomieniem w aplikacji; S04 doda kanał/outbox/retry. Retencja 90 dni i czyszczenie wygasłych rodzin przez istniejący codzienny cron. Bez IP, UA, tokenów i danych wydatków. Migracja addytywna; nie cofamy kodu do autoryzacji JWT bez sprawdzenia sesji.
 - Odbiór S02 zamknięty potwierdzeniem użytkownika, że przetestował zmiany i wszystko działa. Wcześniejsze zapisy o oczekującym odbiorze są historyczne.
+
+## S04 — dostarczanie poczty (2026-11-05)
+
+- Token i szyfrowany outbox powstają w jednej transakcji; poprzedni ważny link pozostaje do upływu terminu lub skutecznego użycia resetu. Cooldown 60 sekund, pięć prób, limit 25 minut i identyfikator idempotencji Brevo. Szyfrogram usuwa się przy zakończeniu, a wygasłe dane i stare metadane czyści codzienny job. `AUTH_SECRET` jest kluczem źródłowym i jego zmiana unieważnia oczekujące zadania.
+- Projekt Vercel ma Hobby, więc częsty Vercel Cron byłby odrzucony; kod używa Vercel Queues. Publikacja pobudzenia przed commitem powoduje rollback operacji przy niedostępnej kolejce i retry przy dostarczeniu przed commitem. Rzeczywiste Queues/OIDC, Brevo, click tracking oraz telemetria wymagają kontrolowanego odbioru; szczegóły w raporcie S04.

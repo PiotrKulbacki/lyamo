@@ -10,6 +10,9 @@ import { hashToken } from '@web/features/auth/lib/tokens';
 import { POST as register } from '@web/app/api/auth/register/route';
 import { GET as cleanup } from '@web/app/api/cron/delete-unverified-accounts/route';
 
+vi.mock('@web/features/email/services/brevo.service', () => ({
+  sendTransactionalEmail: vi.fn(async () => ({ ok: true })),
+}));
 vi.mock('@web/features/auth/services/auth-email.service', () => ({
   sendEmailVerificationEmail: vi.fn(async () => true),
   sendPasswordResetEmail: vi.fn(async () => true),
@@ -81,6 +84,16 @@ test('verification clears expiry and cleanup cannot delete the confirmed account
   expect(await deleteExpiredRegistrations(new Date(Date.now() + 7 * 86400_000))).toBe(0);
 });
 
+test('concurrent verification of one token has exactly one winner', async () => {
+  const user = await fixture({ registrationExpiresAt: new Date(Date.now() + 3600_000) });
+  const token = await tokenFor(user.id);
+  const results = await Promise.all(Array.from({ length: 8 }, () => verifyEmailWithToken(token)));
+  expect(results.filter(Boolean)).toHaveLength(1);
+  expect(
+    (await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).emailVerifiedAt
+  ).toBeTruthy();
+});
+
 test('expired registrations cannot be confirmed or extend their deadline by resending', async () => {
   const user = await fixture();
   expect(await verifyEmailWithToken(await tokenFor(user.id))).toBe(false);
@@ -132,9 +145,14 @@ test('new registration API enrolls a 72-hour deadline and caps resend token expi
       where: { id: user.id },
       data: { registrationExpiresAt: new Date(Date.now() + 60_000) },
     });
+    await prisma.mailJob.updateMany({
+      where: { userId: user.id },
+      data: { createdAt: new Date(Date.now() - 120_000) },
+    });
     await createAndSendEmailVerification(user.id, email);
     const latest = await prisma.emailVerificationToken.findFirstOrThrow({
       where: { userId: user.id },
+      orderBy: { expiresAt: 'asc' },
     });
     expect(latest.expiresAt.getTime()).toBeLessThanOrEqual(Date.now() + 60_000);
   } finally {

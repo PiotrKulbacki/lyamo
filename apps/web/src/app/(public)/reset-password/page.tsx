@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
@@ -17,7 +17,14 @@ function ResetPasswordForm() {
   const { locale } = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token') ?? '';
+  const [token, setToken] = useState(() => searchParams.get('token') ?? '');
+  useEffect(() => {
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const fragmentToken = fragment.get('token');
+    if (fragmentToken) setToken(fragmentToken);
+    if (window.location.search || window.location.hash)
+      window.history.replaceState(window.history.state, '', window.location.pathname);
+  }, []);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);

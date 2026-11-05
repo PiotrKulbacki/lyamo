@@ -51,6 +51,7 @@ model User {
   emailVerifiedAt        DateTime?
   registrationExpiresAt  DateTime?
 
+  mailJobs          MailJob[]
   securityEvents    SecurityEvent[]
   accounts          Account[]
   sessions          Session[]
@@ -314,4 +315,24 @@ model SecurityEvent {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId, createdAt])
   @@map("security_events")
+}
+
+
+// Encrypted, short-lived delivery payload. No public API access.
+model MailJob {
+  id String @id @default(uuid()) @db.Uuid
+  userId String
+  kind String
+  payload String?
+  attempts Int @default(0)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  nextAttemptAt DateTime @default(now())
+  lockedUntil DateTime?
+  completedAt DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([nextAttemptAt])
+  @@index([userId, kind, createdAt])
+  @@index([expiresAt])
+  @@map("mail_jobs")
 }

@@ -2,6 +2,7 @@
 
 import posthog from 'posthog-js';
 import { env } from '@web/env';
+import { secretPage, sensitiveLocation } from './privacy';
 
 let initialized = false;
 
@@ -26,6 +27,12 @@ export function initPostHog(): void {
     capture_pageview: true,
     capture_pageleave: true,
     persistence: 'localStorage+cookie',
+    before_send: (event) => {
+      if (!event || secretPage() || sensitiveLocation(JSON.stringify(event.properties)))
+        return null;
+      return event;
+    },
+    disable_session_recording: true,
   });
 
   initialized = true;

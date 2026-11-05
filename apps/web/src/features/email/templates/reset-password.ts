@@ -22,7 +22,7 @@ export function buildResetPasswordEmail(params: ResetPasswordEmailParams): {
   text: string;
 } {
   const locale = resolveLocale(params.locale);
-  const resetUrl = `${getAppUrl()}/reset-password?token=${encodeURIComponent(params.token)}`;
+  const resetUrl = `${getAppUrl()}/reset-password#token=${encodeURIComponent(params.token)}`;
   const name = params.name?.trim() || null;
 
   const subject = t('email.reset.subject', locale);

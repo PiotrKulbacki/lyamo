@@ -81,11 +81,13 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (!response.ok) {
         if (mode === 'login' && data.error === 'auth.errors.emailNotVerified') {
           toast.error(translateError(data.error, locale));
-          const verifyEmail = encodeURIComponent(data.email ?? email);
-          setIsNavigating(true);
-          router.push(
-            `/verify-email?email=${verifyEmail}${data.registrationExpiresAt ? `&registrationExpiresAt=${encodeURIComponent(data.registrationExpiresAt)}` : ''}`
+          sessionStorage.setItem('lyamo-verification-email', data.email ?? email);
+          sessionStorage.setItem(
+            'lyamo-verification-deadline',
+            data.registrationExpiresAt ? '1' : ''
           );
+          setIsNavigating(true);
+          router.push('/verify-email');
           return;
         }
         toast.error(translateError(data.error ?? 'auth.errors.generic', locale));
@@ -94,11 +96,13 @@ export function AuthForm({ mode }: AuthFormProps) {
 
       if (mode === 'register' && data.requiresEmailVerification) {
         toast.success(t('auth.success.register'));
-        const verifyEmail = encodeURIComponent(data.email ?? email);
-        setIsNavigating(true);
-        router.push(
-          `/verify-email?email=${verifyEmail}${data.registrationExpiresAt ? `&registrationExpiresAt=${encodeURIComponent(data.registrationExpiresAt)}` : ''}`
+        sessionStorage.setItem('lyamo-verification-email', data.email ?? email);
+        sessionStorage.setItem(
+          'lyamo-verification-deadline',
+          data.registrationExpiresAt ? '1' : ''
         );
+        setIsNavigating(true);
+        router.push('/verify-email');
         return;
       }
 
