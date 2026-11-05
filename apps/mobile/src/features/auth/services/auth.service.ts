@@ -44,7 +44,7 @@ function showSuccess(key: string) {
   });
 }
 
-async function apiRequest<T>(
+export async function apiRequest<T>(
   path: string,
   options: RequestInit = {}
 ): Promise<{ data?: T; error?: string; status: number }> {
@@ -128,7 +128,7 @@ export async function changePassword(payload: {
   newPassword: string;
   confirmPassword: string;
 }): Promise<boolean> {
-  const result = await apiRequest<{ ok?: boolean }>('/api/auth/change-password', {
+  const result = await apiRequest<AuthResponse & { ok?: boolean }>('/api/auth/change-password', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
@@ -138,6 +138,8 @@ export async function changePassword(payload: {
     return false;
   }
 
+  if (result.data?.accessToken && result.data.refreshToken)
+    await saveTokens(result.data.accessToken, result.data.refreshToken);
   showSuccess('auth.success.passwordChanged');
   return true;
 }
@@ -242,44 +244,28 @@ export async function resendVerificationEmail(email: string): Promise<boolean> {
   return true;
 }
 
-export async function logoutUser(): Promise<void> {
+export async function logoutUser(): Promise<boolean> {
   const refreshToken = await getRefreshToken();
 
-  await apiRequest('/api/auth/logout', {
+  const result = await apiRequest('/api/auth/logout', {
     method: 'POST',
     body: JSON.stringify({ refreshToken }),
   });
 
+  if (result.error) {
+    showError(result.error);
+    return false;
+  }
   await clearTokens();
   showSuccess('auth.success.logout');
+  return true;
 }
 
 export async function getCurrentUser(): Promise<SafeUser | null> {
   const result = await apiRequest<{ user: SafeUser }>('/api/auth/me');
 
   if (result.status === 401) {
-    const refreshToken = await getRefreshToken();
-    if (!refreshToken) {
-      return null;
-    }
-
-    const refreshResult = await apiRequest<AuthResponse>('/api/auth/refresh', {
-      method: 'POST',
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (refreshResult.error || !refreshResult.data?.accessToken) {
-      await clearTokens();
-      showError(refreshResult.error ?? 'auth.errors.sessionExpired');
-      return null;
-    }
-
-    await saveTokens(
-      refreshResult.data.accessToken,
-      refreshResult.data.refreshToken ?? refreshToken
-    );
-
-    return refreshResult.data.user;
+    return refreshCurrentUser();
   }
 
   if (result.error) {
@@ -291,3 +277,32 @@ export async function getCurrentUser(): Promise<SafeUser | null> {
 }
 
 export { showError, showSuccess };
+
+let refreshInFlight: Promise<SafeUser | null> | undefined;
+export function refreshCurrentUser(): Promise<SafeUser | null> {
+  refreshInFlight ??= performRefresh().finally(() => {
+    refreshInFlight = undefined;
+  });
+  return refreshInFlight;
+}
+async function performRefresh(): Promise<SafeUser | null> {
+  const refreshToken = await getRefreshToken();
+  if (!refreshToken) return null;
+  // A lost response retries the same generation inside the server's fixed grace window.
+  let result = await apiRequest<AuthResponse>('/api/auth/refresh', {
+    method: 'POST',
+    body: JSON.stringify({ refreshToken }),
+  });
+  if (result.status === 0)
+    result = await apiRequest<AuthResponse>('/api/auth/refresh', {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    });
+  if (!result.data?.accessToken || !result.data.refreshToken) {
+    if (result.status === 401) await clearTokens();
+    showError(result.error ?? 'auth.errors.sessionExpired');
+    return null;
+  }
+  await saveTokens(result.data.accessToken, result.data.refreshToken);
+  return result.data.user;
+}

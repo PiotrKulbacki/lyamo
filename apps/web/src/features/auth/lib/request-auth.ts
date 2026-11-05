@@ -5,11 +5,8 @@ import {
 } from '@web/features/auth/services/auth.service';
 
 export async function getAuthenticatedUser(request: Request): Promise<SafeUser | null> {
-  const bearerUser = await getUserFromBearerToken(request.headers.get('authorization'));
-  if (bearerUser) {
-    return bearerUser;
-  }
-
+  if (request.headers.has('authorization'))
+    return getUserFromBearerToken(request.headers.get('authorization'));
   return getUserFromSession();
 }
 

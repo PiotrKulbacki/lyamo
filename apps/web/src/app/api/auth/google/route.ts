@@ -1,3 +1,4 @@
+import { findSession, FRESH_MS } from '@web/features/auth/services/session-lifecycle.service';
 import { NextResponse } from 'next/server';
 import { prisma } from '@lyamo/database';
 import * as oidc from 'openid-client';
@@ -11,15 +12,32 @@ export async function GET(request: Request) {
     const limit = await checkAuthRateLimit(request, 'google');
     if (!limit.allowed)
       return NextResponse.json({ error: 'api.errors.rateLimitExceeded' }, { status: 429 });
+    const requestedPurpose = new URL(request.url).searchParams.get('purpose');
+    const purpose =
+      requestedPurpose === 'reauth' || requestedPurpose === 'link' ? requestedPurpose : 'login';
+    const session = purpose !== 'login' ? await findSession(request) : null;
+    if (purpose !== 'login' && !session) throw new Error('NO_SESSION');
+    if (
+      purpose === 'link' &&
+      (!session?.authenticatedAt || session.authenticatedAt.getTime() <= Date.now() - FRESH_MS)
+    )
+      throw new Error('REAUTH_REQUIRED');
     const state = oidc.randomState();
     const nonce = oidc.randomNonce();
     const codeVerifier = oidc.randomPKCECodeVerifier();
-    const url = await getGoogleOAuthUrl({ state, nonce, codeVerifier });
+    const url = await getGoogleOAuthUrl(
+      { state, nonce, codeVerifier },
+      undefined,
+      purpose === 'reauth'
+    );
     await prisma.$transaction([
       prisma.oAuthAttempt.deleteMany({ where: { expiresAt: { lt: new Date() } } }),
       prisma.oAuthAttempt.create({
         data: {
           stateHash: hashToken(state),
+          purpose,
+          userId: session?.userId,
+          sessionId: session?.id,
           nonce,
           codeVerifier,
           expiresAt: new Date(Date.now() + 600_000),

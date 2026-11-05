@@ -1,3 +1,7 @@
+import {
+  findSession,
+  revokeOwnedSessions,
+} from '@web/features/auth/services/session-lifecycle.service';
 import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -11,13 +15,17 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const rejected = await protectMutation(request, { bodyless: true });
+    const rejected = await protectMutation(request, { bodyless: true, bearer: true });
     if (rejected) return rejected;
 
     const body = (await request.json().catch(() => ({}))) as { refreshToken?: string };
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get(AUTH_COOKIE_NAME)?.value;
 
+    if (request.headers.has('authorization')) {
+      const current = await findSession(request);
+      if (current) await revokeOwnedSessions(current.userId, current.id);
+    }
     if (sessionToken) {
       await revokeSession(sessionToken);
     }

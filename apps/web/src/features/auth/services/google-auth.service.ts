@@ -52,6 +52,10 @@ export async function createGoogleSession(profile: GoogleProfile): Promise<strin
             data: {
               userId: user.id,
               token: hashToken(token),
+              authenticatedAt:
+                profile.authenticatedAt && profile.authenticatedAt <= Date.now() / 1000 + 60
+                  ? new Date(profile.authenticatedAt * 1000)
+                  : null,
               expiresAt: new Date(Date.now() + SESSION_DURATION_MS),
             },
           });

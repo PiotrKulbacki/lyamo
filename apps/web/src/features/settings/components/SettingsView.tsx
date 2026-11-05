@@ -25,6 +25,7 @@ import { LoadingSpinner } from '@web/components/ui/loading-spinner';
 import { RecurringExpensesSection } from '@web/features/settings/components/RecurringExpensesSection';
 import { CategoriesSection } from '@web/features/settings/components/CategoriesSection';
 import { CategoryLimitsSection } from '@web/features/settings/components/CategoryLimitsSection';
+import { SessionsSection } from './SessionsSection';
 import { ChangePasswordSection } from '@web/features/settings/components/ChangePasswordSection';
 import { useLocale, useT } from '@web/features/i18n/LocaleProvider';
 import { useCookieConsent } from '@web/features/cookie-consent';
@@ -467,6 +468,7 @@ export function SettingsView({ initialUser }: SettingsViewProps) {
         </div>
       </section>
 
+      <SessionsSection hasPassword={user.hasPassword} />
       <ChangePasswordSection hasPassword={user.hasPassword} email={user.email} />
 
       <section className="panel border-glow/30 relative z-10 p-6">

@@ -1,17 +1,16 @@
+import { issueSession, findSession, revokeOwnedSessions } from './session-lifecycle.service';
 import { prisma } from '@lyamo/database';
 import bcrypt from 'bcryptjs';
 import { cache } from 'react';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import {
   AUTH_COOKIE_NAME,
-  REFRESH_TOKEN_DURATION_MS,
   SESSION_DURATION_MS,
   type AuthResponse,
   type SafeUser,
   toSafeUser,
 } from '@web/features/auth/types';
-import { generateToken, hashToken, signAccessToken } from '@web/features/auth/lib/tokens';
+import { hashToken } from '@web/features/auth/lib/tokens';
 import { touchUserLastActive } from '@web/features/auth/services/last-active.service';
 
 export { toSafeUser };
@@ -26,32 +25,19 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-export async function createWebSession(userId: string): Promise<string> {
-  const token = generateToken();
-  const hashedToken = hashToken(token);
-  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
-
-  await prisma.session.create({
-    data: { userId, token: hashedToken, expiresAt },
-  });
-
-  return token;
+export async function createWebSession(
+  userId: string,
+  expectedPasswordHash?: string
+): Promise<string> {
+  return (await issueSession(userId, false, expectedPasswordHash)).token;
 }
 
-export async function createMobileTokens(userId: string): Promise<{
-  accessToken: string;
-  refreshToken: string;
-}> {
-  const accessToken = await signAccessToken(userId);
-  const refreshToken = generateToken();
-  const hashedRefreshToken = hashToken(refreshToken);
-  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_DURATION_MS);
-
-  await prisma.refreshToken.create({
-    data: { userId, token: hashedRefreshToken, expiresAt },
-  });
-
-  return { accessToken, refreshToken };
+export async function createMobileTokens(
+  userId: string,
+  expectedPasswordHash?: string
+): Promise<{ accessToken: string; refreshToken: string }> {
+  const result = await issueSession(userId, true, expectedPasswordHash);
+  return { accessToken: result.accessToken!, refreshToken: result.refreshToken! };
 }
 
 function sessionCookieOptions() {
@@ -82,22 +68,9 @@ export function buildAuthResponse(
 }
 
 async function resolveUserFromSession(): Promise<SafeUser | null> {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(AUTH_COOKIE_NAME)?.value;
-
-  if (!sessionToken) {
-    return null;
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { token: hashToken(sessionToken) },
-    include: { user: true },
-  });
-
-  if (!session || session.expiresAt < new Date()) {
-    return null;
-  }
-
+  const session = await findSession();
+  if (!session) return null;
+  await prisma.session.updateMany({ where: { id: session.id }, data: { lastSeenAt: new Date() } });
   touchUserLastActive(session.user.id, session.user.lastActiveAt);
   return toSafeUser(session.user);
 }
@@ -111,33 +84,25 @@ export async function getUserFromBearerToken(
     return null;
   }
 
-  const token = authorizationHeader.slice(7);
-  const { verifyAccessToken } = await import('@web/features/auth/lib/tokens');
-  const userId = await verifyAccessToken(token);
-
-  if (!userId) {
-    return null;
-  }
-
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) {
-    return null;
-  }
-
+  const session = await findSession(
+    new Request('http://localhost', { headers: { authorization: authorizationHeader } })
+  );
+  if (!session) return null;
+  const user = session.user;
+  await prisma.session.updateMany({ where: { id: session.id }, data: { lastSeenAt: new Date() } });
   touchUserLastActive(user.id, user.lastActiveAt);
   return toSafeUser(user);
 }
 
 export async function revokeSession(token: string): Promise<void> {
-  await prisma.session.deleteMany({
-    where: { token: hashToken(token) },
-  });
+  const session = await prisma.session.findUnique({ where: { token: hashToken(token) } });
+  if (session) await revokeOwnedSessions(session.userId, session.id);
 }
 
 export async function revokeRefreshToken(token: string): Promise<void> {
-  await prisma.refreshToken.deleteMany({
-    where: { token: hashToken(token) },
-  });
+  const stored = await prisma.refreshToken.findUnique({ where: { token: hashToken(token) } });
+  if (stored?.sessionId) await revokeOwnedSessions(stored.userId, stored.sessionId);
+  else await prisma.refreshToken.deleteMany({ where: { token: hashToken(token) } });
 }
 
 export function isMobileClient(request: Request): boolean {

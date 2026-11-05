@@ -20,7 +20,9 @@ afterAll(() => prisma.$disconnect());
 
 test('creates concurrent web sessions in PostgreSQL, revokes one and cleans up its fixture', async () => {
   const id = randomUUID();
-  await prisma.user.create({ data: { id, email: `s00-${id}@example.invalid` } });
+  await prisma.user.create({
+    data: { id, email: `s00-${id}@example.invalid`, emailVerifiedAt: new Date() },
+  });
   try {
     const tokens = await Promise.all(Array.from({ length: 8 }, () => createWebSession(id)));
     expect(new Set(tokens).size).toBe(8);

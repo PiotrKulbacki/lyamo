@@ -83,7 +83,9 @@
       "oauthAccountExists": "Für diese E-Mail besteht bereits ein Konto. Nutzen Sie Ihre bisherige Anmeldemethode. Falls Sie sich nicht registriert haben, setzen Sie zuerst das Passwort zurück und bestätigen Sie dann die E-Mail. Google verknüpft Konten nicht automatisch.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut",
       "networkError": "Netzwerkfehler. Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut",
-      "legalAcceptanceRequired": "Bitte akzeptieren Sie die Allgemeinen Geschäftsbedingungen und die Datenschutzrichtlinie, um ein Konto zu erstellen"
+      "legalAcceptanceRequired": "Bitte akzeptieren Sie die Allgemeinen Geschäftsbedingungen und die Datenschutzrichtlinie, um ein Konto zu erstellen",
+      "reauthenticationRequired": "Bestätige deine Identität erneut in den Kontoeinstellungen.",
+      "refreshConflict": "Diese Sitzung wurde bereits erneuert. Bitte erneut versuchen."
     },
     "checkboxes": {
       "legalAcceptancePrefix": "Ich habe die ",
@@ -866,5 +868,27 @@
         "description": "Reserviert für optionale Marketing-Tools. Derzeit werden keine Marketing-Pixel oder Werbeskripte geladen. Nicht erforderlich für die Nutzung der App."
       }
     }
+  },
+  "security": {
+    "sessions": "Sitzungen und Zugriff",
+    "description": "Der Clienttyp identifiziert kein physisches Gerät. Letzte Aktivität:",
+    "current": "Diese Sitzung",
+    "web": "Browser",
+    "mobile": "Mobile App",
+    "logoutAll": "Alle Sitzungen abmelden",
+    "reauthenticate": "Identität vor der Kontolöschung bestätigen (5 Minuten gültig)",
+    "confirm": "Bestätigen",
+    "confirmed": "Identität bestätigt",
+    "notifications": "Sicherheitsmeldungen (90 Tage)",
+    "events": {
+      "password_reset": "Passwort zurückgesetzt. Alle Sitzungen widerrufen.",
+      "password_changed": "Passwort geändert. Andere Sitzungen widerrufen.",
+      "refresh_reuse": "Token wiederverwendet. Sitzung widerrufen.",
+      "session_revoked": "Sitzung widerrufen.",
+      "all_sessions_revoked": "Alle Sitzungen widerrufen.",
+      "reauthenticated": "Identität bestätigt.",
+      "method_linked": "Google-Anmeldemethode hinzugefügt."
+    },
+    "linkGoogle": "Google verknüpfen (zuerst Identität bestätigen)"
   }
 }
