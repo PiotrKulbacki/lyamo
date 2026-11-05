@@ -3,7 +3,7 @@ import { prisma } from '@lyamo/database';
 import { deliverMailJob } from '@web/features/email/services/mail-outbox.service';
 
 export const runtime = 'nodejs';
-export const POST = handleCallback<{ id: string }>(
+const handle = handleCallback<{ id: string }>(
   async ({ id }) => {
     await deliverMailJob(id);
     const job = await prisma.mailJob.findUnique({
@@ -16,3 +16,7 @@ export const POST = handleCallback<{ id: string }>(
   },
   { retry: () => ({ afterSeconds: 60 }) }
 );
+
+export async function POST(request: Request) {
+  return handle(request);
+}
