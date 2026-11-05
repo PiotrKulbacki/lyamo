@@ -67,6 +67,7 @@ export async function POST(request: Request) {
       await tx.user.update({ where: { id: user.id }, data: { passwordHash } });
       await tx.session.deleteMany({ where: { userId: user.id } });
       await tx.refreshToken.deleteMany({ where: { userId: user.id } });
+      await tx.passwordResetToken.deleteMany({ where: { userId: user.id, usedAt: null } });
       await securityEvent(tx, user.id, 'password_changed');
       return true;
     });

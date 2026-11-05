@@ -1,7 +1,9 @@
 'use client';
 
 import { Analytics, type BeforeSendEvent } from '@vercel/analytics/next';
+import { secretPage, sensitiveLocation } from '@web/features/analytics/privacy';
 import { useCookieConsent } from '@web/features/cookie-consent';
+import { usePathname } from 'next/navigation';
 
 /**
  * Vercel Web Analytics, gated behind cookie consent (analytics category).
@@ -9,8 +11,9 @@ import { useCookieConsent } from '@web/features/cookie-consent';
  */
 export function VercelAnalytics() {
   const { canUseAnalytics, isReady: consentReady } = useCookieConsent();
+  const pathname = usePathname();
 
-  if (!consentReady || !canUseAnalytics) {
+  if (!consentReady || !canUseAnalytics || sensitiveLocation(pathname) || secretPage()) {
     return null;
   }
 
@@ -18,7 +21,7 @@ export function VercelAnalytics() {
     <Analytics
       beforeSend={(event: BeforeSendEvent) => {
         // Defence in depth: drop if consent was withdrawn after mount.
-        if (!canUseAnalytics) {
+        if (!canUseAnalytics || secretPage() || sensitiveLocation(event.url)) {
           return null;
         }
         return event;

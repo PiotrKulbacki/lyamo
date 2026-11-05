@@ -1,5 +1,6 @@
 import { prisma, type Prisma } from '@lyamo/database';
 import { cookies } from 'next/headers';
+import { enqueueMail } from '@web/features/email/services/mail-outbox.service';
 import { AUTH_COOKIE_NAME, SESSION_DURATION_MS, REFRESH_TOKEN_DURATION_MS } from '../types';
 import {
   generateToken,
@@ -27,6 +28,7 @@ export async function securityEvent(tx: Prisma.TransactionClient, userId: string
     where: { userId, createdAt: { lt: new Date(Date.now() - 90 * 86400000) } },
   });
   await tx.securityEvent.create({ data: { userId, kind } });
+  await enqueueMail(tx, userId, 'security', { event: kind });
 }
 
 export async function issueSession(userId: string, mobile: boolean, expectedPasswordHash?: string) {
@@ -158,4 +160,6 @@ export async function cleanupAuthState(now = new Date()) {
     },
   });
   await prisma.refreshToken.deleteMany({ where: { expiresAt: { lte: now } } });
+  await prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lte: now } } });
+  await prisma.emailVerificationToken.deleteMany({ where: { expiresAt: { lte: now } } });
 }

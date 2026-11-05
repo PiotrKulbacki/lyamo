@@ -17,3 +17,12 @@ test.each(['pl', 'en', 'de', 'es'])(
     expect(pending.text).toContain('3');
   }
 );
+
+test.each(['pl', 'en', 'de', 'es'])(
+  'verification uses a fragment without untranslated content: %s',
+  (locale) => {
+    const message = buildVerifyEmail({ token: 'synthetic-secret', locale });
+    expect(message.text).toContain('/verify-email#token=synthetic-secret');
+    expect(message.html).not.toContain('email.verify.');
+  }
+);

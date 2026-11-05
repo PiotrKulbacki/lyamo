@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
@@ -14,48 +14,52 @@ function VerifyEmailContent() {
   const { locale } = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token') ?? '';
+  const [token, setToken] = useState(() => searchParams.get('token') ?? '');
   const emailParam = searchParams.get('email') ?? '';
-  const hasRegistrationDeadline = Boolean(searchParams.get('registrationExpiresAt'));
+  const [hasRegistrationDeadline, setHasRegistrationDeadline] = useState(
+    Boolean(searchParams.get('registrationExpiresAt'))
+  );
   const [email, setEmail] = useState(emailParam);
-  const [isVerifying, setIsVerifying] = useState(Boolean(token));
+  const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [verified, setVerified] = useState(false);
-  const verifyStarted = useRef(false);
 
   useEffect(() => {
-    if (!token || verifyStarted.current) {
-      return;
-    }
-    verifyStarted.current = true;
+    const storedEmail = sessionStorage.getItem('lyamo-verification-email');
+    if (storedEmail && !emailParam) setEmail(storedEmail);
+    if (sessionStorage.getItem('lyamo-verification-deadline')) setHasRegistrationDeadline(true);
+    sessionStorage.removeItem('lyamo-verification-email');
+    sessionStorage.removeItem('lyamo-verification-deadline');
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const fragmentToken = fragment.get('token');
+    if (fragmentToken) setToken(fragmentToken);
+    if (window.location.search || window.location.hash)
+      window.history.replaceState(window.history.state, '', window.location.pathname);
+  }, [emailParam]);
 
-    async function verify() {
-      setIsVerifying(true);
-      try {
-        const response = await fetch('/api/auth/verify-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token }),
-        });
-        const data = (await response.json()) as { error?: string };
-
-        if (!response.ok) {
-          toast.error(translateError(data.error ?? 'auth.errors.generic', locale));
-          return;
-        }
-
-        setVerified(true);
-        toast.success(t('auth.verify.success'));
-        router.push('/login');
-      } catch {
-        toast.error(t('auth.errors.networkError'));
-      } finally {
-        setIsVerifying(false);
+  async function verify() {
+    if (!token || isVerifying) return;
+    setIsVerifying(true);
+    try {
+      const response = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      const data = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        toast.error(translateError(data.error ?? 'auth.errors.generic', locale));
+        return;
       }
+      setVerified(true);
+      toast.success(t('auth.verify.success'));
+      router.push('/login');
+    } catch {
+      toast.error(t('auth.errors.networkError'));
+    } finally {
+      setIsVerifying(false);
     }
-
-    void verify();
-  }, [token, locale, router, t]);
+  }
 
   async function handleResend(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -91,6 +95,10 @@ function VerifyEmailContent() {
         </div>
       ) : verified ? (
         <p className="text-muted relative z-10 text-sm">{t('auth.verify.success')}</p>
+      ) : token ? (
+        <button type="button" onClick={() => void verify()} className="btn-primary w-full">
+          {t('auth.labels.verifyEmail')}
+        </button>
       ) : (
         <div className="relative z-10 space-y-4">
           <p className="text-muted text-sm">

@@ -55,6 +55,7 @@ export async function sendTransactionalEmail(params: {
   html: string;
   text: string;
   replyTo?: { email: string; name?: string };
+  idempotencyKey?: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const apiKey = getApiKey();
   const sender = getSender();
@@ -66,6 +67,7 @@ export async function sendTransactionalEmail(params: {
   try {
     const response = await fetch(BREVO_SEND_URL, {
       method: 'POST',
+      signal: AbortSignal.timeout(8_000),
       headers: {
         accept: 'application/json',
         'api-key': apiKey,
@@ -80,6 +82,7 @@ export async function sendTransactionalEmail(params: {
         subject: params.subject,
         htmlContent: params.html,
         textContent: params.text,
+        ...(params.idempotencyKey ? { headers: { idempotencyKey: params.idempotencyKey } } : {}),
         ...(params.replyTo
           ? {
               replyTo: {
@@ -92,19 +95,20 @@ export async function sendTransactionalEmail(params: {
     });
 
     if (!response.ok) {
-      const body = await response.text().catch(() => '');
+      // Brevo reports a previously accepted idempotency key as duplicate_parameter.
+      const body = (await response.json().catch(() => null)) as { code?: string } | null;
+      if (params.idempotencyKey && response.status === 400 && body?.code === 'duplicate_parameter')
+        return { ok: true };
       captureServerException(new Error(`Brevo send failed: ${response.status}`), {
         scope: 'email.brevo.send',
-        to: params.to,
         status: response.status,
-        body: body.slice(0, 500),
       });
       return { ok: false, error: 'email.errors.sendFailed' };
     }
 
     return { ok: true };
-  } catch (error) {
-    captureServerException(error, { scope: 'email.brevo.send', to: params.to });
+  } catch {
+    captureServerException(new Error('Brevo request failed'), { scope: 'email.brevo.send' });
     return { ok: false, error: 'email.errors.sendFailed' };
   }
 }

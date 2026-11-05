@@ -23,8 +23,10 @@ export async function sendPasswordResetEmail(params: {
     });
 
     return result.ok;
-  } catch (error) {
-    captureServerException(error, { scope: 'auth.email.passwordReset', email: params.email });
+  } catch {
+    captureServerException(new Error('Password reset email failed'), {
+      scope: 'auth.email.passwordReset',
+    });
     return false;
   }
 }
@@ -51,10 +53,9 @@ export async function sendEmailVerificationEmail(params: {
     });
 
     return result.ok;
-  } catch (error) {
-    captureServerException(error, {
+  } catch {
+    captureServerException(new Error('Verification email failed'), {
       scope: 'auth.email.emailVerification',
-      email: params.email,
     });
     return false;
   }

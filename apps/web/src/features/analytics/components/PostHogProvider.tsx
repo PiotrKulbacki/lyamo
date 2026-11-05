@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useCookieConsent } from '@web/features/cookie-consent';
+import { usePathname } from 'next/navigation';
+import { secretPage, sensitiveLocation } from '@web/features/analytics/privacy';
 import {
   initPostHog,
   getPostHogClient,
@@ -25,6 +27,7 @@ export function useFeatureFlag(flagKey: string): boolean {
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
   const { canUseAnalytics, isReady: consentReady } = useCookieConsent();
+  const pathname = usePathname();
   const [isReady, setIsReady] = useState(false);
   const [flagsVersion, setFlagsVersion] = useState(0);
 
@@ -33,7 +36,7 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (!canUseAnalytics) {
+    if (!canUseAnalytics || sensitiveLocation(pathname) || secretPage()) {
       disablePostHog();
       setIsReady(true);
       return;
@@ -54,7 +57,7 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
 
     const timeout = setTimeout(() => setIsReady(true), 3000);
     return () => clearTimeout(timeout);
-  }, [canUseAnalytics, consentReady]);
+  }, [canUseAnalytics, consentReady, pathname]);
 
   const contextValue = useMemo(
     (): FeatureFlagsContextValue => ({

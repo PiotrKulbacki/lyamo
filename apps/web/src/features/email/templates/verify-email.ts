@@ -23,7 +23,7 @@ export function buildVerifyEmail(params: VerifyEmailParams): {
   text: string;
 } {
   const locale = resolveLocale(params.locale);
-  const verifyUrl = `${getAppUrl()}/verify-email?token=${encodeURIComponent(params.token)}`;
+  const verifyUrl = `${getAppUrl()}/verify-email#token=${encodeURIComponent(params.token)}`;
   const name = params.name?.trim() || null;
 
   const subject = t('email.verify.subject', locale);

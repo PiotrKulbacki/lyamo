@@ -160,6 +160,14 @@ test('password change replaces current mobile credentials and revokes every old 
     const current = await createMobileTokens(id);
     browser.token = await createWebSession(id);
     const next = 'New-S03-password-456!';
+    const staleReset = randomUUID();
+    await prisma.passwordResetToken.create({
+      data: {
+        userId: id,
+        tokenHash: hashToken(staleReset),
+        expiresAt: new Date(Date.now() + 60_000),
+      },
+    });
     const response = await changePassword(
       new Request('http://localhost/api/auth/change-password', {
         method: 'POST',
@@ -180,6 +188,7 @@ test('password change replaces current mobile credentials and revokes every old 
     expect(await getUserFromBearerToken(`Bearer ${current.accessToken}`)).toBeNull();
     browser.token = '';
     expect(await getUserFromBearerToken(`Bearer ${replacement.accessToken}`)).not.toBeNull();
+    expect(await resetPasswordWithToken(staleReset, 'stale-hash')).toBe(false);
     expect(await rotate(current.refreshToken)).toBeNull();
     expect(await rotate(replacement.refreshToken)).not.toBeNull();
   }));

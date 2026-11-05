@@ -2,7 +2,7 @@
 
 Aktualizacja: 2026-11-05. S00 i S01 scalone do dev oraz main. S01 wdrożone na lyamo.eu: Ready, Node 26, SHA `81a16f5`; kontrola HTTP 12/12.
 
-Następne zadanie: **S04 (po merge S03 przez użytkownika)**. Ostatni raport: [S03](reports/S03.md).
+Bieżące zadanie: **S04 — weryfikacja i odbiór**. Ostatni raport: [S04](reports/S04.md).
 
 Historia S02 (stan przed potwierdzeniem użytkownika poniżej, obecnie S02 ukończone): implementacja na `codex/security-s02`, PR do `main` według korekty użytkownika. Konta i hasła pozostają bez zmian; wyłączone łączenie po e-mailu, OIDC/PKCE/nonce i jednorazowy state, normalizacja z kontrolą kolizji. Lokalny quality i CI są źródłem weryfikacji kodu; bieżący wynik CI w PR. Brakuje kontrolowanego testu rzeczywistego Google, więc odbiór pozostaje otwarty. Pierwszy automatyczny build Preview zastosował addytywną migrację na współdzielonej bazie produkcyjnej (bez zmian kont/haseł). Poprawka pomija kolejne migracje w Preview bez zatrzymywania builda; kod Production bez merge pozostaje dotychczasowy. Merge wyłącznie użytkownika. S03 nie rozpoczęto.
 
@@ -19,7 +19,7 @@ To zapis historyczny po S01; bieżący stan S02 znajduje się powyżej.
 | S01     | ukończone | [S01](reports/S01.md) |
 | S02     | ukończone | [S02](reports/S02.md) |
 | S03     | ukończone | [S03](reports/S03.md) |
-| S04     | oczekuje  | —                     |
+| S04     | w toku    | [S04](reports/S04.md) |
 | S05     | oczekuje  | —                     |
 | S06     | oczekuje  | —                     |
 | S07     | oczekuje  | —                     |

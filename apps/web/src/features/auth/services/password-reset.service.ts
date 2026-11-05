@@ -3,9 +3,10 @@ import { findUserByEmail } from '@web/features/auth/services/email-identity.serv
 import { prisma } from '@lyamo/database';
 import { generateToken, hashToken } from '@web/features/auth/lib/tokens';
 import {
-  sendEmailVerificationEmail,
-  sendPasswordResetEmail,
-} from '@web/features/auth/services/auth-email.service';
+  enqueueMail,
+  deliverMailJob,
+  mailIsCoolingDown,
+} from '@web/features/email/services/mail-outbox.service';
 
 const PASSWORD_RESET_TTL_MS = 60 * 60 * 1000;
 const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
@@ -21,27 +22,25 @@ export async function createAndSendPasswordReset(
     return;
   }
 
-  await prisma.passwordResetToken.deleteMany({
-    where: { userId: user.id, usedAt: null },
+  const id = await prisma.$transaction(async (tx) => {
+    await lockUser(tx, user.id);
+    const current = await tx.user.findUnique({ where: { id: user.id } });
+    if (!current?.passwordHash || (await mailIsCoolingDown(tx, user.id, 'reset'))) return null;
+    const token = generateToken();
+    await tx.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        tokenHash: hashToken(token),
+        expiresAt: new Date(Date.now() + PASSWORD_RESET_TTL_MS),
+      },
+    });
+    return enqueueMail(tx, user.id, 'reset', {
+      token,
+      locale: options?.locale,
+      name: current.name,
+    });
   });
-
-  const token = generateToken();
-  const expiresAt = new Date(Date.now() + PASSWORD_RESET_TTL_MS);
-
-  await prisma.passwordResetToken.create({
-    data: {
-      userId: user.id,
-      tokenHash: hashToken(token),
-      expiresAt,
-    },
-  });
-
-  await sendPasswordResetEmail({
-    email: user.email,
-    token,
-    locale: options?.locale,
-    name: user.name,
-  });
+  if (id) await deliverMailJob(id);
 }
 
 export async function resetPasswordWithToken(
@@ -78,41 +77,35 @@ export async function createAndSendEmailVerification(
   email: string,
   options?: { locale?: string | null; name?: string | null }
 ): Promise<void> {
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (
-    !user ||
-    user.emailVerifiedAt ||
-    (user.registrationExpiresAt && user.registrationExpiresAt <= new Date())
-  )
-    return;
-
-  await prisma.emailVerificationToken.deleteMany({
-    where: { userId, usedAt: null },
-  });
-
-  const token = generateToken();
-  const expiresAt = new Date(
-    Math.min(
-      Date.now() + EMAIL_VERIFICATION_TTL_MS,
-      user.registrationExpiresAt?.getTime() ?? Infinity
+  const id = await prisma.$transaction(async (tx) => {
+    await lockUser(tx, userId);
+    const user = await tx.user.findUnique({ where: { id: userId } });
+    if (
+      !user ||
+      user.email !== email ||
+      user.emailVerifiedAt ||
+      (user.registrationExpiresAt && user.registrationExpiresAt <= new Date()) ||
+      (await mailIsCoolingDown(tx, userId, 'verify'))
     )
-  );
-
-  await prisma.emailVerificationToken.create({
-    data: {
-      userId,
-      tokenHash: hashToken(token),
-      expiresAt,
-    },
+      return null;
+    const token = generateToken();
+    const expiresAt = new Date(
+      Math.min(
+        Date.now() + EMAIL_VERIFICATION_TTL_MS,
+        user.registrationExpiresAt?.getTime() ?? Infinity
+      )
+    );
+    await tx.emailVerificationToken.create({
+      data: { userId, tokenHash: hashToken(token), expiresAt },
+    });
+    return enqueueMail(tx, userId, 'verify', {
+      token,
+      locale: options?.locale,
+      name: options?.name,
+      registrationExpiresAt: user.registrationExpiresAt?.toISOString(),
+    });
   });
-
-  await sendEmailVerificationEmail({
-    registrationExpiresAt: user.registrationExpiresAt,
-    email,
-    token,
-    locale: options?.locale,
-    name: options?.name,
-  });
+  if (id) await deliverMailJob(id);
 }
 
 export async function verifyEmailWithToken(token: string): Promise<boolean> {
@@ -126,7 +119,20 @@ export async function verifyEmailWithToken(token: string): Promise<boolean> {
   }
 
   return prisma.$transaction(async (tx) => {
+    await lockUser(tx, record.userId);
     const now = new Date();
+    const user = await tx.user.findUnique({ where: { id: record.userId } });
+    if (
+      !user ||
+      user.emailVerifiedAt ||
+      (user.registrationExpiresAt && user.registrationExpiresAt <= now)
+    )
+      return false;
+    const claimed = await tx.emailVerificationToken.updateMany({
+      where: { id: record.id, usedAt: null, expiresAt: { gt: now } },
+      data: { usedAt: now },
+    });
+    if (claimed.count !== 1) return false;
     const updated = await tx.user.updateMany({
       where: {
         id: record.userId,
@@ -134,8 +140,10 @@ export async function verifyEmailWithToken(token: string): Promise<boolean> {
       },
       data: { emailVerifiedAt: now, registrationExpiresAt: null },
     });
-    if (updated.count !== 1) return false;
-    await tx.emailVerificationToken.update({ where: { id: record.id }, data: { usedAt: now } });
+    if (updated.count !== 1) {
+      // Roll back the claim if the registration expired while waiting for the lock.
+      throw new Error('VERIFICATION_REGISTRATION_EXPIRED');
+    }
     await tx.emailVerificationToken.deleteMany({
       where: { userId: record.userId, usedAt: null, id: { not: record.id } },
     });

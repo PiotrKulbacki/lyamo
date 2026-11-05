@@ -8,5 +8,15 @@
       "path": "/api/cron/delete-unverified-accounts",
       "schedule": "15 0 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/queues/security-mail/route.ts": {
+      "experimentalTriggers": [
+        {
+          "type": "queue/v2beta",
+          "topic": "security-mail"
+        }
+      ]
+    }
+  }
 }
