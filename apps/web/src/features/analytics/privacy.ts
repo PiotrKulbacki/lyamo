@@ -7,3 +7,14 @@ export function sensitiveLocation(value: string): boolean {
 export function secretPage(): boolean {
   return typeof window !== 'undefined' && sensitiveLocation(window.location.href);
 }
+
+// Sentry hooks may receive live SDK objects (including circular timers/clients).
+// Drop anything we cannot inspect instead of throwing from the telemetry hook.
+export function sensitiveTelemetry(value: unknown): boolean {
+  try {
+    const serialized = JSON.stringify(value);
+    return serialized === undefined || sensitiveLocation(serialized);
+  } catch {
+    return true;
+  }
+}
