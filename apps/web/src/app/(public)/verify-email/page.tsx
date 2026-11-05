@@ -16,6 +16,7 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token') ?? '';
   const emailParam = searchParams.get('email') ?? '';
+  const hasRegistrationDeadline = Boolean(searchParams.get('registrationExpiresAt'));
   const [email, setEmail] = useState(emailParam);
   const [isVerifying, setIsVerifying] = useState(Boolean(token));
   const [isResending, setIsResending] = useState(false);
@@ -95,6 +96,9 @@ function VerifyEmailContent() {
           <p className="text-muted text-sm">
             {t('auth.verify.checkInbox', { email: email || '…' })}
           </p>
+          {hasRegistrationDeadline && (
+            <p className="text-muted text-sm">{t('auth.verify.registrationExpiry')}</p>
+          )}
           <form onSubmit={(event) => void handleResend(event)} className="flex flex-col gap-4">
             <div>
               <label htmlFor="email" className="auth-label">

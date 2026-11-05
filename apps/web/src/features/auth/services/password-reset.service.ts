@@ -78,12 +78,25 @@ export async function createAndSendEmailVerification(
   email: string,
   options?: { locale?: string | null; name?: string | null }
 ): Promise<void> {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (
+    !user ||
+    user.emailVerifiedAt ||
+    (user.registrationExpiresAt && user.registrationExpiresAt <= new Date())
+  )
+    return;
+
   await prisma.emailVerificationToken.deleteMany({
     where: { userId, usedAt: null },
   });
 
   const token = generateToken();
-  const expiresAt = new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS);
+  const expiresAt = new Date(
+    Math.min(
+      Date.now() + EMAIL_VERIFICATION_TTL_MS,
+      user.registrationExpiresAt?.getTime() ?? Infinity
+    )
+  );
 
   await prisma.emailVerificationToken.create({
     data: {
@@ -94,6 +107,7 @@ export async function createAndSendEmailVerification(
   });
 
   await sendEmailVerificationEmail({
+    registrationExpiresAt: user.registrationExpiresAt,
     email,
     token,
     locale: options?.locale,
@@ -111,21 +125,22 @@ export async function verifyEmailWithToken(token: string): Promise<boolean> {
     return false;
   }
 
-  await prisma.$transaction([
-    prisma.user.update({
-      where: { id: record.userId },
-      data: { emailVerifiedAt: new Date() },
-    }),
-    prisma.emailVerificationToken.update({
-      where: { id: record.id },
-      data: { usedAt: new Date() },
-    }),
-    prisma.emailVerificationToken.deleteMany({
+  return prisma.$transaction(async (tx) => {
+    const now = new Date();
+    const updated = await tx.user.updateMany({
+      where: {
+        id: record.userId,
+        OR: [{ registrationExpiresAt: null }, { registrationExpiresAt: { gt: now } }],
+      },
+      data: { emailVerifiedAt: now, registrationExpiresAt: null },
+    });
+    if (updated.count !== 1) return false;
+    await tx.emailVerificationToken.update({ where: { id: record.id }, data: { usedAt: now } });
+    await tx.emailVerificationToken.deleteMany({
       where: { userId: record.userId, usedAt: null, id: { not: record.id } },
-    }),
-  ]);
-
-  return true;
+    });
+    return true;
+  });
 }
 
 export async function resendEmailVerification(

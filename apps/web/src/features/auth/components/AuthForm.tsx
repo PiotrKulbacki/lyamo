@@ -23,6 +23,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const t = useT();
   const { locale } = useLocale();
   const [isLoading, setIsLoading] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -39,6 +40,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isLoading || isNavigating) return;
     setIsLoading(true);
 
     try {
@@ -73,13 +75,17 @@ export function AuthForm({ mode }: AuthFormProps) {
         error?: string;
         email?: string;
         requiresEmailVerification?: boolean;
+        registrationExpiresAt?: string;
       };
 
       if (!response.ok) {
         if (mode === 'login' && data.error === 'auth.errors.emailNotVerified') {
           toast.error(translateError(data.error, locale));
           const verifyEmail = encodeURIComponent(data.email ?? email);
-          router.push(`/verify-email?email=${verifyEmail}`);
+          setIsNavigating(true);
+          router.push(
+            `/verify-email?email=${verifyEmail}${data.registrationExpiresAt ? `&registrationExpiresAt=${encodeURIComponent(data.registrationExpiresAt)}` : ''}`
+          );
           return;
         }
         toast.error(translateError(data.error ?? 'auth.errors.generic', locale));
@@ -89,19 +95,35 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (mode === 'register' && data.requiresEmailVerification) {
         toast.success(t('auth.success.register'));
         const verifyEmail = encodeURIComponent(data.email ?? email);
-        router.push(`/verify-email?email=${verifyEmail}`);
+        setIsNavigating(true);
+        router.push(
+          `/verify-email?email=${verifyEmail}${data.registrationExpiresAt ? `&registrationExpiresAt=${encodeURIComponent(data.registrationExpiresAt)}` : ''}`
+        );
         return;
       }
 
       toast.success(t(mode === 'login' ? 'auth.success.login' : 'auth.success.register'));
       const redirect = safeAuthRedirect(searchParams.get('redirect'));
+      setIsNavigating(true);
       router.push(redirect);
       router.refresh();
     } catch {
+      setIsNavigating(false);
       toast.error(t('auth.errors.networkError'));
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isNavigating) {
+    return (
+      <div className="panel relative z-10 w-full max-w-md p-8" aria-busy="true">
+        <div role="status" aria-live="polite" className="flex flex-col items-center gap-4 py-10">
+          <LoadingSpinner className="text-cool h-8 w-8" />
+          <p className="text-muted text-sm">{t('auth.labels.redirecting')}</p>
+        </div>
+      </div>
+    );
   }
 
   return (

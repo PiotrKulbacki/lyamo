@@ -193,3 +193,31 @@ test('bodyless API clients reach authentication on every supported route', async
     );
   }
 });
+
+test('successful login keeps a loading screen while dashboard navigation is pending', async ({
+  page,
+  baseURL,
+}) => {
+  let releaseNavigation!: () => void;
+  const navigationGate = new Promise<void>((resolve) => {
+    releaseNavigation = resolve;
+  });
+  await page.route('**/dashboard*', async (route) => {
+    await navigationGate;
+    await route.continue();
+  });
+  try {
+    await page.goto('/login');
+    await page.locator('#email').fill(email);
+    await page.locator('#password').fill(password);
+    await page.locator('button[type=submit]').click();
+    await expect(page.locator('[aria-busy="true"]').getByRole('status')).toBeVisible();
+    await expect(page.locator('#email')).toHaveCount(0);
+    await expect(page.locator('#password')).toHaveCount(0);
+    await expect(page.locator('button[type=submit]')).toHaveCount(0);
+    releaseNavigation();
+    await expect(page).toHaveURL(`${baseURL}/dashboard`, { timeout: 30_000 });
+  } finally {
+    releaseNavigation();
+  }
+});

@@ -7,6 +7,7 @@ import {
 } from '@web/features/email/templates/layout';
 
 export type VerifyEmailParams = {
+  registrationExpiresAt?: Date | null;
   token: string;
   locale?: string | null;
   name?: string | null;
@@ -38,6 +39,7 @@ export function buildVerifyEmail(params: VerifyEmailParams): {
     verifyUrl,
     '',
     t('email.verify.expires', locale),
+    ...(params.registrationExpiresAt ? [t('auth.verify.registrationExpiry', locale)] : []),
     '',
     t('email.verify.ignore', locale),
   ].join('\n');
@@ -47,6 +49,9 @@ export function buildVerifyEmail(params: VerifyEmailParams): {
     paragraphHtml(t('email.verify.intro', locale)),
     paragraphHtml(t('email.verify.ctaHint', locale)),
     paragraphHtml(t('email.verify.expires', locale)),
+    ...(params.registrationExpiresAt
+      ? [paragraphHtml(t('auth.verify.registrationExpiry', locale))]
+      : []),
     paragraphHtml(t('email.verify.ignore', locale), 0),
   ].join('');
 

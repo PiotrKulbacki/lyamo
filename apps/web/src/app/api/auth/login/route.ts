@@ -49,7 +49,11 @@ export async function POST(request: Request) {
 
     if (!user.emailVerifiedAt) {
       return NextResponse.json(
-        { error: 'auth.errors.emailNotVerified', email: user.email },
+        {
+          error: 'auth.errors.emailNotVerified',
+          email: user.email,
+          registrationExpiresAt: user.registrationExpiresAt?.toISOString(),
+        },
         { status: 403 }
       );
     }
