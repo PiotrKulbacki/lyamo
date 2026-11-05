@@ -1,3 +1,4 @@
+import { prisma } from '@lyamo/database';
 import { cleanupAuthState } from '@web/features/auth/services/session-lifecycle.service';
 import { NextResponse } from 'next/server';
 import { env } from '@web/env';
@@ -16,6 +17,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Not available in Preview' }, { status: 403 });
   }
   try {
+    await prisma.authRateBucket.deleteMany({ where: { expiresAt: { lt: new Date() } } });
     await cleanupAuthState();
     await processMailOutbox();
     const deleted = await deleteExpiredRegistrations();

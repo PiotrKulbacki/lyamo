@@ -1,5 +1,7 @@
 'use client';
 
+import { authFetch } from '@shared/features/auth/client-request';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -29,7 +31,7 @@ export default function ForgotPasswordPage() {
         return;
       }
 
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await authFetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...parsed.data, locale }),

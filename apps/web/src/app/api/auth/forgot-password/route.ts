@@ -1,11 +1,12 @@
+import { performance } from 'node:perf_hooks';
+import { finishNeutralResponse } from '@web/features/auth/lib/neutral-response';
+import { readAuthBody, authBodyErrorResponse } from '@web/features/auth/lib/auth-body';
 import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { forgotPasswordSchema } from '@shared/features/auth/schemas';
 import { jsonError } from '@web/features/auth/services/auth.service';
 import { createAndSendPasswordReset } from '@web/features/auth/services/password-reset.service';
-import { checkAuthRateLimit } from '@web/lib/rate-limit';
-
-const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
+import { checkAuthRateLimit, authRateLimitResponse } from '@web/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -14,10 +15,10 @@ export async function POST(request: Request) {
 
     const rateLimit = await checkAuthRateLimit(request, 'forgot-password');
     if (!rateLimit.allowed) {
-      return jsonError(RATE_LIMIT_ERROR, 429);
+      return authRateLimitResponse(rateLimit);
     }
 
-    const body = await request.json();
+    const body = await readAuthBody(request);
     const parsed = forgotPasswordSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -25,13 +26,19 @@ export async function POST(request: Request) {
       return jsonError(firstError, 400);
     }
 
-    await createAndSendPasswordReset(parsed.data.email, { locale: parsed.data.locale }).catch(
-      () => {}
-    );
+    const started = performance.now();
+    const subjectLimit = await checkAuthRateLimit(request, 'forgot-password', parsed.data.email);
+    if (!subjectLimit.allowed) return authRateLimitResponse(subjectLimit);
 
+    await createAndSendPasswordReset(parsed.data.email, {
+      locale: parsed.data.locale,
+      queuedOnly: true,
+    }).catch(() => {});
+
+    await finishNeutralResponse(started);
     // Always succeed to avoid email enumeration.
     return NextResponse.json({ ok: true });
-  } catch {
-    return jsonError('auth.errors.generic', 500);
+  } catch (error) {
+    return authBodyErrorResponse(error) ?? jsonError('auth.errors.generic', 500);
   }
 }

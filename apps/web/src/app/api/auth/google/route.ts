@@ -5,13 +5,12 @@ import * as oidc from 'openid-client';
 import { getGoogleOAuthUrl } from '@web/features/auth/lib/google-oidc';
 import { hashToken } from '@web/features/auth/lib/tokens';
 import { env } from '@web/env';
-import { checkAuthRateLimit } from '@web/lib/rate-limit';
+import { checkAuthRateLimit, authRateLimitResponse } from '@web/lib/rate-limit';
 
 export async function GET(request: Request) {
   try {
     const limit = await checkAuthRateLimit(request, 'google');
-    if (!limit.allowed)
-      return NextResponse.json({ error: 'api.errors.rateLimitExceeded' }, { status: 429 });
+    if (!limit.allowed) return authRateLimitResponse(limit);
     const requestedPurpose = new URL(request.url).searchParams.get('purpose');
     const purpose =
       requestedPurpose === 'reauth' || requestedPurpose === 'link' ? requestedPurpose : 'login';

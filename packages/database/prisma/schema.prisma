@@ -336,3 +336,12 @@ model MailJob {
   @@index([expiresAt])
   @@map("mail_jobs")
 }
+
+// HMAC identifiers only; private, expiring distributed auth budgets.
+model AuthRateBucket {
+  key String @id
+  count Int
+  expiresAt DateTime
+  @@index([expiresAt])
+  @@map("auth_rate_buckets")
+}

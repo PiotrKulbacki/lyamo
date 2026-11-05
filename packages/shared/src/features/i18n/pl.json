@@ -57,11 +57,13 @@
     },
     "success": {
       "login": "Zalogowano pomyślnie",
-      "register": "Konto utworzone pomyślnie",
+      "register": "Sprawdź skrzynkę, jeśli adres może zostać zarejestrowany. Jeśli masz już konto, zaloguj się lub zresetuj hasło.",
       "logout": "Wylogowano pomyślnie",
       "passwordChanged": "Hasło zostało zmienione"
     },
     "errors": {
+      "inputTooLong": "Ta wartość jest za długa.",
+      "temporarilyUnavailable": "Usługa jest chwilowo niedostępna. Odczekaj chwilę i spróbuj ponownie.",
       "invalidEmail": "Podaj prawidłowy adres e-mail",
       "passwordRequired": "Podaj hasło",
       "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków",

@@ -1,5 +1,7 @@
 'use client';
 
+import { authFetch } from '@shared/features/auth/client-request';
+
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -41,7 +43,7 @@ function VerifyEmailContent() {
     if (!token || isVerifying) return;
     setIsVerifying(true);
     try {
-      const response = await fetch('/api/auth/verify-email', {
+      const response = await authFetch('/api/auth/verify-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),
@@ -66,7 +68,7 @@ function VerifyEmailContent() {
     setIsResending(true);
 
     try {
-      const response = await fetch('/api/auth/resend-verification', {
+      const response = await authFetch('/api/auth/resend-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, locale }),

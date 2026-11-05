@@ -1,4 +1,6 @@
 'use client';
+
+import { authFetch } from '@shared/features/auth/client-request';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useT, useLocale } from '@web/features/i18n/LocaleProvider';
@@ -15,7 +17,7 @@ export function SessionsSection({ hasPassword }: { hasPassword: boolean }) {
   const [busy, setBusy] = useState(false);
   const load = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth/sessions');
+      const response = await authFetch('/api/auth/sessions');
       const data = await response.json();
       if (!response.ok) throw new Error();
       setGoogleLinked(data.googleLinked);
@@ -31,7 +33,7 @@ export function SessionsSection({ hasPassword }: { hasPassword: boolean }) {
   async function mutate(path: string, method: string, body: object) {
     setBusy(true);
     try {
-      const response = await fetch(path, {
+      const response = await authFetch(path, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

@@ -11,6 +11,16 @@ Sentry.init({
     return breadcrumb;
   },
   beforeSend(event) {
+    // Explicit operational signal: strip request/breadcrumb/user data before allowing
+    // it through the auth URL filter. No credentials or identifier can be attached.
+    if (event.message === 'AUTH_RATE_LIMIT_UNAVAILABLE')
+      return {
+        type: event.type,
+        event_id: event.event_id,
+        timestamp: event.timestamp,
+        level: 'error',
+        message: 'AUTH_RATE_LIMIT_UNAVAILABLE',
+      };
     if (secretPage() || sensitiveLocation(JSON.stringify(event))) return null;
     return event;
   },

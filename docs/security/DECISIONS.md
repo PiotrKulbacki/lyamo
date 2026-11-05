@@ -77,3 +77,10 @@ Aktualizacja na polecenie użytkownika: Preview pomija migracje i kontynuuje bui
 
 - Token i szyfrowany outbox powstają w jednej transakcji; poprzedni ważny link pozostaje do upływu terminu lub skutecznego użycia resetu. Cooldown 60 sekund, pięć prób, limit 25 minut i identyfikator idempotencji Brevo. Szyfrogram usuwa się przy zakończeniu, a wygasłe dane i stare metadane czyści codzienny job. `AUTH_SECRET` jest kluczem źródłowym i jego zmiana unieważnia oczekujące zadania.
 - Projekt Vercel ma Hobby, więc częsty Vercel Cron byłby odrzucony; kod używa Vercel Queues. Publikacja pobudzenia przed commitem powoduje rollback operacji przy niedostępnej kolejce i retry przy dostarczeniu przed commitem. Rzeczywiste Queues/OIDC, Brevo, click tracking oraz telemetria wymagają kontrolowanego odbioru; szczegóły w raporcie S04.
+
+## S05 — limity i awarie (2026-11-05)
+
+- Osobne budżety IP i konta/operacji; globalny limit skrzynki 6/h łączy rejestrację, reset request i resend. Login 5/min oraz 30/15 min zamiast trwałej blokady konta. Szczegóły: [raport S05](reports/S05.md), `AUTH_BUDGETS`.
+- Brak konfiguracji Redis w Production potwierdzony odczytem nazw zmiennych. Bez nowej usługi: fallback w istniejącym PostgreSQL, atomowy UPSERT, wygasanie i timeout. Gdy oba backendy niedostępne: 503/Retry-After i alarm bez danych żądania w istniejącej telemetrii. Przejście między niezależnymi licznikami może dopuścić jeden dodatkowy budżet okna; nie ma nieograniczonego fail-open. Addytywna migracja `20261105180000_auth_rate_buckets`, produkcja przez pipeline po merge.
+- Na Vercel ufamy tylko pojedynczemu `x-vercel-forwarded-for` zgodnie z kontraktem ingress; poza Vercel wspólny bucket unknown do czasu jawnej obsługi proxy. Klucze kont/IP są HMAC z domeną i AUTH_SECRET. Rotacja sekretu resetuje te budżety.
+- Rejestracja istniejącego adresu nie ujawnia go przez 409; zachowuje neutralny 201 i instrukcję logowania/resetu, nie zmienia konta ani hasła. Błędny login zawsze porównuje bcrypt. Wysyłkę dostawcy oddzielono od publicznej odpowiedzi przez outbox S04; zachowano atomową publikację pobudzenia. Web/mobile respektują Retry-After bez automatycznych retry.

@@ -1,5 +1,7 @@
 'use client';
 
+import { authFetch } from '@shared/features/auth/client-request';
+
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { changePasswordSchema } from '@shared/features/auth/schemas';
@@ -40,7 +42,7 @@ export function ChangePasswordSection({ hasPassword, email }: ChangePasswordSect
         return;
       }
 
-      const response = await fetch('/api/auth/change-password', {
+      const response = await authFetch('/api/auth/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),
@@ -68,7 +70,7 @@ export function ChangePasswordSection({ hasPassword, email }: ChangePasswordSect
     setIsSendingReset(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await authFetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, locale }),
