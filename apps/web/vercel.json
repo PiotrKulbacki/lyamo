@@ -10,7 +10,7 @@
     }
   ],
   "functions": {
-    "app/api/queues/security-mail/route.ts": {
+    "src/app/api/queues/security-mail/route.ts": {
       "experimentalTriggers": [
         {
           "type": "queue/v2beta",
