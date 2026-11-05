@@ -78,6 +78,7 @@
       "unauthorized": "Musisz być zalogowany, aby kontynuować",
       "sessionExpired": "Twoja sesja wygasła. Zaloguj się ponownie",
       "oauthFailed": "Logowanie przez Google nie powiodło się. Spróbuj ponownie",
+      "oauthAccountExists": "Ten adres ma już konto. Zaloguj się dotychczasową metodą. Jeśli rejestracja nie jest Twoja, najpierw zresetuj hasło, a następnie potwierdź e-mail. Google nie połączy kont automatycznie.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie",
       "networkError": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie",
       "legalAcceptanceRequired": "Aby utworzyć konto, musisz zaakceptować Regulamin i Politykę prywatności"

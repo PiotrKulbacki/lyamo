@@ -71,6 +71,7 @@ export type AuthErrorCode =
   | 'auth.errors.unauthorized'
   | 'auth.errors.sessionExpired'
   | 'auth.errors.oauthFailed'
+  | 'auth.errors.oauthAccountExists'
   | 'auth.errors.generic'
   | 'auth.errors.networkError';
 

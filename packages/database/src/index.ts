@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export { PrismaClient };
+export { Prisma } from '@prisma/client';
 export type {
   User,
   Account,

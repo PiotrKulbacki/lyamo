@@ -13,6 +13,15 @@ const pkgRoot = resolve(__dir, '..');
 const rootEnv = resolve(__dir, '../../../.env');
 const selfPath = fileURLToPath(import.meta.url);
 
+// Preview may inherit Production database settings. Do not read .env or run
+// Prisma until a separate preview migration workflow has been established.
+if (process.env.VERCEL_ENV === 'preview') {
+  console.log(
+    '[migrate-deploy] Skipping migrations in Preview; schema changes run on Production only.'
+  );
+  process.exit(0);
+}
+
 const hasDbUrls = Boolean(process.env.DATABASE_URL && process.env.DIRECT_DATABASE_URL);
 
 if (!hasDbUrls && existsSync(rootEnv) && process.env.__MIGRATE_DEPLOY_REEXEC !== '1') {
