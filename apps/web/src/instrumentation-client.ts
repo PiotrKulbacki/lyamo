@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-import { secretPage, sensitiveLocation } from '@web/features/analytics/privacy';
+import { secretPage, sensitiveTelemetry } from '@web/features/analytics/privacy';
 import { readConsentFromDocument } from '@web/features/cookie-consent/storage';
 
 const isSentryAllowed = (() => {
@@ -21,15 +21,15 @@ Sentry.init({
   enabled: isSentryAllowed,
   environment: process.env.NODE_ENV,
   beforeBreadcrumb(breadcrumb) {
-    if (secretPage() || sensitiveLocation(JSON.stringify(breadcrumb))) return null;
+    if (secretPage() || sensitiveTelemetry(breadcrumb)) return null;
     return breadcrumb;
   },
   beforeSend(event) {
-    if (secretPage() || sensitiveLocation(JSON.stringify(event))) return null;
+    if (secretPage() || sensitiveTelemetry(event)) return null;
     return event;
   },
   beforeSendTransaction(event) {
-    if (secretPage() || sensitiveLocation(JSON.stringify(event))) return null;
+    if (secretPage() || sensitiveTelemetry(event)) return null;
     return event;
   },
 });
