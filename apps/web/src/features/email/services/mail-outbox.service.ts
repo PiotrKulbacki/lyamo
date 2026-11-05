@@ -61,7 +61,9 @@ export async function enqueueMail(
   // delivery retries until the row is visible, so a committed job has a wakeup.
   if (
     process.env.VERCEL_ENV === 'production' ||
-    (process.env.VERCEL_ENV === 'preview' && env.MAIL_QUEUE_PREVIEW_ENABLED === 'true')
+    (env.MAIL_QUEUE_PREVIEW_ENABLED === 'true' &&
+      (process.env.VERCEL_ENV === 'preview' ||
+        (process.env.LYAMO_TEST_ENV === '1' && process.env.NODE_ENV === 'development')))
   ) {
     await send(
       'security-mail',
