@@ -62,11 +62,11 @@ export async function POST(request: Request) {
     const mobile = isMobileClient(request);
 
     if (mobile) {
-      const tokens = await createMobileTokens(user.id);
+      const tokens = await createMobileTokens(user.id, user.passwordHash);
       return NextResponse.json(buildAuthResponse(safeUser, tokens));
     }
 
-    const sessionToken = await createWebSession(user.id);
+    const sessionToken = await createWebSession(user.id, user.passwordHash);
     const response = NextResponse.json(buildAuthResponse(safeUser));
     setSessionCookie(response, sessionToken);
     return response;

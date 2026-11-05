@@ -4,8 +4,8 @@ const ACCESS_TOKEN_KEY = 'sec_access_token';
 const REFRESH_TOKEN_KEY = 'sec_refresh_token';
 
 export async function saveTokens(accessToken: string, refreshToken: string): Promise<void> {
-  await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
   await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+  await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
 }
 
 export async function getAccessToken(): Promise<string | null> {

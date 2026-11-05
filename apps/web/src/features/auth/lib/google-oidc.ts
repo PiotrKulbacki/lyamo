@@ -23,6 +23,7 @@ export function getGoogleConfiguration() {
 }
 
 export type GoogleProfile = {
+  authenticatedAt?: number;
   providerAccountId: string;
   email: string;
   authoritativeEmail: boolean;
@@ -33,11 +34,19 @@ export type GoogleChecks = { state: string; nonce: string; codeVerifier: string 
 
 export async function getGoogleOAuthUrl(
   checks: GoogleChecks,
-  config?: oidc.Configuration
+  config?: oidc.Configuration,
+  reauthenticate = false
 ): Promise<URL> {
   return oidc.buildAuthorizationUrl(config ?? (await getGoogleConfiguration()), {
     redirect_uri: googleCallbackUrl(),
     scope: 'openid email profile',
+    ...(reauthenticate
+      ? {
+          prompt: 'select_account',
+          max_age: '0',
+          claims: JSON.stringify({ id_token: { auth_time: { essential: true } } }),
+        }
+      : {}),
     state: checks.state,
     nonce: checks.nonce,
     code_challenge: await oidc.calculatePKCECodeChallenge(checks.codeVerifier),
@@ -76,6 +85,7 @@ export async function exchangeGoogleCode(
   const authoritativeEmail =
     email.endsWith('@gmail.com') || (typeof claims.hd === 'string' && claims.hd.length > 0);
   return {
+    authenticatedAt: typeof claims.auth_time === 'number' ? claims.auth_time : undefined,
     providerAccountId: claims.sub,
     email,
     authoritativeEmail,

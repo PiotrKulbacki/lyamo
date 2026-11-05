@@ -51,6 +51,7 @@ model User {
   emailVerifiedAt        DateTime?
   registrationExpiresAt  DateTime?
 
+  securityEvents    SecurityEvent[]
   accounts          Account[]
   sessions          Session[]
   refreshTokens     RefreshToken[]
@@ -110,6 +111,11 @@ model Account {
 }
 
 model Session {
+  createdAt DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  authenticatedAt DateTime?
+  kind String @default("web")
+  refreshTokens RefreshToken[]
   id        String   @id @default(cuid())
   userId    String
   token     String   @unique
@@ -123,6 +129,10 @@ model Session {
 }
 
 model RefreshToken {
+  sessionId String?
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  consumedAt DateTime?
+  successorHash String?
   id        String   @id @default(cuid())
   userId    String
   token     String   @unique
@@ -283,6 +293,9 @@ model UserCategoryLimit {
 
 // Short-lived browser-bound OIDC transactions. Consumed before the token exchange.
 model OAuthAttempt {
+  userId String?
+  sessionId String?
+  purpose String @default("login")
   stateHash    String   @id
   nonce        String
   codeVerifier String
@@ -290,4 +303,15 @@ model OAuthAttempt {
 
   @@index([expiresAt])
   @@map("oauth_attempts")
+}
+
+// Minimal security inbox; delivery/retry belongs to S04.
+model SecurityEvent {
+  id String @id @default(cuid())
+  userId String
+  kind String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+  @@map("security_events")
 }

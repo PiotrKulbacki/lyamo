@@ -17,6 +17,9 @@ export default function HomeScreen() {
           <Pressable style={styles.button} onPress={() => router.push('/change-password' as Href)}>
             <Text style={styles.buttonText}>{t('auth.labels.changePassword', locale)}</Text>
           </Pressable>
+          <Pressable onPress={() => router.push('/sessions' as Href)}>
+            <Text style={styles.link}>{t('security.sessions', locale)}</Text>
+          </Pressable>
           <Pressable onPress={() => void logout()}>
             <Text style={styles.link}>{t('auth.labels.logout', locale)}</Text>
           </Pressable>

@@ -1,3 +1,4 @@
+import { cleanupAuthState } from '@web/features/auth/services/session-lifecycle.service';
 import { NextResponse } from 'next/server';
 import { env } from '@web/env';
 import { deleteExpiredRegistrations } from '@web/features/auth/services/registration-cleanup.service';
@@ -14,6 +15,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Not available in Preview' }, { status: 403 });
   }
   try {
+    await cleanupAuthState();
     const deleted = await deleteExpiredRegistrations();
     return NextResponse.json({ success: true, deleted });
   } catch (error) {

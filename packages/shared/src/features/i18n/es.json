@@ -83,7 +83,9 @@
       "oauthAccountExists": "Este correo ya tiene una cuenta. Usa tu método de acceso habitual. Si no la registraste, restablece primero la contraseña y después verifica el correo. Google no vinculará las cuentas automáticamente.",
       "generic": "Algo salió mal. Inténtalo de nuevo",
       "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo",
-      "legalAcceptanceRequired": "Para crear una cuenta debes aceptar los Términos de servicio y la Política de privacidad"
+      "legalAcceptanceRequired": "Para crear una cuenta debes aceptar los Términos de servicio y la Política de privacidad",
+      "reauthenticationRequired": "Confirma tu identidad de nuevo en los ajustes de la cuenta.",
+      "refreshConflict": "Esta sesión ya se renovó. Inténtalo de nuevo."
     },
     "checkboxes": {
       "legalAcceptancePrefix": "He leído y acepto los ",
@@ -866,5 +868,27 @@
         "description": "Reservada para herramientas de marketing opcionales. Por ahora no se cargan píxeles ni scripts publicitarios. No son necesarias para usar la app."
       }
     }
+  },
+  "security": {
+    "sessions": "Sesiones y acceso",
+    "description": "El tipo de cliente no identifica un dispositivo físico. Última actividad:",
+    "current": "Esta sesión",
+    "web": "Navegador",
+    "mobile": "Aplicación móvil",
+    "logoutAll": "Cerrar todas las sesiones",
+    "reauthenticate": "Confirma tu identidad antes de eliminar la cuenta (válido por 5 minutos)",
+    "confirm": "Confirmar",
+    "confirmed": "Identidad confirmada",
+    "notifications": "Notificaciones de seguridad (90 días)",
+    "events": {
+      "password_reset": "Contraseña restablecida. Todas las sesiones revocadas.",
+      "password_changed": "Contraseña cambiada. Otras sesiones revocadas.",
+      "refresh_reuse": "Reutilización de token detectada. Sesión revocada.",
+      "session_revoked": "Sesión revocada.",
+      "all_sessions_revoked": "Todas las sesiones revocadas.",
+      "reauthenticated": "Identidad confirmada.",
+      "method_linked": "Método de acceso de Google añadido."
+    },
+    "linkGoogle": "Vincular Google (confirma tu identidad primero)"
   }
 }

@@ -83,7 +83,9 @@
       "oauthAccountExists": "Ten adres ma już konto. Zaloguj się dotychczasową metodą. Jeśli rejestracja nie jest Twoja, najpierw zresetuj hasło, a następnie potwierdź e-mail. Google nie połączy kont automatycznie.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie",
       "networkError": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie",
-      "legalAcceptanceRequired": "Aby utworzyć konto, musisz zaakceptować Regulamin i Politykę prywatności"
+      "legalAcceptanceRequired": "Aby utworzyć konto, musisz zaakceptować Regulamin i Politykę prywatności",
+      "reauthenticationRequired": "Potwierdź ponownie tożsamość w ustawieniach konta.",
+      "refreshConflict": "Sesja została już odświeżona. Spróbuj ponownie."
     },
     "checkboxes": {
       "legalAcceptancePrefix": "Zapoznałem/łam się z ",
@@ -891,5 +893,27 @@
         "description": "Zarezerwowane dla opcjonalnych narzędzi marketingowych. Obecnie nie ładujemy pikseli reklamowych ani skryptów marketingowych. Nie są wymagane do korzystania z aplikacji."
       }
     }
+  },
+  "security": {
+    "sessions": "Sesje i dostęp",
+    "description": "Typ klienta nie identyfikuje fizycznego urządzenia. Ostatnia aktywność:",
+    "current": "Ta sesja",
+    "web": "Przeglądarka",
+    "mobile": "Aplikacja mobilna",
+    "logoutAll": "Wyloguj wszystkie sesje",
+    "reauthenticate": "Potwierdź tożsamość przed usunięciem konta (ważne 5 minut)",
+    "confirm": "Potwierdź",
+    "confirmed": "Tożsamość potwierdzona",
+    "notifications": "Powiadomienia bezpieczeństwa (90 dni)",
+    "events": {
+      "password_reset": "Hasło zresetowane. Wszystkie sesje odwołane.",
+      "password_changed": "Hasło zmienione. Pozostałe sesje odwołane.",
+      "refresh_reuse": "Wykryto ponowne użycie tokenu. Sesja odwołana.",
+      "session_revoked": "Sesja odwołana.",
+      "all_sessions_revoked": "Wszystkie sesje odwołane.",
+      "reauthenticated": "Tożsamość potwierdzona.",
+      "method_linked": "Dodano metodę Google."
+    },
+    "linkGoogle": "Połącz Google (najpierw potwierdź tożsamość)"
   }
 }

@@ -1,3 +1,4 @@
+import { lockUser, securityEvent } from './session-lifecycle.service';
 import { findUserByEmail } from '@web/features/auth/services/email-identity.service';
 import { prisma } from '@lyamo/database';
 import { generateToken, hashToken } from '@web/features/auth/lib/tokens';
@@ -56,21 +57,20 @@ export async function resetPasswordWithToken(
     return false;
   }
 
-  await prisma.$transaction([
-    prisma.user.update({
-      where: { id: record.userId },
-      data: { passwordHash },
-    }),
-    prisma.passwordResetToken.update({
-      where: { id: record.id },
+  return prisma.$transaction(async (tx) => {
+    await lockUser(tx, record.userId);
+    const claimed = await tx.passwordResetToken.updateMany({
+      where: { id: record.id, usedAt: null, expiresAt: { gt: new Date() } },
       data: { usedAt: new Date() },
-    }),
-    prisma.passwordResetToken.deleteMany({
-      where: { userId: record.userId, usedAt: null, id: { not: record.id } },
-    }),
-  ]);
-
-  return true;
+    });
+    if (claimed.count !== 1) return false;
+    await tx.user.update({ where: { id: record.userId }, data: { passwordHash } });
+    await tx.session.deleteMany({ where: { userId: record.userId } });
+    await tx.refreshToken.deleteMany({ where: { userId: record.userId } });
+    await tx.passwordResetToken.deleteMany({ where: { userId: record.userId, usedAt: null } });
+    await securityEvent(tx, record.userId, 'password_reset');
+    return true;
+  });
 }
 
 export async function createAndSendEmailVerification(

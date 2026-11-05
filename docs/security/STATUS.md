@@ -1,10 +1,10 @@
 # Stan programu bezpieczeństwa
 
-Aktualizacja: 2026-11-04. S00 i S01 scalone do dev oraz main. S01 wdrożone na lyamo.eu: Ready, Node 26, SHA `81a16f5`; kontrola HTTP 12/12.
+Aktualizacja: 2026-11-05. S00 i S01 scalone do dev oraz main. S01 wdrożone na lyamo.eu: Ready, Node 26, SHA `81a16f5`; kontrola HTTP 12/12.
 
-Następne zadanie: **odbiór S02**. Ostatni raport: [S02](reports/S02.md).
+Następne zadanie: **S04 (po merge S03 przez użytkownika)**. Ostatni raport: [S03](reports/S03.md).
 
-S02 (2026-11-05): implementacja na `codex/security-s02`, PR do `main` według korekty użytkownika. Konta i hasła pozostają bez zmian; wyłączone łączenie po e-mailu, OIDC/PKCE/nonce i jednorazowy state, normalizacja z kontrolą kolizji. Lokalny quality i CI są źródłem weryfikacji kodu; bieżący wynik CI w PR. Brakuje kontrolowanego testu rzeczywistego Google, więc odbiór pozostaje otwarty. Pierwszy automatyczny build Preview zastosował addytywną migrację na współdzielonej bazie produkcyjnej (bez zmian kont/haseł). Poprawka pomija kolejne migracje w Preview bez zatrzymywania builda; kod Production bez merge pozostaje dotychczasowy. Merge wyłącznie użytkownika. S03 nie rozpoczęto.
+Historia S02 (stan przed potwierdzeniem użytkownika poniżej, obecnie S02 ukończone): implementacja na `codex/security-s02`, PR do `main` według korekty użytkownika. Konta i hasła pozostają bez zmian; wyłączone łączenie po e-mailu, OIDC/PKCE/nonce i jednorazowy state, normalizacja z kontrolą kolizji. Lokalny quality i CI są źródłem weryfikacji kodu; bieżący wynik CI w PR. Brakuje kontrolowanego testu rzeczywistego Google, więc odbiór pozostaje otwarty. Pierwszy automatyczny build Preview zastosował addytywną migrację na współdzielonej bazie produkcyjnej (bez zmian kont/haseł). Poprawka pomija kolejne migracje w Preview bez zatrzymywania builda; kod Production bez merge pozostaje dotychczasowy. Merge wyłącznie użytkownika. S03 nie rozpoczęto.
 
 Zgłoszona regresja po S01: udane Google OAuth wracało na landing page po usunięciu
 przekierowania middleware. Osobna [poprawka logowania](reports/S01-google-login-hotfix.md)
@@ -13,19 +13,19 @@ kieruje do panelu, strona główna sprawdza ważność sesji. [PR #81](https://g
 do `dev`, implementacja `7e48227`, [CI #118](https://github.com/PiotrKulbacki/lyamo/actions/runs/41907901963): success.
 To zapis historyczny po S01; bieżący stan S02 znajduje się powyżej.
 
-| Zadanie | Stan                         | Raport                |
-| ------- | ---------------------------- | --------------------- |
-| S00     | ukończone                    | [S00](reports/S00.md) |
-| S01     | ukończone                    | [S01](reports/S01.md) |
-| S02     | wymaga działania użytkownika | [S02](reports/S02.md) |
-| S03     | oczekuje                     | —                     |
-| S04     | oczekuje                     | —                     |
-| S05     | oczekuje                     | —                     |
-| S06     | oczekuje                     | —                     |
-| S07     | oczekuje                     | —                     |
-| S08     | oczekuje                     | —                     |
-| S09     | oczekuje                     | —                     |
-| S10     | oczekuje                     | —                     |
+| Zadanie | Stan      | Raport                |
+| ------- | --------- | --------------------- |
+| S00     | ukończone | [S00](reports/S00.md) |
+| S01     | ukończone | [S01](reports/S01.md) |
+| S02     | ukończone | [S02](reports/S02.md) |
+| S03     | ukończone | [S03](reports/S03.md) |
+| S04     | oczekuje  | —                     |
+| S05     | oczekuje  | —                     |
+| S06     | oczekuje  | —                     |
+| S07     | oczekuje  | —                     |
+| S08     | oczekuje  | —                     |
+| S09     | oczekuje  | —                     |
+| S10     | oczekuje  | —                     |
 
 Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkownika / ukończone. Oznacz ukończenie tylko po spełnieniu kryteriów karty; brak połączenia z produkcją nie oznacza, że poprawka została wdrożona.
 
@@ -57,3 +57,11 @@ Aktualizacja na polecenie użytkownika: Preview pomija migracje i kontynuuje bui
 ## Uzupełnienie po ręcznych próbach rejestracji (2026-11-05)
 
 Użytkownik potwierdził lokalną rejestrację i bramkę e-maila, zgłosił mignięcie formularza oraz zatwierdził 72-godzinny termin i usuwanie tylko przyszłych niepotwierdzonych rejestracji. Poprawka na `codex/auth-login-loading`, baza main `a3937ad`, oddzielny PR do main. [Raport](reports/registration-lifecycle.md) opisuje bezpieczny zakres, codzienny cleanup, addytywną migrację i utrzymanie loadera. Dotychczasowe konta pozostają poza nową polityką, nie wykonano ręcznych usunięć produkcyjnych. S03 nie rozpoczęto; odbiór Google w S02 pozostaje otwarty.
+
+## Potwierdzenie odbioru S02 (2026-11-05)
+
+Użytkownik potwierdził, że przetestował zmiany i wszystko działa. S02 zakończone; wcześniejsze zapisy o otwartym odbiorze są historyczne. S03 rozpoczęte na bazie `46ead74` (main), z czystym katalogiem roboczym.
+
+## S03 (2026-11-05)
+
+Implementacja na `codex/security-s03`, baza main `46ead74`; raport [S03](reports/S03.md). Powiązanie JWT z sesją, atomowa rotacja/replay, odwołanie po reset/zmianie/wylogowaniu, lista sesji web/mobile, świeże potwierdzenie i jawne dołączenie Google, minimalne powiadomienia z retencją. Konta/hasła/dane zachowane. Migracja addytywna testowana w izolacji; Production dopiero po merge użytkownika. Quality lokalnie: sukces (193 testy), build/integracja/E2E w CI PR (wynik i SHA w odpowiedzi końcowej). Nowe przepływy Google wymagają auth_time; brak claimu odmawia potwierdzenia. Nie wykonano próby na fizycznym telefonie ani rzeczywistym Google S03. Nie rozpoczęto S04.

@@ -8,10 +8,19 @@ import { findUserByEmail } from '@web/features/auth/services/email-identity.serv
 import { POST as login } from '@web/app/api/auth/login/route';
 import { hashSync } from 'bcryptjs';
 
-const google = vi.hoisted(() => ({ providerAccountId: '', email: '', authoritativeEmail: true }));
-const browser = vi.hoisted(() => ({ state: '' }));
+const google = vi.hoisted(() => ({
+  providerAccountId: '',
+  email: '',
+  authoritativeEmail: true,
+  authenticatedAt: undefined as number | undefined,
+}));
+const browser = vi.hoisted(() => ({ state: '', session: '' }));
 vi.mock('next/headers', () => ({
-  cookies: async () => ({ get: () => ({ value: browser.state }) }),
+  cookies: async () => ({
+    get: (name: string) => ({
+      value: name === 'sec_oauth_state' ? browser.state : browser.session,
+    }),
+  }),
 }));
 vi.mock('@web/features/auth/lib/google-oidc', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@web/features/auth/lib/google-oidc')>()),
@@ -35,6 +44,8 @@ beforeEach(() => {
   google.providerAccountId = randomUUID();
   google.email = `google-${google.providerAccountId}@gmail.com`;
   google.authoritativeEmail = true;
+  google.authenticatedAt = undefined;
+  browser.session = '';
   browser.state = randomUUID();
 });
 async function start(expiresAt = new Date(Date.now() + 60_000)) {
@@ -182,5 +193,104 @@ test('different Google subjects competing for one email never merge accounts', a
     expect(await prisma.account.count({ where: { userId: user.id } })).toBe(1);
   } finally {
     await cleanup();
+  }
+});
+
+test('Google-only reauthentication requires matching sub, recent provider authentication and the same live session', async () => {
+  const { createWebSession } = await import('@web/features/auth/services/auth.service');
+  const id = randomUUID();
+  await prisma.user.create({
+    data: {
+      id,
+      email: `reauth-${id}@example.invalid`,
+      emailVerifiedAt: new Date(),
+      accounts: { create: { provider: 'google', providerAccountId: google.providerAccountId } },
+    },
+  });
+  try {
+    browser.session = await createWebSession(id);
+    const session = await prisma.session.findUniqueOrThrow({
+      where: { token: hashToken(browser.session) },
+    });
+    await prisma.session.update({ where: { id: session.id }, data: { authenticatedAt: null } });
+    async function attempt() {
+      browser.state = randomUUID();
+      await start();
+      await prisma.oAuthAttempt.update({
+        where: { stateHash: hashToken(browser.state) },
+        data: { purpose: 'reauth', sessionId: session.id, userId: id },
+      });
+      return callback();
+    }
+    expect((await attempt()).headers.get('location')).toContain('error=');
+    google.authenticatedAt = Math.floor(Date.now() / 1000) - 600;
+    expect((await attempt()).headers.get('location')).toContain('error=');
+    google.authenticatedAt = Math.floor(Date.now() / 1000);
+    const original = google.providerAccountId;
+    google.providerAccountId = 'wrong-sub';
+    expect((await attempt()).headers.get('location')).toContain('error=');
+    google.providerAccountId = original;
+    expect((await attempt()).headers.get('location')).toContain('/settings?reauth=success');
+    expect(
+      (await prisma.session.findUniqueOrThrow({ where: { id: session.id } })).authenticatedAt
+    ).not.toBeNull();
+    await prisma.session.delete({ where: { id: session.id } });
+    expect((await attempt()).headers.get('location')).toContain('error=');
+  } finally {
+    browser.session = '';
+    await prisma.user.delete({ where: { id } });
+  }
+});
+
+test('explicit Google link requires fresh original session, never transfers a linked identity', async () => {
+  const { createWebSession } = await import('@web/features/auth/services/auth.service');
+  const id = randomUUID();
+  const otherId = randomUUID();
+  await prisma.user.create({
+    data: { id, email: `link-${id}@example.invalid`, emailVerifiedAt: new Date() },
+  });
+  await prisma.user.create({
+    data: {
+      id: otherId,
+      email: `link-${otherId}@example.invalid`,
+      emailVerifiedAt: new Date(),
+      accounts: { create: { provider: 'google', providerAccountId: google.providerAccountId } },
+    },
+  });
+  try {
+    browser.session = await createWebSession(id);
+    const session = await prisma.session.findUniqueOrThrow({
+      where: { token: hashToken(browser.session) },
+    });
+    async function attempt() {
+      browser.state = randomUUID();
+      await start();
+      await prisma.oAuthAttempt.update({
+        where: { stateHash: hashToken(browser.state) },
+        data: { purpose: 'link', sessionId: session.id, userId: id },
+      });
+      return callback();
+    }
+    expect((await attempt()).headers.get('location')).toContain('oauthAccountExists');
+    expect(await prisma.account.count({ where: { userId: id } })).toBe(0);
+    google.providerAccountId = randomUUID();
+    await prisma.session.update({ where: { id: session.id }, data: { authenticatedAt: null } });
+    expect((await attempt()).headers.get('location')).toContain('error=');
+    await prisma.session.update({
+      where: { id: session.id },
+      data: { authenticatedAt: new Date() },
+    });
+    expect((await attempt()).headers.get('location')).toContain('/settings');
+    expect(
+      await prisma.account.count({
+        where: { userId: id, providerAccountId: google.providerAccountId },
+      })
+    ).toBe(1);
+    expect((await prisma.user.findUniqueOrThrow({ where: { id } })).email).toBe(
+      `link-${id}@example.invalid`
+    );
+  } finally {
+    browser.session = '';
+    await prisma.user.deleteMany({ where: { id: { in: [id, otherId] } } });
   }
 });
