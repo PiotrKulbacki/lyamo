@@ -59,7 +59,10 @@ export async function enqueueMail(
   });
   // Publish before commit: a publish failure rolls the transaction back. An early
   // delivery retries until the row is visible, so a committed job has a wakeup.
-  if (process.env.VERCEL_ENV === 'production') {
+  if (
+    process.env.VERCEL_ENV === 'production' ||
+    (process.env.VERCEL_ENV === 'preview' && env.MAIL_QUEUE_PREVIEW_ENABLED === 'true')
+  ) {
     await send(
       'security-mail',
       { id },
