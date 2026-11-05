@@ -4,7 +4,7 @@ Aktualizacja: 2026-11-04. S00 i S01 scalone do dev oraz main. S01 wdrożone na l
 
 Następne zadanie: **odbiór S02**. Ostatni raport: [S02](reports/S02.md).
 
-S02 (2026-11-05): implementacja na `codex/security-s02`, PR do `main` według korekty użytkownika. Konta i hasła pozostają bez zmian; wyłączone łączenie po e-mailu, OIDC/PKCE/nonce i jednorazowy state, normalizacja z kontrolą kolizji. Lokalny quality i CI są źródłem weryfikacji kodu; bieżący wynik CI w PR. Brakuje kontrolowanego testu rzeczywistego Google, więc odbiór pozostaje otwarty. Produkcja bez zmian; merge wyłącznie użytkownika. S03 nie rozpoczęto.
+S02 (2026-11-05): implementacja na `codex/security-s02`, PR do `main` według korekty użytkownika. Konta i hasła pozostają bez zmian; wyłączone łączenie po e-mailu, OIDC/PKCE/nonce i jednorazowy state, normalizacja z kontrolą kolizji. Lokalny quality i CI są źródłem weryfikacji kodu; bieżący wynik CI w PR. Brakuje kontrolowanego testu rzeczywistego Google, więc odbiór pozostaje otwarty. Pierwszy automatyczny build Preview zastosował addytywną migrację na współdzielonej bazie produkcyjnej (bez zmian kont/haseł). Poprawka blokuje kolejne migracje w Preview do potwierdzenia izolacji; kod Production bez merge pozostaje dotychczasowy. Merge wyłącznie użytkownika. S03 nie rozpoczęto.
 
 Zgłoszona regresja po S01: udane Google OAuth wracało na landing page po usunięciu
 przekierowania middleware. Osobna [poprawka logowania](reports/S01-google-login-hotfix.md)
