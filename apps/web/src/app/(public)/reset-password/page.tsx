@@ -1,5 +1,7 @@
 'use client';
 
+import { authFetch } from '@shared/features/auth/client-request';
+
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -41,7 +43,7 @@ function ResetPasswordForm() {
         return;
       }
 
-      const response = await fetch('/api/auth/reset-password', {
+      const response = await authFetch('/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),

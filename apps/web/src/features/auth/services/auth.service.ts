@@ -16,6 +16,8 @@ import { touchUserLastActive } from '@web/features/auth/services/last-active.ser
 export { toSafeUser };
 
 const BCRYPT_ROUNDS = 12;
+// Valid cost-12 bcrypt salt/hash, no user's credential. No lazy first-request hash.
+export const DUMMY_PASSWORD_HASH = '$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/PgBkqquzi.Ss7KIUgO2t0jWMUW';
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, BCRYPT_ROUNDS);

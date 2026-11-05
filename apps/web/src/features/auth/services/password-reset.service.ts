@@ -13,7 +13,7 @@ const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 
 export async function createAndSendPasswordReset(
   email: string,
-  options?: { locale?: string | null }
+  options?: { locale?: string | null; queuedOnly?: boolean }
 ): Promise<void> {
   const user = await findUserByEmail(email);
 
@@ -40,7 +40,7 @@ export async function createAndSendPasswordReset(
       name: current.name,
     });
   });
-  if (id) await deliverMailJob(id);
+  if (id && !options?.queuedOnly) await deliverMailJob(id);
 }
 
 export async function resetPasswordWithToken(
@@ -75,7 +75,7 @@ export async function resetPasswordWithToken(
 export async function createAndSendEmailVerification(
   userId: string,
   email: string,
-  options?: { locale?: string | null; name?: string | null }
+  options?: { locale?: string | null; name?: string | null; queuedOnly?: boolean }
 ): Promise<void> {
   const id = await prisma.$transaction(async (tx) => {
     await lockUser(tx, userId);
@@ -105,7 +105,7 @@ export async function createAndSendEmailVerification(
       registrationExpiresAt: user.registrationExpiresAt?.toISOString(),
     });
   });
-  if (id) await deliverMailJob(id);
+  if (id && !options?.queuedOnly) await deliverMailJob(id);
 }
 
 export async function verifyEmailWithToken(token: string): Promise<boolean> {
@@ -153,7 +153,7 @@ export async function verifyEmailWithToken(token: string): Promise<boolean> {
 
 export async function resendEmailVerification(
   email: string,
-  options?: { locale?: string | null }
+  options?: { locale?: string | null; queuedOnly?: boolean }
 ): Promise<void> {
   const user = await findUserByEmail(email);
 
@@ -164,5 +164,6 @@ export async function resendEmailVerification(
   await createAndSendEmailVerification(user.id, user.email, {
     locale: options?.locale,
     name: user.name,
+    queuedOnly: options?.queuedOnly,
   });
 }

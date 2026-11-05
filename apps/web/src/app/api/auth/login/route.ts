@@ -1,3 +1,4 @@
+import { readAuthBody, authBodyErrorResponse } from '@web/features/auth/lib/auth-body';
 import { findUserByEmail } from '@web/features/auth/services/email-identity.service';
 import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
@@ -11,10 +12,9 @@ import {
   setSessionCookie,
   toSafeUser,
   verifyPassword,
+  DUMMY_PASSWORD_HASH,
 } from '@web/features/auth/services/auth.service';
-import { checkAuthRateLimit } from '@web/lib/rate-limit';
-
-const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
+import { checkAuthRateLimit, authRateLimitResponse } from '@web/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
@@ -23,10 +23,10 @@ export async function POST(request: Request) {
 
     const rateLimit = await checkAuthRateLimit(request, 'login');
     if (!rateLimit.allowed) {
-      return jsonError(RATE_LIMIT_ERROR, 429);
+      return authRateLimitResponse(rateLimit);
     }
 
-    const body = await request.json();
+    const body = await readAuthBody(request);
     const parsed = loginSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -34,16 +34,15 @@ export async function POST(request: Request) {
       return jsonError(firstError, 400);
     }
 
+    const subjectLimit = await checkAuthRateLimit(request, 'login', parsed.data.email);
+    if (!subjectLimit.allowed) return authRateLimitResponse(subjectLimit);
+
     const { email, password } = parsed.data;
 
     const user = await findUserByEmail(email);
 
-    if (!user?.passwordHash) {
-      return jsonError('auth.errors.invalidCredentials', 401);
-    }
-
-    const isValid = await verifyPassword(password, user.passwordHash);
-    if (!isValid) {
+    const isValid = await verifyPassword(password, user?.passwordHash ?? DUMMY_PASSWORD_HASH);
+    if (!user?.passwordHash || !isValid) {
       return jsonError('auth.errors.invalidCredentials', 401);
     }
 
@@ -70,7 +69,7 @@ export async function POST(request: Request) {
     const response = NextResponse.json(buildAuthResponse(safeUser));
     setSessionCookie(response, sessionToken);
     return response;
-  } catch {
-    return jsonError('auth.errors.generic', 500);
+  } catch (error) {
+    return authBodyErrorResponse(error) ?? jsonError('auth.errors.generic', 500);
   }
 }

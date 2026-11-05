@@ -22,12 +22,15 @@ export const emailSchema = z
   .trim()
   .toLowerCase()
   .min(1, AUTH_ERROR_CODES.INVALID_EMAIL)
+  .max(254, AUTH_ERROR_CODES.INVALID_EMAIL)
   .email(AUTH_ERROR_CODES.INVALID_EMAIL);
 
 export const PASSWORD_MIN_LENGTH = 8;
+export const PASSWORD_MAX_LENGTH = 1024;
 
 export const passwordSchema = z
   .string()
+  .max(PASSWORD_MAX_LENGTH, 'auth.errors.inputTooLong')
   .min(PASSWORD_MIN_LENGTH, AUTH_ERROR_CODES.PASSWORD_TOO_SHORT)
   .regex(/\d/, AUTH_ERROR_CODES.PASSWORD_NEEDS_DIGIT)
   .regex(/[^A-Za-z0-9]/, AUTH_ERROR_CODES.PASSWORD_NEEDS_SPECIAL);
@@ -53,14 +56,20 @@ export function arePasswordRequirementsMet(password: string): boolean {
 
 export const loginSchema = z.object({
   email: emailSchema,
-  password: z.string().min(1, AUTH_ERROR_CODES.PASSWORD_REQUIRED),
+  password: z
+    .string()
+    .max(PASSWORD_MAX_LENGTH, 'auth.errors.inputTooLong')
+    .min(1, AUTH_ERROR_CODES.PASSWORD_REQUIRED),
 });
 
 export const registerSchema = z
   .object({
     email: emailSchema,
     password: passwordSchema,
-    confirmPassword: z.string().min(1, AUTH_ERROR_CODES.PASSWORDS_MISMATCH),
+    confirmPassword: z
+      .string()
+      .max(PASSWORD_MAX_LENGTH, 'auth.errors.inputTooLong')
+      .min(1, AUTH_ERROR_CODES.PASSWORDS_MISMATCH),
     name: z.string().min(2, AUTH_ERROR_CODES.NAME_TOO_SHORT).max(100).optional(),
     locale: z.enum(['en', 'de', 'pl', 'es']).optional(),
   })
@@ -71,9 +80,15 @@ export const registerSchema = z
 
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, AUTH_ERROR_CODES.CURRENT_PASSWORD_REQUIRED),
+    currentPassword: z
+      .string()
+      .max(PASSWORD_MAX_LENGTH, 'auth.errors.inputTooLong')
+      .min(1, AUTH_ERROR_CODES.CURRENT_PASSWORD_REQUIRED),
     newPassword: passwordSchema,
-    confirmPassword: z.string().min(1, AUTH_ERROR_CODES.PASSWORDS_MISMATCH),
+    confirmPassword: z
+      .string()
+      .max(PASSWORD_MAX_LENGTH, 'auth.errors.inputTooLong')
+      .min(1, AUTH_ERROR_CODES.PASSWORDS_MISMATCH),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: AUTH_ERROR_CODES.PASSWORDS_MISMATCH,
@@ -87,9 +102,15 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1, AUTH_ERROR_CODES.INVALID_RESET_TOKEN),
+    token: z
+      .string()
+      .min(1, AUTH_ERROR_CODES.INVALID_RESET_TOKEN)
+      .max(256, AUTH_ERROR_CODES.INVALID_RESET_TOKEN),
     password: passwordSchema,
-    confirmPassword: z.string().min(1, AUTH_ERROR_CODES.PASSWORDS_MISMATCH),
+    confirmPassword: z
+      .string()
+      .max(PASSWORD_MAX_LENGTH, 'auth.errors.inputTooLong')
+      .min(1, AUTH_ERROR_CODES.PASSWORDS_MISMATCH),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: AUTH_ERROR_CODES.PASSWORDS_MISMATCH,

@@ -57,11 +57,13 @@
     },
     "success": {
       "login": "Successfully logged in",
-      "register": "Account created successfully",
+      "register": "Check your inbox if this address can be registered. If you already have an account, sign in or reset your password.",
       "logout": "Successfully logged out",
       "passwordChanged": "Password changed successfully"
     },
     "errors": {
+      "inputTooLong": "This value is too long.",
+      "temporarilyUnavailable": "The service is temporarily unavailable. Please wait before trying again.",
       "invalidEmail": "Please enter a valid email address",
       "passwordRequired": "Please enter your password",
       "passwordTooShort": "Password must be at least 8 characters",

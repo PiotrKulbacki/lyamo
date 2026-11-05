@@ -1,5 +1,7 @@
 'use client';
 
+import { authFetch } from '@shared/features/auth/client-request';
+
 import { safeAuthRedirect } from '@web/features/auth/lib/safe-redirect';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -65,7 +67,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       }
 
       const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
-      const response = await fetch(endpoint, {
+      const response = await authFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

@@ -2,7 +2,9 @@
 
 Aktualizacja: 2026-11-05. S00 i S01 scalone do dev oraz main. S01 wdrożone na lyamo.eu: Ready, Node 26, SHA `81a16f5`; kontrola HTTP 12/12.
 
-Bieżące zadanie: **S04 — weryfikacja i odbiór**. Ostatni raport: [S04](reports/S04.md).
+Bieżące zadanie: **S05 — implementacja gotowa, oczekuje publikacji/CI i odbioru po merge**. Raport: [S05](reports/S05.md).
+
+Użytkownik potwierdził odbiór S04 i wcześniejsze dostarczanie wiadomości; PR #88 scalony do main (`0403ddd`). Starsze zapisy o oczekiwaniu na odbiór S04 są historyczne. S05 rozpoczęto na `codex/security-s05`; zastany katalog `docs/plan-api-mcp/` pozostaje poza zadaniem.
 
 Historia S02 (stan przed potwierdzeniem użytkownika poniżej, obecnie S02 ukończone): implementacja na `codex/security-s02`, PR do `main` według korekty użytkownika. Konta i hasła pozostają bez zmian; wyłączone łączenie po e-mailu, OIDC/PKCE/nonce i jednorazowy state, normalizacja z kontrolą kolizji. Lokalny quality i CI są źródłem weryfikacji kodu; bieżący wynik CI w PR. Brakuje kontrolowanego testu rzeczywistego Google, więc odbiór pozostaje otwarty. Pierwszy automatyczny build Preview zastosował addytywną migrację na współdzielonej bazie produkcyjnej (bez zmian kont/haseł). Poprawka pomija kolejne migracje w Preview bez zatrzymywania builda; kod Production bez merge pozostaje dotychczasowy. Merge wyłącznie użytkownika. S03 nie rozpoczęto.
 
@@ -13,19 +15,19 @@ kieruje do panelu, strona główna sprawdza ważność sesji. [PR #81](https://g
 do `dev`, implementacja `7e48227`, [CI #118](https://github.com/PiotrKulbacki/lyamo/actions/runs/41907901963): success.
 To zapis historyczny po S01; bieżący stan S02 znajduje się powyżej.
 
-| Zadanie | Stan      | Raport                |
-| ------- | --------- | --------------------- |
-| S00     | ukończone | [S00](reports/S00.md) |
-| S01     | ukończone | [S01](reports/S01.md) |
-| S02     | ukończone | [S02](reports/S02.md) |
-| S03     | ukończone | [S03](reports/S03.md) |
-| S04     | w toku    | [S04](reports/S04.md) |
-| S05     | oczekuje  | —                     |
-| S06     | oczekuje  | —                     |
-| S07     | oczekuje  | —                     |
-| S08     | oczekuje  | —                     |
-| S09     | oczekuje  | —                     |
-| S10     | oczekuje  | —                     |
+| Zadanie | Stan                         | Raport                |
+| ------- | ---------------------------- | --------------------- |
+| S00     | ukończone                    | [S00](reports/S00.md) |
+| S01     | ukończone                    | [S01](reports/S01.md) |
+| S02     | ukończone                    | [S02](reports/S02.md) |
+| S03     | ukończone                    | [S03](reports/S03.md) |
+| S04     | ukończone                    | [S04](reports/S04.md) |
+| S05     | wymaga działania użytkownika | [S05](reports/S05.md) |
+| S06     | oczekuje                     | —                     |
+| S07     | oczekuje                     | —                     |
+| S08     | oczekuje                     | —                     |
+| S09     | oczekuje                     | —                     |
+| S10     | oczekuje                     | —                     |
 
 Stany: oczekuje / gotowe do rozpoczęcia / w toku / wymaga działania użytkownika / ukończone. Oznacz ukończenie tylko po spełnieniu kryteriów karty; brak połączenia z produkcją nie oznacza, że poprawka została wdrożona.
 

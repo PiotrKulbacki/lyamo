@@ -1,3 +1,8 @@
+import { claimAuthBudget } from '@web/features/auth/services/auth-throttle.service';
+import { createHmac } from 'node:crypto';
+import { isIP } from 'node:net';
+import { captureMessage } from '@sentry/nextjs';
+import { NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { env } from '@web/env';
@@ -27,13 +32,10 @@ const AI_RATE_LIMIT_PREFIX: Record<AiRateLimitScope, string> = {
 
 const CONTACT_RATE_LIMIT_PREFIX = `${UPSTASH_KEY_PREFIX}:contact`;
 const AUTH_RATE_LIMIT_PREFIX = `${UPSTASH_KEY_PREFIX}:auth`;
-const AUTH_RATE_LIMIT_WINDOW = '1 h';
-const AUTH_RATE_LIMIT_MAX = 10;
 
 let redisClient: Redis | null | undefined;
 const aiRateLimiters: Partial<Record<AiRateLimitScope, Ratelimit>> = {};
 let contactRateLimiter: Ratelimit | null | undefined;
-let authRateLimiter: Ratelimit | null | undefined;
 
 function getRedisClient(): Redis | null {
   if (redisClient !== undefined) {
@@ -96,39 +98,16 @@ function getContactRateLimiter(): Ratelimit | null {
   return contactRateLimiter;
 }
 
-function getAuthRateLimiter(): Ratelimit | null {
-  if (authRateLimiter !== undefined) {
-    return authRateLimiter;
-  }
-
-  const redis = getRedisClient();
-  if (!redis) {
-    authRateLimiter = null;
-    return null;
-  }
-
-  authRateLimiter = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(AUTH_RATE_LIMIT_MAX, AUTH_RATE_LIMIT_WINDOW),
-    prefix: AUTH_RATE_LIMIT_PREFIX,
-    analytics: true,
-  });
-
-  return authRateLimiter;
-}
-
+/** Only Vercel's ingress may supply this header. Other hosts share an unknown bucket
+ * until their proxy trust contract is explicitly implemented. Never parse caller XFF.
+ * https://vercel.com/docs/headers/request-headers#x-vercel-forwarded-for
+ */
 export function getClientIp(request: Request): string {
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0]?.trim() ?? 'unknown';
-  }
-
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp) {
-    return realIp;
-  }
-
-  return 'unknown';
+  if (process.env.VERCEL !== '1') return 'unknown';
+  const ip = request.headers.get('x-vercel-forwarded-for')?.trim();
+  if (!ip || !isIP(ip)) return 'unknown';
+  // Canonicalize alternate IPv6 spellings before keying the limiter.
+  return isIP(ip) === 6 ? new URL(`http://[${ip}]/`).hostname : ip;
 }
 
 export type RateLimitResult = {
@@ -239,34 +218,132 @@ export async function checkContactRateLimit(request: Request): Promise<RateLimit
   }
 }
 
-export async function checkAuthRateLimit(
-  request: Request,
-  scope: string,
-  userId?: string
-): Promise<RateLimitResult> {
-  const identifier = userId ? `user:${userId}` : `ip:${getClientIp(request)}`;
-  const key = `${AUTH_RATE_LIMIT_PREFIX}:${scope}:${identifier}`;
-  const limiter = getAuthRateLimiter();
+// Account windows expire: throttling never changes account state or credentials.
+export const AUTH_BUDGETS = {
+  login: { ip: 120, subject: 5, window: '1 m' },
+  register: { ip: 30, subject: 3, window: '1 h' },
+  'forgot-password': { ip: 60, subject: 5, window: '1 h' },
+  'resend-verification': { ip: 60, subject: 5, window: '1 h' },
+  'reset-password': { ip: 60, subject: 10, window: '15 m' },
+  'verify-email': { ip: 120, subject: 10, window: '15 m' },
+  refresh: { ip: 600, subject: 60, window: '1 m' },
+  'change-password': { ip: 60, subject: 10, window: '15 m' },
+  reauth: { ip: 60, subject: 10, window: '15 m' },
+  google: { ip: 120, subject: 120, window: '15 m' },
+} as const;
+export type AuthRateLimitScope = keyof typeof AUTH_BUDGETS;
+type AuthLimitResult = RateLimitResult & { unavailable?: boolean };
+const authLimiters = new Map<string, Ratelimit>();
+let lastAuthAlarm = 0;
 
-  if (!limiter) {
-    return resolveMissingLimiter(key, AUTH_RATE_LIMIT_MAX);
+function authUnavailable(scope: AuthRateLimitScope): AuthLimitResult {
+  // One alert per warm instance per minute. Never include identifiers or Redis errors.
+  if (Date.now() - lastAuthAlarm >= 60_000) {
+    lastAuthAlarm = Date.now();
+    console.error('AUTH_RATE_LIMIT_UNAVAILABLE', { scope });
+    captureMessage('AUTH_RATE_LIMIT_UNAVAILABLE', { level: 'error', tags: { scope } });
   }
+  return {
+    allowed: false,
+    unavailable: true,
+    remaining: 0,
+    reset: Date.now() + 60_000,
+    limit: 0,
+    key: scope,
+  };
+}
 
+async function authBudget(
+  scope: AuthRateLimitScope,
+  bucket: string,
+  value: string,
+  max: number,
+  window: '1 m' | '1 h' | '15 m'
+): Promise<AuthLimitResult> {
+  // Domain-separated keyed digest prevents email dictionary attacks against Redis keys.
+  const digest = createHmac('sha256', env.AUTH_SECRET)
+    .update(`lyamo-auth-limit-v2:${bucket}:${value}`)
+    .digest('hex');
+  const prefix = `${AUTH_RATE_LIMIT_PREFIX}:v2:${bucket}`;
+  const fallback = async () => {
+    authUnavailable(scope); // alarm also on successful fallback
+    try {
+      const windowMs = window === '1 m' ? 60_000 : window === '1 h' ? 3600_000 : 900_000;
+      return await claimAuthBudget(`${prefix}:${digest}`, max, windowMs);
+    } catch {
+      return authUnavailable(scope);
+    }
+  };
   try {
-    const result = await limiter.limit(`${scope}:${identifier}`);
-
-    console.log(
-      `Rate Limit Check: Key: ${key}, Remaining: ${result.remaining}, Total: ${AUTH_RATE_LIMIT_MAX}`
-    );
-
+    const redis = getRedisClient();
+    if (!redis) return fallback();
+    let limiter = authLimiters.get(prefix);
+    if (!limiter) {
+      limiter = new Ratelimit({
+        redis,
+        prefix,
+        limiter: Ratelimit.slidingWindow(max, window),
+        analytics: false,
+        timeout: 1500,
+        ephemeralCache: false,
+      });
+      authLimiters.set(prefix, limiter);
+    }
+    const result = await limiter.limit(digest);
+    // The SDK returns success on timeout by default; auth must fail closed instead.
+    if (result.reason === 'timeout') return fallback();
     return {
       allowed: result.success,
       remaining: result.remaining,
       reset: result.reset,
-      limit: AUTH_RATE_LIMIT_MAX,
-      key,
+      limit: max,
+      key: prefix,
     };
   } catch {
-    return resolveLimiterError(key, AUTH_RATE_LIMIT_MAX);
+    return fallback();
   }
+}
+
+/** With no subject consumes the IP budget. With subject consumes only global account/
+ * mailbox/token budgets, after bounded schema validation and before DB/hash/mail work.
+ */
+export async function checkAuthRateLimit(
+  request: Request,
+  scope: AuthRateLimitScope,
+  subject?: string
+): Promise<AuthLimitResult> {
+  const budget = AUTH_BUDGETS[scope];
+  if (subject === undefined)
+    return authBudget(scope, `${scope}:ip`, getClientIp(request), budget.ip, budget.window);
+  const result = await authBudget(
+    scope,
+    `${scope}:subject`,
+    subject.trim().toLowerCase(),
+    budget.subject,
+    budget.window
+  );
+  if (!result.allowed) return result;
+  if (scope === 'login')
+    return authBudget(scope, 'login:sustained', subject.trim().toLowerCase(), 30, '15 m');
+  // Shared mailbox allowance: changing operation/IP cannot multiply mail delivery.
+  if (scope === 'register' || scope === 'forgot-password' || scope === 'resend-verification')
+    return authBudget(scope, 'mail:subject', subject.trim().toLowerCase(), 6, '1 h');
+  return result;
+}
+
+export function authRateLimitResponse(result: AuthLimitResult): NextResponse {
+  return NextResponse.json(
+    {
+      error: result.unavailable
+        ? 'auth.errors.temporarilyUnavailable'
+        : 'api.errors.rateLimitExceeded',
+    },
+    {
+      status: result.unavailable ? 503 : 429,
+      headers: {
+        'Retry-After': String(Math.max(1, Math.ceil((result.reset - Date.now()) / 1000))),
+        'Cache-Control': 'no-store',
+      },
+    }
+  );
 }

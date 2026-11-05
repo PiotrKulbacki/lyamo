@@ -1,3 +1,4 @@
+import { authFetch } from '@shared/features/auth/client-request';
 import Toast from 'react-native-toast-message';
 import { DEFAULT_LOCALE, translateError, t } from '@shared/features/i18n';
 import { env } from '@mobile/env';
@@ -61,7 +62,7 @@ export async function apiRequest<T>(
   }
 
   try {
-    const response = await fetch(`${env.EXPO_PUBLIC_API_URL}${path}`, {
+    const response = await authFetch(`${env.EXPO_PUBLIC_API_URL}${path}`, {
       ...options,
       headers,
     });

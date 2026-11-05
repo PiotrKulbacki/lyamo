@@ -77,3 +77,16 @@ describe('registerSchema', () => {
     expect(result.success).toBe(false);
   });
 });
+
+it('rejects oversized passwords and addresses before server hashing', () => {
+  expect(
+    loginSchema.safeParse({ email: 'test@example.invalid', password: 'x'.repeat(1025) }).success
+  ).toBe(false);
+  expect(
+    loginSchema.safeParse({
+      email: 'x'.repeat(250) + '@example.invalid',
+      password: 'Synthetic123!',
+    }).success
+  ).toBe(false);
+  expect(passwordSchema.safeParse('Synthetic123!' + 'x'.repeat(1024)).success).toBe(false);
+});

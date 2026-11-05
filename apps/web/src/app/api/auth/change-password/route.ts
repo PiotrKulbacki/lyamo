@@ -1,3 +1,4 @@
+import { readAuthBody, authBodyErrorResponse } from '@web/features/auth/lib/auth-body';
 import {
   findSession,
   lockUser,
@@ -15,15 +16,15 @@ import { changePasswordSchema } from '@shared/features/auth/schemas';
 import { prisma } from '@lyamo/database';
 import { getAuthenticatedUser } from '@web/features/auth/lib/request-auth';
 import { hashPassword, jsonError, verifyPassword } from '@web/features/auth/services/auth.service';
-import { checkAuthRateLimit } from '@web/lib/rate-limit';
-
-const RATE_LIMIT_ERROR = 'api.errors.rateLimitExceeded';
+import { checkAuthRateLimit, authRateLimitResponse } from '@web/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
     const rejected = await protectMutation(request, { bearer: true });
     if (rejected) return rejected;
 
+    const ipLimit = await checkAuthRateLimit(request, 'change-password');
+    if (!ipLimit.allowed) return authRateLimitResponse(ipLimit);
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return jsonError('auth.errors.unauthorized', 401);
@@ -31,14 +32,14 @@ export async function POST(request: Request) {
 
     const rateLimit = await checkAuthRateLimit(request, 'change-password', user.id);
     if (!rateLimit.allowed) {
-      return jsonError(RATE_LIMIT_ERROR, 429);
+      return authRateLimitResponse(rateLimit);
     }
 
     if (!user.hasPassword) {
       return jsonError('auth.errors.oauthPasswordChangeUnavailable', 400);
     }
 
-    const body = await request.json();
+    const body = await readAuthBody(request);
     const parsed = changePasswordSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
     const response = NextResponse.json({ ok: true });
     setSessionCookie(response, token);
     return response;
-  } catch {
-    return jsonError('auth.errors.generic', 500);
+  } catch (error) {
+    return authBodyErrorResponse(error) ?? jsonError('auth.errors.generic', 500);
   }
 }

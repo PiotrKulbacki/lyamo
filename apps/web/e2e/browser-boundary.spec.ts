@@ -16,17 +16,17 @@ test.use({ actionTimeout: 30_000 });
 const password = 'Synthetic-test-password-123!';
 let id: string;
 let email: string;
-test.beforeAll(async () => {
+test.beforeEach(async () => {
   id = randomUUID();
   email = `s01-${id}@example.invalid`;
   await prisma.user.create({
     data: { id, email, passwordHash: await bcrypt.hash(password, 4), emailVerifiedAt: new Date() },
   });
 });
-test.afterAll(async () => {
-  await prisma.user.delete({ where: { id } });
-  await prisma.$disconnect();
+test.afterEach(async () => {
+  await prisma.user.deleteMany({ where: { id } });
 });
+test.afterAll(() => prisma.$disconnect());
 
 for (const redirect of [
   '/history',
@@ -219,5 +219,35 @@ test('successful login keeps a loading screen while dashboard navigation is pend
     await expect(page).toHaveURL(`${baseURL}/dashboard`, { timeout: 30_000 });
   } finally {
     releaseNavigation();
+  }
+});
+
+test('account login budget survives forged forwarding headers and does not block another owner', async ({
+  request,
+}) => {
+  for (let i = 0; i < 5; i++) {
+    const failed = await request.post('/api/auth/login', {
+      headers: { 'x-forwarded-for': `192.0.2.${i}`, 'x-vercel-forwarded-for': `198.51.100.${i}` },
+      data: { email, password: 'incorrect-synthetic-password' },
+    });
+    expect(failed.status()).toBe(401);
+  }
+  const blocked = await request.post('/api/auth/login', { data: { email, password } });
+  expect(blocked.status()).toBe(429);
+  expect(Number(blocked.headers()['retry-after'])).toBeGreaterThan(0);
+  const otherEmail = `independent-${randomUUID()}@example.invalid`;
+  const other = await prisma.user.create({
+    data: {
+      email: otherEmail,
+      passwordHash: await bcrypt.hash(password, 4),
+      emailVerifiedAt: new Date(),
+    },
+  });
+  try {
+    expect(
+      (await request.post('/api/auth/login', { data: { email: otherEmail, password } })).status()
+    ).toBe(200);
+  } finally {
+    await prisma.user.delete({ where: { id: other.id } });
   }
 });

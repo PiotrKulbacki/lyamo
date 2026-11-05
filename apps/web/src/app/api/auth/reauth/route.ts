@@ -1,3 +1,4 @@
+import { readAuthBody, authBodyErrorResponse } from '@web/features/auth/lib/auth-body';
 import { prisma } from '@lyamo/database';
 import { NextResponse } from 'next/server';
 import { protectMutation } from '@web/features/auth/lib/mutation-protection';
@@ -8,16 +9,18 @@ import {
   securityEvent,
 } from '@web/features/auth/services/session-lifecycle.service';
 import { jsonError, verifyPassword } from '@web/features/auth/services/auth.service';
-import { checkAuthRateLimit } from '@web/lib/rate-limit';
+import { checkAuthRateLimit, authRateLimitResponse } from '@web/lib/rate-limit';
 export async function POST(request: Request) {
   try {
     const rejected = await protectMutation(request, { bearer: true });
     if (rejected) return rejected;
+    const ipLimit = await checkAuthRateLimit(request, 'reauth');
+    if (!ipLimit.allowed) return authRateLimitResponse(ipLimit);
     const session = await findSession(request);
     if (!session) return jsonError('auth.errors.unauthorized', 401);
-    if (!(await checkAuthRateLimit(request, 'reauth', session.userId)).allowed)
-      return jsonError('api.errors.rateLimitExceeded', 429);
-    const body = await request.json();
+    const limit = await checkAuthRateLimit(request, 'reauth', session.userId);
+    if (!limit.allowed) return authRateLimitResponse(limit);
+    const body = await readAuthBody(request);
     if (
       !session.user.passwordHash ||
       typeof body.password !== 'string' ||
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
       return true;
     });
     return ok ? NextResponse.json({ ok: true }) : jsonError('auth.errors.unauthorized', 401);
-  } catch {
-    return jsonError('auth.errors.generic', 500);
+  } catch (error) {
+    return authBodyErrorResponse(error) ?? jsonError('auth.errors.generic', 500);
   }
 }
