@@ -1,3 +1,4 @@
+import { findUserByEmail } from '@web/features/auth/services/email-identity.service';
 import { prisma } from '@lyamo/database';
 import { generateToken, hashToken } from '@web/features/auth/lib/tokens';
 import {
@@ -12,7 +13,7 @@ export async function createAndSendPasswordReset(
   email: string,
   options?: { locale?: string | null }
 ): Promise<void> {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await findUserByEmail(email);
 
   // Always no-op outwardly; only send when the account has a local password.
   if (!user?.passwordHash) {
@@ -131,7 +132,7 @@ export async function resendEmailVerification(
   email: string,
   options?: { locale?: string | null }
 ): Promise<void> {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await findUserByEmail(email);
 
   if (!user || user.emailVerifiedAt || !user.passwordHash) {
     return;

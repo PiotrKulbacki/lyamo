@@ -1,3 +1,4 @@
+import { findUserByEmail } from '@web/features/auth/services/email-identity.service';
 import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { registerSchema } from '@shared/features/auth/schemas';
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
 
     const { email, password, name, locale } = parsed.data;
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return jsonError('auth.errors.userExists', 409);
     }

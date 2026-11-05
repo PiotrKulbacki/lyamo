@@ -78,6 +78,7 @@
       "unauthorized": "Sie müssen angemeldet sein, um fortzufahren",
       "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an",
       "oauthFailed": "Google-Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut",
+      "oauthAccountExists": "Für diese E-Mail besteht bereits ein Konto. Nutzen Sie Ihre bisherige Anmeldemethode. Falls Sie sich nicht registriert haben, setzen Sie zuerst das Passwort zurück und bestätigen Sie dann die E-Mail. Google verknüpft Konten nicht automatisch.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut",
       "networkError": "Netzwerkfehler. Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut",
       "legalAcceptanceRequired": "Bitte akzeptieren Sie die Allgemeinen Geschäftsbedingungen und die Datenschutzrichtlinie, um ein Konto zu erstellen"

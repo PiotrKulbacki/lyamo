@@ -78,6 +78,7 @@
       "unauthorized": "Debes iniciar sesión para continuar",
       "sessionExpired": "Tu sesión ha expirado. Inicia sesión de nuevo",
       "oauthFailed": "Error al iniciar sesión con Google. Inténtalo de nuevo",
+      "oauthAccountExists": "Este correo ya tiene una cuenta. Usa tu método de acceso habitual. Si no la registraste, restablece primero la contraseña y después verifica el correo. Google no vinculará las cuentas automáticamente.",
       "generic": "Algo salió mal. Inténtalo de nuevo",
       "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo",
       "legalAcceptanceRequired": "Para crear una cuenta debes aceptar los Términos de servicio y la Política de privacidad"

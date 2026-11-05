@@ -278,3 +278,14 @@ model UserCategoryLimit {
   @@index([userId])
   @@map("user_category_limits")
 }
+
+// Short-lived browser-bound OIDC transactions. Consumed before the token exchange.
+model OAuthAttempt {
+  stateHash    String   @id
+  nonce        String
+  codeVerifier String
+  expiresAt    DateTime
+
+  @@index([expiresAt])
+  @@map("oauth_attempts")
+}

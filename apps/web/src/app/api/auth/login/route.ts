@@ -1,7 +1,7 @@
+import { findUserByEmail } from '@web/features/auth/services/email-identity.service';
 import { protectMutation } from '@web/features/auth/lib/mutation-protection';
 import { NextResponse } from 'next/server';
 import { loginSchema } from '@shared/features/auth/schemas';
-import { prisma } from '@lyamo/database';
 import {
   buildAuthResponse,
   createMobileTokens,
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const { email, password } = parsed.data;
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await findUserByEmail(email);
 
     if (!user?.passwordHash) {
       return jsonError('auth.errors.invalidCredentials', 401);

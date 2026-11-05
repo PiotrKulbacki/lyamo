@@ -13,8 +13,14 @@ export const AUTH_ERROR_CODES = {
   NAME_TOO_SHORT: 'auth.errors.nameTooShort',
 } as const;
 
-const emailSchema = z
+export function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
+
+export const emailSchema = z
   .string()
+  .trim()
+  .toLowerCase()
   .min(1, AUTH_ERROR_CODES.INVALID_EMAIL)
   .email(AUTH_ERROR_CODES.INVALID_EMAIL);
 
