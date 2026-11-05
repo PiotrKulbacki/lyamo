@@ -4,6 +4,7 @@
   },
   "auth": {
     "labels": {
+      "redirecting": "Te llevamos a la siguiente página…",
       "email": "Correo electrónico",
       "password": "Contraseña",
       "confirmPassword": "Confirmar contraseña",
@@ -48,6 +49,7 @@
       "success": "Contraseña actualizada. Ya puedes iniciar sesión."
     },
     "verify": {
+      "registrationExpiry": "Verifica tu correo en los 3 días siguientes al registro. Después, el registro sin verificar caduca y se elimina automáticamente durante la limpieza diaria. Reenviar el enlace no amplía este plazo.",
       "title": "Verifica tu correo",
       "checkInbox": "Enviamos un enlace de verificación a {{email}}. Ábrelo para activar tu cuenta.",
       "success": "Correo verificado. Ya puedes iniciar sesión.",

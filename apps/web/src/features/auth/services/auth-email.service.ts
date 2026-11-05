@@ -30,6 +30,7 @@ export async function sendPasswordResetEmail(params: {
 }
 
 export async function sendEmailVerificationEmail(params: {
+  registrationExpiresAt?: Date | null;
   email: string;
   token: string;
   locale?: string | null;
@@ -37,6 +38,7 @@ export async function sendEmailVerificationEmail(params: {
 }): Promise<boolean> {
   try {
     const copy = buildVerifyEmail({
+      registrationExpiresAt: params.registrationExpiresAt,
       token: params.token,
       locale: params.locale,
       name: params.name,

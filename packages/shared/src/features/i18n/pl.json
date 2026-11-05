@@ -4,6 +4,7 @@
   },
   "auth": {
     "labels": {
+      "redirecting": "Przechodzimy dalej…",
       "email": "E-mail",
       "password": "Hasło",
       "confirmPassword": "Potwierdź hasło",
@@ -48,6 +49,7 @@
       "success": "Hasło zaktualizowane. Możesz się zalogować."
     },
     "verify": {
+      "registrationExpiry": "Potwierdź adres w ciągu 3 dni od rejestracji. Po tym czasie niepotwierdzona rejestracja wygasa i jest automatycznie usuwana podczas codziennego porządkowania. Ponowna wysyłka linku nie przedłuża tego terminu.",
       "title": "Zweryfikuj e-mail",
       "checkInbox": "Wysłaliśmy link weryfikacyjny na {{email}}. Otwórz go, aby aktywować konto.",
       "success": "E-mail zweryfikowany. Możesz się zalogować.",

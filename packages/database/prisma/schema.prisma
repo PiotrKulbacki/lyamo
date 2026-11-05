@@ -49,6 +49,7 @@ model User {
   pastDueReminderSentAt  DateTime?
   lastActiveAt           DateTime  @default(now())
   emailVerifiedAt        DateTime?
+  registrationExpiresAt  DateTime?
 
   accounts          Account[]
   sessions          Session[]
@@ -63,6 +64,7 @@ model User {
   periodAggregations     UserPeriodAggregation[]
   aiInsight              AiInsight?
 
+  @@index([registrationExpiresAt])
   @@index([lastActiveAt])
   @@index([pastDueSince])
   @@map("users")

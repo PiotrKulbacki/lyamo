@@ -4,6 +4,7 @@
   },
   "auth": {
     "labels": {
+      "redirecting": "Taking you to the next page…",
       "email": "Email",
       "password": "Password",
       "confirmPassword": "Confirm password",
@@ -48,6 +49,7 @@
       "success": "Password updated. You can log in now."
     },
     "verify": {
+      "registrationExpiry": "Verify your email within 3 days of registration. After that, an unverified registration expires and is automatically deleted during daily cleanup. Resending the link does not extend this deadline.",
       "title": "Verify your email",
       "checkInbox": "We sent a verification link to {{email}}. Open it to activate your account.",
       "success": "Email verified. You can log in now.",

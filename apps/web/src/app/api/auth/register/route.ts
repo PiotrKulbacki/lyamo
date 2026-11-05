@@ -51,6 +51,7 @@ export async function POST(request: Request) {
         financialMonthStartDay: getFinancialMonthStartDayFromDate(now),
         lastQuotaResetAt: now,
         emailVerifiedAt: null,
+        registrationExpiresAt: new Date(now.getTime() + 72 * 60 * 60 * 1000),
       },
     });
 
@@ -63,6 +64,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         requiresEmailVerification: true,
+        registrationExpiresAt: user.registrationExpiresAt?.toISOString(),
         email: user.email,
       },
       { status: 201 }

@@ -53,3 +53,7 @@ Commit `39afc81` w PR #74: równoległe checks/build/browser, końcowy quality, 
 Końcowy pomiar optymalizacji: [CI #109](https://github.com/PiotrKulbacki/lyamo/actions/runs/41881213744), commit `f63e84b`, **success, 88 s**. Wszystkie cztery zadania zielone. Kolejny commit uzupełnia wyłącznie dokumentację pomiaru; stan aktualnego head należy sprawdzić w PR #74.
 
 Aktualizacja na polecenie użytkownika: Preview pomija migracje i kontynuuje build (exit 0); nie wymaga już osobnego środowiska do ręcznego odbioru S02. Użytkownik zdecydował, że sprawdzi rzeczywiste Google na produkcji po własnym merge PR. Nie wykonano jeszcze tej próby i nie oznaczono pełnego odbioru S02. Baza Preview nadal może być współdzielona — nie używać jej do tworzenia danych testowych. Produkcyjny build nadal wykonuje migrate deploy; migracja S02 jest już zastosowana. Nie rozpoczęto S03.
+
+## Uzupełnienie po ręcznych próbach rejestracji (2026-11-05)
+
+Użytkownik potwierdził lokalną rejestrację i bramkę e-maila, zgłosił mignięcie formularza oraz zatwierdził 72-godzinny termin i usuwanie tylko przyszłych niepotwierdzonych rejestracji. Poprawka na `codex/auth-login-loading`, baza main `a3937ad`, oddzielny PR do main. [Raport](reports/registration-lifecycle.md) opisuje bezpieczny zakres, codzienny cleanup, addytywną migrację i utrzymanie loadera. Dotychczasowe konta pozostają poza nową polityką, nie wykonano ręcznych usunięć produkcyjnych. S03 nie rozpoczęto; odbiór Google w S02 pozostaje otwarty.

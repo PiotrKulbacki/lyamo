@@ -4,6 +4,7 @@
   },
   "auth": {
     "labels": {
+      "redirecting": "Sie werden weitergeleitet…",
       "email": "E-Mail",
       "password": "Passwort",
       "confirmPassword": "Passwort bestätigen",
@@ -48,6 +49,7 @@
       "success": "Passwort aktualisiert. Sie können sich jetzt anmelden."
     },
     "verify": {
+      "registrationExpiry": "Bestätigen Sie Ihre E-Mail innerhalb von 3 Tagen nach der Registrierung. Danach verfällt eine unbestätigte Registrierung und wird bei der täglichen Bereinigung automatisch gelöscht. Ein erneut gesendeter Link verlängert diese Frist nicht.",
       "title": "E-Mail bestätigen",
       "checkInbox": "Wir haben einen Bestätigungslink an {{email}} gesendet. Öffnen Sie ihn, um Ihr Konto zu aktivieren.",
       "success": "E-Mail bestätigt. Sie können sich jetzt anmelden.",
