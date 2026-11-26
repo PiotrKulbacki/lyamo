@@ -1,7 +1,7 @@
 import { t, type Locale } from '@shared/features/i18n';
 import { OPERATOR, OWNER_STRUCTURED_DATA as OWNER } from '@web/lib/legal';
 
-/** schema.org graph for the home page: product, owner and website. */
+/** schema.org graph for the home page: brand/product, owner and website. */
 export function buildHomeJsonLd(locale: Locale) {
   const productRef = { '@id': OWNER.productId };
   const personRef = { '@id': OWNER.person.id };
@@ -10,10 +10,10 @@ export function buildHomeJsonLd(locale: Locale) {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'WebApplication',
+        '@type': ['Brand', 'WebApplication'],
         ...productRef,
         name: OPERATOR.productName,
-        url: `${OWNER.siteUrl}/`,
+        url: OWNER.siteUrl,
         logo: `${OWNER.siteUrl}/lyamo-mark.png`,
         description: t('seo.home.description', locale),
         applicationCategory: 'FinanceApplication',

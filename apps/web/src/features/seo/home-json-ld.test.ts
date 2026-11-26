@@ -7,8 +7,10 @@ describe('buildHomeJsonLd', () => {
     const [product, person, website] = buildHomeJsonLd('de')['@graph'];
 
     expect(product).toMatchObject({
-      '@type': 'WebApplication',
+      '@type': ['Brand', 'WebApplication'],
       '@id': 'https://lyamo.eu/#lyamo',
+      name: 'Lyamo',
+      url: 'https://lyamo.eu',
       applicationCategory: 'FinanceApplication',
       description: t('seo.home.description', 'de'),
       author: { '@id': 'https://cavunio.com/#piotr-kulbacki' },
@@ -19,6 +21,14 @@ describe('buildHomeJsonLd', () => {
       '@id': 'https://cavunio.com/#piotr-kulbacki',
       name: 'Piotr Kulbacki',
       url: 'https://piotrkulbacki.com',
+      sameAs: [
+        'https://www.linkedin.com/in/it-piotr-kulbacki',
+        'https://www.facebook.com/profile.php?id=61568507043528',
+        'https://github.com/PiotrKulbacki',
+        'https://www.instagram.com/piotr.kulbacki/',
+        'https://www.tiktok.com/@piotr_kulbacki_youtube',
+        'https://www.youtube.com/@kulbackipiotr',
+      ],
       brand: [
         { '@id': 'https://lyamo.eu/#lyamo' },
         {
