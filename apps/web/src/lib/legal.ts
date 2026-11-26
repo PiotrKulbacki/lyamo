@@ -9,6 +9,30 @@ export const OPERATOR = {
   website: 'https://piotrkulbacki.com',
 } as const;
 
+/**
+ * Owner identity for JSON-LD. The owner (sole proprietorship) is presented by
+ * piotrkulbacki.com and owns every brand below. The `@id` values are shared with
+ * the owner's other sites (cavunio.com, dokiero.com) and must stay byte-identical.
+ */
+export const OWNER_STRUCTURED_DATA = {
+  siteUrl: 'https://lyamo.eu',
+  productId: 'https://lyamo.eu/#lyamo',
+  websiteId: 'https://lyamo.eu/#website',
+  person: {
+    id: 'https://cavunio.com/#piotr-kulbacki',
+    name: OPERATOR.legalName,
+    url: OPERATOR.website,
+    sameAs: [
+      'https://www.facebook.com/profile.php?id=61568507043528',
+      'https://www.instagram.com/piotr.kulbacki/',
+    ],
+  },
+  otherBrands: [
+    { id: 'https://cavunio.com/#cavunio', name: 'Cavunio', url: 'https://cavunio.com' },
+    { id: 'https://dokiero.com/#dokiero', name: 'Dokiero', url: 'https://dokiero.com' },
+  ],
+} as const;
+
 /** German VAT ID - public by law once issued. Set NEXT_PUBLIC_UST_IDNR. */
 export const UST_IDNR = process.env.NEXT_PUBLIC_UST_IDNR?.trim() ?? '';
 
