@@ -28,7 +28,15 @@ export function buildHomeJsonLd(locale: Locale) {
         name: OWNER.person.name,
         url: OWNER.person.url,
         sameAs: OWNER.person.sameAs,
-        brand: [productRef, ...OWNER.otherBrands.map((brand) => ({ '@type': 'Brand', ...brand }))],
+        brand: [
+          productRef,
+          ...OWNER.otherBrands.map(({ id, name, url }) => ({
+            '@type': 'Brand',
+            '@id': id,
+            name,
+            url,
+          })),
+        ],
       },
       {
         '@type': 'WebSite',
@@ -36,7 +44,7 @@ export function buildHomeJsonLd(locale: Locale) {
         name: OPERATOR.productName,
         url: `${OWNER.siteUrl}/`,
         inLanguage: locale,
-        publisher: productRef,
+        publisher: personRef,
       },
     ],
   };

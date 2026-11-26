@@ -10,8 +10,9 @@ export const OPERATOR = {
 } as const;
 
 /**
- * Owner identity for JSON-LD. The `@id` values are shared with the owner's other
- * sites (cavunio.com) and must stay byte-identical across them.
+ * Owner identity for JSON-LD. The owner (sole proprietorship) is presented by
+ * piotrkulbacki.com and owns every brand below. The `@id` values are shared with
+ * the owner's other sites (cavunio.com, dokiero.com) and must stay byte-identical.
  */
 export const OWNER_STRUCTURED_DATA = {
   siteUrl: 'https://lyamo.eu',
@@ -20,15 +21,15 @@ export const OWNER_STRUCTURED_DATA = {
   person: {
     id: 'https://cavunio.com/#piotr-kulbacki',
     name: OPERATOR.legalName,
-    url: 'https://cavunio.com',
+    url: OPERATOR.website,
     sameAs: [
       'https://www.facebook.com/profile.php?id=61568507043528',
       'https://www.instagram.com/piotr.kulbacki/',
     ],
   },
   otherBrands: [
-    { name: 'Cavunio', url: 'https://cavunio.com' },
-    { name: 'Dokiero', url: 'https://dokiero.com' },
+    { id: 'https://cavunio.com/#cavunio', name: 'Cavunio', url: 'https://cavunio.com' },
+    { id: 'https://dokiero.com/#dokiero', name: 'Dokiero', url: 'https://dokiero.com' },
   ],
 } as const;
 

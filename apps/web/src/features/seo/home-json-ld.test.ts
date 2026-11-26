@@ -18,17 +18,30 @@ describe('buildHomeJsonLd', () => {
       '@type': 'Person',
       '@id': 'https://cavunio.com/#piotr-kulbacki',
       name: 'Piotr Kulbacki',
-      url: 'https://cavunio.com',
+      url: 'https://piotrkulbacki.com',
       brand: [
         { '@id': 'https://lyamo.eu/#lyamo' },
-        { '@type': 'Brand', name: 'Cavunio', url: 'https://cavunio.com' },
-        { '@type': 'Brand', name: 'Dokiero', url: 'https://dokiero.com' },
+        {
+          '@type': 'Brand',
+          '@id': 'https://cavunio.com/#cavunio',
+          name: 'Cavunio',
+          url: 'https://cavunio.com',
+        },
+        {
+          '@type': 'Brand',
+          '@id': 'https://dokiero.com/#dokiero',
+          name: 'Dokiero',
+          url: 'https://dokiero.com',
+        },
       ],
     });
     expect(website).toMatchObject({
       '@type': 'WebSite',
+      '@id': 'https://lyamo.eu/#website',
+      name: 'Lyamo',
+      url: 'https://lyamo.eu/',
       inLanguage: 'de',
-      publisher: { '@id': 'https://lyamo.eu/#lyamo' },
+      publisher: { '@id': 'https://cavunio.com/#piotr-kulbacki' },
     });
   });
 });
