@@ -359,7 +359,9 @@
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
       "cookieSettings": "Cookie settings",
-      "contact": "Contact"
+      "contact": "Contact",
+      "myProducts": "My products",
+      "portfolio": "Portfolio"
     },
     "aria": {
       "billingCurrency": "Billing currency",

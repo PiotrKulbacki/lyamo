@@ -3,12 +3,19 @@ import { t } from '@shared/features/i18n';
 import { buildHomeJsonLd, serializeJsonLd } from './home-json-ld';
 
 describe('buildHomeJsonLd', () => {
-  it('links product, owner and website through stable @id values', () => {
-    const [product, person, website] = buildHomeJsonLd('de')['@graph'];
+  it('links brand, app, owner and website through stable @id values', () => {
+    const [brand, app, person, website] = buildHomeJsonLd('de')['@graph'];
 
-    expect(product).toMatchObject({
-      '@type': ['Brand', 'WebApplication'],
+    expect(brand).toEqual({
+      '@type': 'Brand',
       '@id': 'https://lyamo.eu/#lyamo',
+      name: 'Lyamo',
+      url: 'https://lyamo.eu',
+      logo: 'https://lyamo.eu/lyamo-mark.png',
+    });
+    expect(app).toMatchObject({
+      '@type': 'WebApplication',
+      '@id': 'https://lyamo.eu/#app',
       name: 'Lyamo',
       url: 'https://lyamo.eu',
       applicationCategory: 'FinanceApplication',
@@ -49,7 +56,7 @@ describe('buildHomeJsonLd', () => {
       '@type': 'WebSite',
       '@id': 'https://lyamo.eu/#website',
       name: 'Lyamo',
-      url: 'https://lyamo.eu/',
+      url: 'https://lyamo.eu',
       inLanguage: 'de',
       publisher: { '@id': 'https://cavunio.com/#piotr-kulbacki' },
     });

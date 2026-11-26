@@ -359,7 +359,9 @@
       "terms": "Nutzungsbedingungen",
       "privacy": "Datenschutz",
       "cookieSettings": "Cookie-Einstellungen",
-      "contact": "Kontakt"
+      "contact": "Kontakt",
+      "myProducts": "Meine Produkte",
+      "portfolio": "Portfolio"
     },
     "aria": {
       "billingCurrency": "Abrechnungswährung",
