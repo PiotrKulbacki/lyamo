@@ -361,7 +361,9 @@
       "terms": "Regulamin",
       "privacy": "Polityka prywatności",
       "cookieSettings": "Ustawienia cookies",
-      "contact": "Kontakt"
+      "contact": "Kontakt",
+      "myProducts": "Moje produkty",
+      "portfolio": "Portfolio"
     },
     "aria": {
       "billingCurrency": "Waluta płatności",

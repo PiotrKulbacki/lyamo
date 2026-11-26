@@ -14,10 +14,12 @@ export const OPERATOR = {
  * piotrkulbacki.com and owns every brand below. The `@id` values are shared with
  * the owner's other sites (piotrkulbacki.com, cavunio.com, dokiero.com) and must stay
  * byte-identical, as must the person's `name`, `url` and `sameAs` (same order).
+ * Site URLs are written without a trailing slash, as on the owner's other sites.
  */
 export const OWNER_STRUCTURED_DATA = {
   siteUrl: 'https://lyamo.eu',
-  productId: 'https://lyamo.eu/#lyamo',
+  brandId: 'https://lyamo.eu/#lyamo',
+  appId: 'https://lyamo.eu/#app',
   websiteId: 'https://lyamo.eu/#website',
   person: {
     id: 'https://cavunio.com/#piotr-kulbacki',

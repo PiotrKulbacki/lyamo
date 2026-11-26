@@ -1,20 +1,26 @@
 import { t, type Locale } from '@shared/features/i18n';
 import { OPERATOR, OWNER_STRUCTURED_DATA as OWNER } from '@web/lib/legal';
 
-/** schema.org graph for the home page: brand/product, owner and website. */
+/** schema.org graph for the home page: brand, app, owner and website. */
 export function buildHomeJsonLd(locale: Locale) {
-  const productRef = { '@id': OWNER.productId };
+  const brandRef = { '@id': OWNER.brandId };
   const personRef = { '@id': OWNER.person.id };
 
   return {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': ['Brand', 'WebApplication'],
-        ...productRef,
+        '@type': 'Brand',
+        ...brandRef,
         name: OPERATOR.productName,
         url: OWNER.siteUrl,
         logo: `${OWNER.siteUrl}/lyamo-mark.png`,
+      },
+      {
+        '@type': 'WebApplication',
+        '@id': OWNER.appId,
+        name: OPERATOR.productName,
+        url: OWNER.siteUrl,
         description: t('seo.home.description', locale),
         applicationCategory: 'FinanceApplication',
         operatingSystem: 'Web',
@@ -29,7 +35,7 @@ export function buildHomeJsonLd(locale: Locale) {
         url: OWNER.person.url,
         sameAs: OWNER.person.sameAs,
         brand: [
-          productRef,
+          brandRef,
           ...OWNER.otherBrands.map(({ id, name, url }) => ({
             '@type': 'Brand',
             '@id': id,
@@ -42,7 +48,7 @@ export function buildHomeJsonLd(locale: Locale) {
         '@type': 'WebSite',
         '@id': OWNER.websiteId,
         name: OPERATOR.productName,
-        url: `${OWNER.siteUrl}/`,
+        url: OWNER.siteUrl,
         inLanguage: locale,
         publisher: personRef,
       },
