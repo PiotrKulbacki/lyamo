@@ -15,30 +15,24 @@ Aktualizacja: 2026-11-26. Jedyny plik stanu i przekazania pracy. Agent aktualizu
 
 - Właściciel: Piotr Kulbacki, jednoosobowa działalność. Strona firmy/wizytówka: https://piotrkulbacki.com — link w stopce zawsze tam prowadzi (`OPERATOR.website`).
 - Wszystkie produkty należą do tej firmy: Lyamo (lyamo.eu), Cavunio (cavunio.com), Dokiero (dokiero.com).
-- JSON-LD: Person `@id` = `https://cavunio.com/#piotr-kulbacki` (bez zmian, wspólny z innymi stronami), `url` = https://piotrkulbacki.com; marki: `https://lyamo.eu/#lyamo`, `https://cavunio.com/#cavunio`, `https://dokiero.com/#dokiero`. WebSite `https://lyamo.eu/#website` ma `publisher` = Person.
+- JSON-LD: Person `@id` = `https://cavunio.com/#piotr-kulbacki` (bez zmian, wspólny z innymi stronami), `url` = https://piotrkulbacki.com, `sameAs` = 6 profili w kolejności z piotrkulbacki.com (LinkedIn, Facebook, GitHub, Instagram `piotr.kulbacki`, TikTok `piotr_kulbacki_youtube`, YouTube); marki: `https://lyamo.eu/#lyamo`, `https://cavunio.com/#cavunio`, `https://dokiero.com/#dokiero`. Węzeł Lyamo ma typ `Brand` + `WebApplication` i `url` https://lyamo.eu. WebSite `https://lyamo.eu/#website` ma `publisher` = Person. Wzorcem są wartości z piotrkulbacki.com.
 - Merge wykonuje wyłącznie użytkownik; bez auto-merge.
 - Promocja dwóch darmowych miesięcy pozostaje kuponem Stripe.
 
 ## 3. Działania dla właściciela
 
-- Merge PR #91 (JSON-LD strony głównej), potem Rich Results Test i validator.schema.org dla https://lyamo.eu.
-- Decyzja o spójności tożsamości między stronami (patrz sekcja 5).
+- Merge PR z ujednoliceniem JSON-LD (`codex/json-ld-align-owner`), potem Rich Results Test i validator.schema.org dla adresu https://lyamo.eu (kod już przetestowany jako fragment: 0 błędów).
 - Program bezpieczeństwa: odbiór S05 i otwarcie nowego czatu dla S06 (polecenie w `docs/security/reports/S05.md`).
 
 ## 4. Zadanie w toku
 
-JSON-LD właściciela i marek na stronie głównej — gałąź `codex/home-json-ld`, PR #91.
-
-- Etap 1: graf WebApplication + Person + WebSite, escapowanie `<` — zrobione.
-- Etap 2: Person `url` → piotrkulbacki.com, `@id` marek Cavunio/Dokiero, WebSite `publisher` → Person, utworzenie tego pliku — zrobione.
-- Następny krok: merge przez użytkownika i walidacja na produkcji.
+Brak. Ostatnie: ujednolicenie JSON-LD z piotrkulbacki.com (raport `docs/reports/2026-11-26-json-ld-align-owner.md`), czeka na merge.
 
 ## 5. Inne otwarte sprawy
 
-- Niespójności JSON-LD między stronami (stan z 2026-11-26, poza tym repo):
-  - piotrkulbacki.com używa innych identyfikatorów (`https://piotrkulbacki.com/#person`, `#organization`) niż wspólny `https://cavunio.com/#piotr-kulbacki`, więc wyszukiwarki widzą dwie osoby.
-  - Instagram: piotrkulbacki.com podaje `piotr_kulbacki`, a Lyamo i Cavunio `piotr.kulbacki` — jeden adres jest prawdopodobnie błędny.
+- Niespójności JSON-LD między stronami (stan z 2026-11-26, poza tym repo; piotrkulbacki.com według właściciela już poprawione):
   - cavunio.com: Person `url` nadal https://cavunio.com, a marka Lyamo bez `@id` `https://lyamo.eu/#lyamo`.
-  - `#cavunio` jest tam typu OnlineStore, `#dokiero` typu SoftwareApplication, a Lyamo opisuje je jako Brand (te same `@id`, różne typy).
+  - `#cavunio` jest tam typu OnlineStore, `#dokiero` typu SoftwareApplication, a Lyamo i piotrkulbacki.com opisują je jako Brand (te same `@id`, różne typy).
 - Zastany, nieśledzony `docs/plan-api-mcp/` (plan API/MCP) — praca właściciela, nie ruszać bez polecenia.
-- WebApplication bez `offers`/`aggregateRating` nie kwalifikuje się do wyników rozszerzonych Google; dodanie wymaga prawdziwych danych cenowych.
+- Profile z `sameAs` nie są linkowane na lyamo.eu (widoczny jest tylko link do piotrkulbacki.com). Ewentualne linki do profili w stopce to decyzja właściciela.
+- Rich Results Test: Software App poprawny, 2 ostrzeżenia opcjonalne (`offers`, `aggregateRating`); dodanie wymaga prawdziwych danych cenowych i ocen.

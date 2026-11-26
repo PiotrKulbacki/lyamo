@@ -12,7 +12,8 @@ export const OPERATOR = {
 /**
  * Owner identity for JSON-LD. The owner (sole proprietorship) is presented by
  * piotrkulbacki.com and owns every brand below. The `@id` values are shared with
- * the owner's other sites (cavunio.com, dokiero.com) and must stay byte-identical.
+ * the owner's other sites (piotrkulbacki.com, cavunio.com, dokiero.com) and must stay
+ * byte-identical, as must the person's `name`, `url` and `sameAs` (same order).
  */
 export const OWNER_STRUCTURED_DATA = {
   siteUrl: 'https://lyamo.eu',
@@ -23,8 +24,12 @@ export const OWNER_STRUCTURED_DATA = {
     name: OPERATOR.legalName,
     url: OPERATOR.website,
     sameAs: [
+      'https://www.linkedin.com/in/it-piotr-kulbacki',
       'https://www.facebook.com/profile.php?id=61568507043528',
+      'https://github.com/PiotrKulbacki',
       'https://www.instagram.com/piotr.kulbacki/',
+      'https://www.tiktok.com/@piotr_kulbacki_youtube',
+      'https://www.youtube.com/@kulbackipiotr',
     ],
   },
   otherBrands: [
