@@ -21,4 +21,15 @@ describe('buildSitemapXml', () => {
     expect(xml).not.toContain('/login');
     expect(xml).not.toContain('/register');
   });
+
+  it('uses fixed per-page lastmod dates and omits changefreq and priority', () => {
+    const xml = buildSitemapXml();
+
+    expect(xml).toContain(
+      '<loc>https://lyamo.eu/impressum</loc>\n<lastmod>2026-09-09T22:03:04+02:00</lastmod>'
+    );
+    expect(xml).toBe(buildSitemapXml());
+    expect(xml).not.toContain('<changefreq>');
+    expect(xml).not.toContain('<priority>');
+  });
 });

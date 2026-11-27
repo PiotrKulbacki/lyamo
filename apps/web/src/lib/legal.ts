@@ -6,37 +6,31 @@ export const OPERATOR = {
   postalCode: '12051',
   city: 'Berlin',
   email: 'kontakt@lyamo.eu',
-  website: 'https://piotrkulbacki.com',
+  countryCode: 'DE',
+  website: 'https://piotrkulbacki.com/',
 } as const;
 
 /**
- * Owner identity for JSON-LD. The owner (sole proprietorship) is presented by
- * piotrkulbacki.com and owns every brand below. The `@id` values are shared with
- * the owner's other sites (piotrkulbacki.com, cavunio.com, dokiero.com) and must stay
- * byte-identical, as must the person's `name`, `url` and `sameAs` (same order).
- * Site URLs are written without a trailing slash, as on the owner's other sites.
+ * Identity for JSON-LD, per the shared standard for the owner's four sites
+ * (~/Developer/ebook-shop/docs/seo-encje.md, sections 1.1 and 3): `@id` values and the
+ * person's `name` and `url` must stay byte-identical on every site. Home page and entity
+ * `url` values end with a slash; subpage URLs do not (same as their canonical).
+ * The person's entity home is piotrkulbacki.com; this site only references it.
  */
 export const OWNER_STRUCTURED_DATA = {
-  siteUrl: 'https://lyamo.eu',
+  siteUrl: 'https://lyamo.eu/',
   brandId: 'https://lyamo.eu/#lyamo',
   appId: 'https://lyamo.eu/#app',
   websiteId: 'https://lyamo.eu/#website',
   person: {
-    id: 'https://cavunio.com/#piotr-kulbacki',
+    id: 'https://piotrkulbacki.com/#person',
     name: OPERATOR.legalName,
     url: OPERATOR.website,
-    sameAs: [
-      'https://www.linkedin.com/in/it-piotr-kulbacki',
-      'https://www.facebook.com/profile.php?id=61568507043528',
-      'https://github.com/PiotrKulbacki',
-      'https://www.instagram.com/piotr.kulbacki/',
-      'https://www.tiktok.com/@piotr_kulbacki_youtube',
-      'https://www.youtube.com/@kulbackipiotr',
-    ],
   },
+  /** The owner's other brands, linked in the footer and in llms.txt. */
   otherBrands: [
-    { id: 'https://cavunio.com/#cavunio', name: 'Cavunio', url: 'https://cavunio.com' },
-    { id: 'https://dokiero.com/#dokiero', name: 'Dokiero', url: 'https://dokiero.com' },
+    { name: 'Cavunio', url: 'https://cavunio.com/' },
+    { name: 'Dokiero', url: 'https://dokiero.com/' },
   ],
 } as const;
 

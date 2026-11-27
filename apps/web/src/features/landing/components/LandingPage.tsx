@@ -17,6 +17,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import type { BillingCurrency } from '@shared/features/billing';
+import { DEFAULT_BILLING_CURRENCY } from '@shared/features/billing/checkout';
 import {
   BillingCurrencySwitcher,
   readStoredBillingCurrency,
@@ -61,10 +62,10 @@ const TRUST_LEGAL_LINKS = [
 
 export function LandingPage() {
   const t = useT();
-  const [billingCurrency, setBillingCurrency] = useState<BillingCurrency>('PLN');
+  const [billingCurrency, setBillingCurrency] = useState<BillingCurrency>(DEFAULT_BILLING_CURRENCY);
 
   useEffect(() => {
-    setBillingCurrency(readStoredBillingCurrency() ?? 'PLN');
+    setBillingCurrency(readStoredBillingCurrency() ?? DEFAULT_BILLING_CURRENCY);
   }, []);
 
   const registerHref = `/register?currency=${billingCurrency}`;

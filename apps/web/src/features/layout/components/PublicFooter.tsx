@@ -4,15 +4,11 @@ import Link from 'next/link';
 import { useT } from '@web/features/i18n/LocaleProvider';
 import { useCookieConsent } from '@web/features/cookie-consent';
 import { LyamoLogo } from '@web/features/layout/components/LyamoLogo';
-import { OPERATOR, OWNER_STRUCTURED_DATA } from '@web/lib/legal';
+import { OWNER_STRUCTURED_DATA } from '@web/lib/legal';
 
 export function PublicFooter() {
   const t = useT();
   const { openPreferences } = useCookieConsent();
-  const productLinks = [
-    ...OWNER_STRUCTURED_DATA.otherBrands.map(({ name, url }) => ({ label: name, url })),
-    { label: t('layout.footer.portfolio'), url: OPERATOR.website },
-  ];
 
   return (
     <footer className="bg-surface/50 border-t border-[var(--border)]">
@@ -23,14 +19,17 @@ export function PublicFooter() {
           </Link>
           <p className="text-muted text-sm">
             {t('layout.footer.copyright', { year: new Date().getFullYear() })}
-            {' · '}
+          </p>
+          {/* Visible founder: the JSON-LD names the founder (seo-encje.md, rule 4 and section 7). */}
+          <p className="text-muted text-sm">
+            {t('layout.footer.founder')}:{' '}
             <a
-              href={OPERATOR.website}
+              href={OWNER_STRUCTURED_DATA.person.url}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-warm transition"
             >
-              {OPERATOR.legalName}
+              {OWNER_STRUCTURED_DATA.person.name}
             </a>
           </p>
         </div>
@@ -43,7 +42,7 @@ export function PublicFooter() {
             {t('layout.footer.myProducts')}
           </p>
           <ul className="text-muted flex flex-wrap gap-x-5 gap-y-2 text-sm">
-            {productLinks.map(({ label, url }) => (
+            {OWNER_STRUCTURED_DATA.otherBrands.map(({ name, url }) => (
               <li key={url}>
                 <a
                   href={url}
@@ -51,7 +50,7 @@ export function PublicFooter() {
                   rel="noopener noreferrer"
                   className="hover:text-warm transition"
                 >
-                  {label}
+                  {name}
                 </a>
               </li>
             ))}

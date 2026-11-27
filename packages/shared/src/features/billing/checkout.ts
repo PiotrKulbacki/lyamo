@@ -4,6 +4,9 @@ export const BILLING_CURRENCIES = ['PLN', 'EUR', 'GBP', 'USD'] as const;
 
 export type BillingCurrency = (typeof BILLING_CURRENCIES)[number];
 
+/** Currency shown on the pricing section before the visitor picks one. */
+export const DEFAULT_BILLING_CURRENCY: BillingCurrency = 'PLN';
+
 export const CHECKOUT_PLANS = ['PRO', 'PREMIUM'] as const;
 
 export type CheckoutPlan = (typeof CHECKOUT_PLANS)[number];

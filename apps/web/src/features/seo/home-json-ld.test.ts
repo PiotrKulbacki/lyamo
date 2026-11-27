@@ -1,65 +1,125 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { t } from '@shared/features/i18n';
+
+const legal = vi.hoisted(() => ({ ustIdnr: 'DE123456789' }));
+
+vi.mock('@web/lib/legal', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@web/lib/legal')>();
+  return {
+    ...actual,
+    get UST_IDNR() {
+      return legal.ustIdnr;
+    },
+  };
+});
+
 import { buildHomeJsonLd, serializeJsonLd } from './home-json-ld';
 
-describe('buildHomeJsonLd', () => {
-  it('links brand, app, owner and website through stable @id values', () => {
-    const [brand, app, person, website] = buildHomeJsonLd('de')['@graph'];
+const PERSON_ID = 'https://piotrkulbacki.com/#person';
 
+describe('buildHomeJsonLd', () => {
+  it('follows template 5.3: brand, app and website linked by stable @id values', () => {
+    const graph = buildHomeJsonLd('de')['@graph'];
+    const [brand, app, website] = graph;
+
+    expect(graph).toHaveLength(3);
     expect(brand).toEqual({
-      '@type': 'Brand',
+      '@type': 'OnlineBusiness',
       '@id': 'https://lyamo.eu/#lyamo',
       name: 'Lyamo',
-      url: 'https://lyamo.eu',
+      legalName: 'Piotr Kulbacki',
+      url: 'https://lyamo.eu/',
       logo: 'https://lyamo.eu/lyamo-mark.png',
+      description: t('seo.home.description', 'de'),
+      email: 'kontakt@lyamo.eu',
+      vatID: 'DE123456789',
+      address: {
+        '@type': 'PostalAddress',
+        postalCode: '12051',
+        addressLocality: 'Berlin',
+        addressCountry: 'DE',
+      },
+      founder: {
+        '@type': 'Person',
+        '@id': PERSON_ID,
+        name: 'Piotr Kulbacki',
+        url: 'https://piotrkulbacki.com/',
+      },
     });
     expect(app).toMatchObject({
       '@type': 'WebApplication',
       '@id': 'https://lyamo.eu/#app',
       name: 'Lyamo',
-      url: 'https://lyamo.eu',
+      url: 'https://lyamo.eu/',
       applicationCategory: 'FinanceApplication',
-      description: t('seo.home.description', 'de'),
-      author: { '@id': 'https://cavunio.com/#piotr-kulbacki' },
-      publisher: { '@id': 'https://cavunio.com/#piotr-kulbacki' },
+      author: { '@id': PERSON_ID },
+      publisher: { '@id': 'https://lyamo.eu/#lyamo' },
     });
-    expect(person).toMatchObject({
-      '@type': 'Person',
-      '@id': 'https://cavunio.com/#piotr-kulbacki',
-      name: 'Piotr Kulbacki',
-      url: 'https://piotrkulbacki.com',
-      sameAs: [
-        'https://www.linkedin.com/in/it-piotr-kulbacki',
-        'https://www.facebook.com/profile.php?id=61568507043528',
-        'https://github.com/PiotrKulbacki',
-        'https://www.instagram.com/piotr.kulbacki/',
-        'https://www.tiktok.com/@piotr_kulbacki_youtube',
-        'https://www.youtube.com/@kulbackipiotr',
-      ],
-      brand: [
-        { '@id': 'https://lyamo.eu/#lyamo' },
-        {
-          '@type': 'Brand',
-          '@id': 'https://cavunio.com/#cavunio',
-          name: 'Cavunio',
-          url: 'https://cavunio.com',
-        },
-        {
-          '@type': 'Brand',
-          '@id': 'https://dokiero.com/#dokiero',
-          name: 'Dokiero',
-          url: 'https://dokiero.com',
-        },
-      ],
-    });
-    expect(website).toMatchObject({
+    expect(website).toEqual({
       '@type': 'WebSite',
       '@id': 'https://lyamo.eu/#website',
       name: 'Lyamo',
-      url: 'https://lyamo.eu',
+      url: 'https://lyamo.eu/',
       inLanguage: 'de',
-      publisher: { '@id': 'https://cavunio.com/#piotr-kulbacki' },
+      publisher: { '@id': 'https://lyamo.eu/#lyamo' },
     });
+  });
+
+  it('lists one monthly offer per plan at the regular price in every currency', () => {
+    const [, app] = buildHomeJsonLd('en')['@graph'];
+    const offers = (app as { offers: Record<string, unknown>[] }).offers;
+
+    expect(offers.map((offer) => offer.name)).toEqual(['Free', 'Pro', 'Premium']);
+    expect(offers[0]).toEqual({ '@type': 'Offer', name: 'Free', price: 0, priceCurrency: 'PLN' });
+    expect(offers[1]).toEqual({
+      '@type': 'Offer',
+      name: 'Pro',
+      price: 34,
+      priceCurrency: 'PLN',
+      priceSpecification: [
+        {
+          '@type': 'UnitPriceSpecification',
+          price: 34,
+          priceCurrency: 'PLN',
+          billingDuration: 'P1M',
+        },
+        {
+          '@type': 'UnitPriceSpecification',
+          price: 8,
+          priceCurrency: 'EUR',
+          billingDuration: 'P1M',
+        },
+        {
+          '@type': 'UnitPriceSpecification',
+          price: 6.5,
+          priceCurrency: 'GBP',
+          billingDuration: 'P1M',
+        },
+        {
+          '@type': 'UnitPriceSpecification',
+          price: 9,
+          priceCurrency: 'USD',
+          billingDuration: 'P1M',
+        },
+      ],
+    });
+    expect(offers[2]).toMatchObject({ name: 'Premium', price: 46, priceCurrency: 'PLN' });
+  });
+
+  it('omits vatID when no VAT ID is configured', () => {
+    legal.ustIdnr = '';
+    const [brand] = buildHomeJsonLd('en')['@graph'];
+    legal.ustIdnr = 'DE123456789';
+
+    expect(brand).not.toHaveProperty('vatID');
+  });
+
+  it('only references the person and never uses the retired @id', () => {
+    const json = JSON.stringify(buildHomeJsonLd('pl'));
+
+    expect(json).not.toContain('cavunio.com/#piotr-kulbacki');
+    expect(json).not.toContain('"sameAs"');
+    expect(json).not.toContain('"brand"');
   });
 });
 
