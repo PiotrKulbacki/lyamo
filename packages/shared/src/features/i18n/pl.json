@@ -363,7 +363,7 @@
       "cookieSettings": "Ustawienia cookies",
       "contact": "Kontakt",
       "myProducts": "Moje produkty",
-      "portfolio": "Portfolio"
+      "founder": "Założyciel"
     },
     "aria": {
       "billingCurrency": "Waluta płatności",
@@ -465,7 +465,7 @@
     "creator": {
       "eyebrow": "Twórca",
       "title": "Za Lyamo stoi realna osoba — nie anonimowy zespół.",
-      "body": "Nazywam się Piotr Kulbacki. Buduję Lyamo w Berlinie jako niezależny produkt: kontrola wydatków bez podpinania banku, z jasnymi zasadami prywatności i AI, które Ty zatwierdzasz.",
+      "body": "Piotr Kulbacki: przedsiębiorca z Berlina, projektant stron internetowych i twórca aplikacji (Dokiero, Lyamo), rozwiązań SaaS i automatyzacji, autor poradników o AI i mediach społecznościowych (Cavunio). Oferuje też wsparcie IT u klienta w Berlinie i okolicach.",
       "name": "Piotr Kulbacki",
       "role": "Twórca Lyamo · Software Engineer",
       "cta": "Poznaj mnie na piotrkulbacki.com",

@@ -8,6 +8,7 @@
     "start": "dotenv -e ../../.env -- next start",
     "lint": "next lint",
     "test": "vitest run",
+    "indexnow": "node scripts/indexnow.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

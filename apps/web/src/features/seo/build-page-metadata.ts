@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { t } from '@shared/features/i18n';
 import { env } from '@web/env';
 import { getRequestLocale } from '@web/features/seo/get-request-locale';
+import { OPERATOR } from '@web/lib/legal';
 
 function appBaseUrl(): string {
   return env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '');
@@ -38,7 +39,7 @@ export async function buildPageMetadata(options: BuildPageMetadataOptions): Prom
       title,
       description,
       url: canonical,
-      siteName: 'Lyamo',
+      siteName: OPERATOR.productName,
       type: 'website',
       locale,
     },
