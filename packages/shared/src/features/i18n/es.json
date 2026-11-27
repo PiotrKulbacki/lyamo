@@ -454,6 +454,16 @@
         "description": "Verificación de email, restablecer contraseña y borrado total en Ajustes."
       }
     },
+    "creator": {
+      "eyebrow": "Creador",
+      "title": "Detrás de Lyamo hay una persona real, no un equipo anónimo.",
+      "body": "Piotr Kulbacki: emprendedor afincado en Berlín, diseñador web y desarrollador de aplicaciones (Dokiero, Lyamo), soluciones SaaS y automatizaciones, autor de guías sobre IA y redes sociales (Cavunio). También ofrece soporte informático presencial en Berlín y alrededores.",
+      "name": "Piotr Kulbacki",
+      "role": "Diseñador web y desarrollador de aplicaciones",
+      "cta": "Conóceme en piotrkulbacki.com",
+      "photoAlt": "Foto de Piotr Kulbacki, creador de Lyamo",
+      "lockupAlt": "Logotipo de Piotr Kulbacki — diseñador web y desarrollador de aplicaciones"
+    },
     "pricing": {
       "title": "Precios simples. Dashboard completo ya en Free.",
       "subtitle": "Paga por más IA y archivo de fotos más largo — no por el control básico de gastos.",
@@ -534,6 +544,10 @@
       "cancel": {
         "q": "¿Cómo cancelo la suscripción?",
         "a": "Desde el Customer Portal de Stripe en Ajustes. Conservas el acceso hasta el final del periodo pagado."
+      },
+      "creator": {
+        "q": "¿Quién ha creado Lyamo?",
+        "a": "Lyamo lo desarrolla Piotr Kulbacki — diseñador web y desarrollador de aplicaciones afincado en Berlín. Más sobre mí: piotrkulbacki.com. Los datos de la empresa también están en el Impressum."
       }
     },
     "cta": {
