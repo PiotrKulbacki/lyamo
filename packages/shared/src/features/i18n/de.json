@@ -454,6 +454,16 @@
         "description": "E-Mail-Verifizierung, Passwort-Reset und vollständige Kontolöschung in den Einstellungen."
       }
     },
+    "creator": {
+      "eyebrow": "Gründer",
+      "title": "Hinter Lyamo steht ein echter Mensch — kein anonymes Team.",
+      "body": "Piotr Kulbacki: Unternehmer aus Berlin, Webdesigner und Entwickler von Apps (Dokiero, Lyamo), SaaS-Lösungen und Automatisierungen, Autor von Ratgebern zu KI und Social Media (Cavunio). Er bietet außerdem IT-Support vor Ort beim Kunden in Berlin und Umgebung.",
+      "name": "Piotr Kulbacki",
+      "role": "Webdesigner und App-Entwickler",
+      "cta": "Lerne mich auf piotrkulbacki.com kennen",
+      "photoAlt": "Foto von Piotr Kulbacki, Gründer von Lyamo",
+      "lockupAlt": "Logo von Piotr Kulbacki — Webdesigner und App-Entwickler"
+    },
     "pricing": {
       "title": "Einfache Preise. Volles Dashboard schon im Free-Plan.",
       "subtitle": "Zahle für mehr KI und längeres Foto-Archiv — nicht für grundlegende Ausgabenkontrolle.",
@@ -534,6 +544,10 @@
       "cancel": {
         "q": "Wie kündige ich ein Abo?",
         "a": "Über das Stripe Customer Portal in den Einstellungen. Zugang bleibt bis zum Ende des bezahlten Zeitraums."
+      },
+      "creator": {
+        "q": "Wer steckt hinter Lyamo?",
+        "a": "Lyamo entwickelt Piotr Kulbacki — Webdesigner und App-Entwickler aus Berlin. Mehr über mich: piotrkulbacki.com. Firmendaten findest du auch im Impressum."
       }
     },
     "cta": {

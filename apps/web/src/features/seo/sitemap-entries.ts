@@ -7,7 +7,7 @@ import { env } from '@web/env';
  * `changefreq` and `priority`, so they are not emitted.
  */
 const PUBLIC_PAGES = [
-  { path: '/', lastModified: '2026-11-27T12:00:00+01:00' },
+  { path: '/', lastModified: '2026-11-27T15:00:00+01:00' },
   { path: '/contact', lastModified: '2026-07-21T21:43:19+02:00' },
   { path: '/terms', lastModified: '2026-09-09T21:09:17+02:00' },
   { path: '/privacy', lastModified: '2026-09-09T21:09:17+02:00' },

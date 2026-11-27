@@ -465,10 +465,10 @@
       "title": "A real person behind Lyamo — not an anonymous team.",
       "body": "Piotr Kulbacki: Berlin-based entrepreneur, web designer and developer of apps (Dokiero, Lyamo), SaaS products and automations, author of guides on AI and social media (Cavunio). He also offers on-site IT support in Berlin and the surrounding area.",
       "name": "Piotr Kulbacki",
-      "role": "Lyamo creator · Software Engineer",
+      "role": "Web designer and app developer",
       "cta": "Meet me at piotrkulbacki.com",
       "photoAlt": "Photo of Piotr Kulbacki, creator of Lyamo",
-      "lockupAlt": "Piotr Kulbacki logo — Software Engineer"
+      "lockupAlt": "Piotr Kulbacki logo — web designer and app developer"
     },
     "pricing": {
       "title": "Simple pricing. Full dashboard on Free.",
@@ -553,7 +553,7 @@
       },
       "creator": {
         "q": "Who built Lyamo?",
-        "a": "Lyamo is built by Piotr Kulbacki — an independent software engineer in Berlin. More about me: piotrkulbacki.com. Company details are also in the Impressum."
+        "a": "Lyamo is built by Piotr Kulbacki — a Berlin-based web designer and app developer. More about me: piotrkulbacki.com. Company details are also in the Impressum."
       }
     },
     "cta": {
